@@ -1,0 +1,114 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+
+// Struktura reprezentująca pojedynczą opcję dialogową
+struct DialogueOption {
+    std::string text;  // Tekst, który widzi gracz
+    int nextDialogueID; // ID następnego dialogu
+};
+
+// Struktura reprezentująca cały dialog
+struct Dialogue {
+    int id;  // Unikalny identyfikator dialogu
+    std::string text;  // Tekst dialogu
+    std::vector<DialogueOption> options;  // Lista opcji dialogowych
+};
+
+// Klasa zarządzająca wszystkimi dialogami
+class DialogueManager {
+private:
+    std::map<int, Dialogue> dialogues;  // Mapa przechowująca wszystkie dialogi
+    int currentDialogueID;  // ID obecnie aktywnego dialogu
+
+public:
+    DialogueManager() : currentDialogueID(-1) {}  // Konstruktor
+
+    // Dodanie nowego dialogu do systemu
+    void addDialogue(const Dialogue& dialogue) {
+        dialogues[dialogue.id] = dialogue;
+    }
+
+    // Rozpoczęcie dialogu o danym ID
+    void startDialogue(int dialogueID) {
+        currentDialogueID = dialogueID;
+    }
+
+    // Wyświetlenie obecnego dialogu
+    void displayCurrentDialogue() {
+        if (currentDialogueID == -1) {
+            std::cout << "No active dialogue." << std::endl;
+            return;
+        }
+
+        Dialogue currentDialogue = dialogues[currentDialogueID];
+        std::cout << currentDialogue.text << std::endl;
+
+        for (size_t i = 0; i < currentDialogue.options.size(); ++i) {
+            std::cout << i + 1 << ". " << currentDialogue.options[i].text << std::endl;
+        }
+    }
+
+    // Wybór opcji dialogowej
+    void chooseOption(int optionIndex) {
+        if (currentDialogueID == -1) {
+            std::cout << "No active dialogue." << std::endl;
+            return;
+        }
+
+        Dialogue currentDialogue = dialogues[currentDialogueID];
+
+        if (optionIndex < 1 || optionIndex > currentDialogue.options.size()) {
+            std::cout << "Invalid option." << std::endl;
+            return;
+        }
+
+        currentDialogueID = currentDialogue.options[optionIndex - 1].nextDialogueID;
+    }
+};
+
+int main() {
+    DialogueManager manager;
+
+    // Pierwszy dialog
+    Dialogue dialogue1;
+    dialogue1.id = 1;
+    dialogue1.text = "Welcome to our village. How can I help you?";
+    dialogue1.options.push_back({"Tell me about this place.", 2});
+    dialogue1.options.push_back({"I'm just passing through.", 3});
+
+    // Drugi dialog
+    Dialogue dialogue2;
+    dialogue2.id = 2;
+    dialogue2.text = "This is a peaceful village known for its beautiful gardens.";
+    dialogue2.options.push_back({"Thank you for the information.", 3});
+
+    // Trzeci dialog
+    Dialogue dialogue3;
+    dialogue3.id = 3;
+    dialogue3.text = "Safe travels, stranger.";
+    dialogue3.options.push_back({"Goodbye.", -1});
+
+    // Dodanie dialogów do menadżera
+    manager.addDialogue(dialogue1);
+    manager.addDialogue(dialogue2);
+    manager.addDialogue(dialogue3);
+
+    // Rozpoczęcie pierwszego dialogu
+    manager.startDialogue(1);
+
+    // Pętla główna dialogu
+    while (true) {
+        manager.displayCurrentDialogue();
+
+        int choice;
+        std::cin >> choice;
+
+        if (choice == -1) break;
+
+        manager.chooseOption(choice);
+    }
+
+    return 0;
+}
