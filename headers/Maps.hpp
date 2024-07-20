@@ -405,7 +405,9 @@ public:
 
                 Character* character = new Character(getPrefab(objectName), x, y);
                 _characters.push_back(character);
-                //cout << "Wall: " << objectName << "\n";
+                if (character->name == "characters/jack")   // TO-DO
+                    character->dialogue = getDialogue(1);
+                //cout << "Character: " << objectName << "\n";
             }
 
             if (objectType == "Inventory") {

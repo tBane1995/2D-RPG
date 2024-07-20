@@ -3,6 +3,16 @@
 
 std::vector < GameObject* > prefabs;
 
+GameObject* getPrefab(string name) {
+    for (auto& go : prefabs) {
+        if (go->name == name)
+            return go;
+    }
+
+    std::cout << "error - get Prefab - Prefab: \"" << name << "\" not exists\n";
+    return nullptr;
+}
+
 void loadPrefabs() {
 
     prefabs.clear();
@@ -88,14 +98,6 @@ void loadPrefabs() {
 
 }
 
-GameObject* getPrefab(string name) {
-    for (auto& go : prefabs) {
-        if (go->name == name)
-            return go;
-    }
 
-    std::cout << "error - get Prefab - Prefab: \"" << name << "\" not exists\n";
-    return nullptr;
-}
 
 #endif
