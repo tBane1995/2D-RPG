@@ -63,7 +63,7 @@ int main()
 
 	window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
-	//game();
+	game();
 	mapEditor();
 	
 	
