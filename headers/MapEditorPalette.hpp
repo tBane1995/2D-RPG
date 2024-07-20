@@ -112,13 +112,13 @@ void createPalette() {
 
     sf::Vector2f buttonSize = sf::Vector2f(160, 40);
 
-    Texture* texUp = getTexture("GUI/wideArrowUp");
+    Texture* texUp = getTexture("GUI/wideArrowUp2");
     sf::Vector2f positionUp;
     positionUp.x = screenWidth / 2.f - buttonSize.x / 2.0f;
     positionUp.y = -screenHeight / 2.0f + buttonSize.y / 2.0f;
     buttonUp = new MapEditorButton(texUp, positionUp);
 
-    Texture* texDown = getTexture("GUI/wideArrowDown");
+    Texture* texDown = getTexture("GUI/wideArrowDown2");
     sf::Vector2f positionDown;
     positionDown.x = screenWidth / 2.f - buttonSize.x / 2.0f;
     positionDown.y = screenHeight/2.0f - buttonSize.y / 2.0f;

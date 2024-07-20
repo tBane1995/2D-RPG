@@ -31,6 +31,7 @@ void loadPrefabs() {
     prefabs.push_back(new Furniture("furnitures/wardrobe1", 64, 32));
     prefabs.push_back(new Furniture("furnitures/furnace1", 60, 26));
     prefabs.push_back(new Furniture("furnitures/bed1", 64, 32));
+    prefabs.push_back(new Furniture("furnitures/chair1", 16, 8));
 
     // WALLS
     prefabs.push_back(new Wall("walls/wooden_wall_bottom", 32, 32));

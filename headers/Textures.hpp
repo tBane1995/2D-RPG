@@ -42,8 +42,10 @@ void loadTextures() {
 
 	loadTexture("GUI/slotTexture1.png", 40, 40);
 	loadTexture("GUI/slotTexture2.png", 40, 40);
-	loadTexture("GUI/wideArrowUp.png", 80, 20);
-	loadTexture("GUI/wideArrowDown.png", 80, 20);
+	loadTexture("GUI/wideArrowUp1.png", 80, 20);
+	loadTexture("GUI/wideArrowUp2.png", 80, 20);
+	loadTexture("GUI/wideArrowDown1.png", 80, 20);
+	loadTexture("GUI/wideArrowDown2.png", 80, 20);
 
 	// TILES //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -187,6 +189,7 @@ void loadTextures() {
 	loadTexture("furnitures/wardrobe1.png", 32, 50);
 	loadTexture("furnitures/furnace1.png", 32, 50);
 	loadTexture("furnitures/bed1.png", 32, 50);
+	loadTexture("furnitures/chair1.png", 34, 38);
 
 	loadTexture("walls/wooden_wall_bottom.png", 16, 16);
 	loadTexture("walls/wooden_wall_top_0.png", 16, 16);
