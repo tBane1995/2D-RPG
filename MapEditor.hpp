@@ -63,6 +63,7 @@ void mapEditor() {
     sf::Time prevTime = clock.getElapsedTime();
     sf::Time currentTime = prevTime;
     float dt;   // delta time
+    dt = currentTime.asSeconds() - prevTime.asSeconds();
 
     prefabToPaint = nullptr;
     createPalette();
@@ -70,7 +71,8 @@ void mapEditor() {
 
     world = new World();
     world->load();
-    
+    world->mapVisiblings();
+
     cam->setPosition(screenWidth/2.0f, screenHeight/2.0f);
 
     while (window->isOpen()) {

@@ -148,8 +148,8 @@ public:
 		actionRangeArea.setFillColor(sf::Color(128, 64, 64, 128));
 		actionRangeArea.setOutlineColor(sf::Color(196, 64, 64, 128));
 		actionRangeArea.setOutlineThickness(4.0f);
-		actionRangeArea.setOrigin(actionRange + collider->width/2.0f, actionRange + collider->height/2.0f);
-		actionRangeArea.setScale(1.0f, collider->height / collider->width);
+		actionRangeArea.setOrigin(actionRange + collider->width / 2.0f, actionRange + collider->width/2.0f);
+		actionRangeArea.setScale(1.0f, collider->height/collider->width);
 	}
 
 

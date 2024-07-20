@@ -63,3 +63,5 @@ Furniture "furnitures/bed1" 64 96
 Furniture "furnitures/furnace1" 128 80
 Furniture "furnitures/chest1" 192 80
 Furniture "furnitures/table1" 64 176
+Furniture "furnitures/chair1" 48 144
+Furniture "furnitures/chair1" 80 144

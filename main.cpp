@@ -52,7 +52,6 @@
 #include "Game.hpp"
 #include "MapEditor.hpp"
 
-
 int main()
 {
 	loadFonts();

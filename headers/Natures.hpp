@@ -20,7 +20,7 @@ public:
 		sprite = sf::Sprite();
 		sprite.setTexture(*texture->texture);
 		sprite.setOrigin(texture->cx, texture->cy);
-
+		sprite.setPosition(position);
 	}
 
 	~Nature() { }
