@@ -46,6 +46,7 @@ void loadTextures() {
 	loadTexture("GUI/wideArrowUp2.png", 80, 20);
 	loadTexture("GUI/wideArrowDown1.png", 80, 20);
 	loadTexture("GUI/wideArrowDown2.png", 80, 20);
+	loadTexture("GUI/hand.png", 8, 8);
 
 	// TILES //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -132,6 +133,7 @@ void loadTextures() {
 	characters.push_back("characters/jack");
 	characters.push_back("characters/john");
 	characters.push_back("characters/peter");
+	characters.push_back("characters/pit");
 
 	for (auto& c : characters) {
 		for (int i = 0; i < 4; i++) {
@@ -185,11 +187,15 @@ void loadTextures() {
 	
 	// FURNITURES
 	loadTexture("furnitures/table1.png", 32, 32);
+	loadTexture("furnitures/bench1.png", 32, 32);
 	loadTexture("furnitures/chest1.png", 32, 32);
 	loadTexture("furnitures/wardrobe1.png", 32, 50);
+	loadTexture("furnitures/bookshelf1.png", 32, 50);
 	loadTexture("furnitures/furnace1.png", 32, 50);
 	loadTexture("furnitures/bed1.png", 32, 50);
 	loadTexture("furnitures/chair1.png", 34, 38);
+	loadTexture("furnitures/barrel1.png", 34, 38);
+	loadTexture("furnitures/lectern1.png", 34, 38);
 
 	loadTexture("walls/wooden_wall_bottom.png", 16, 16);
 	loadTexture("walls/wooden_wall_top_0.png", 16, 16);

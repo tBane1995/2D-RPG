@@ -3,7 +3,6 @@
 
 enum class mapEditorStates { start, editor };
 mapEditorStates mapEditorState;
-sf::Vector2f worldMousePosition;
 
 GameObject* prefabToPaint;
 bool GUIwasHover;
@@ -71,8 +70,6 @@ void mapEditor() {
 
     world = new World();
     world->load();
-    world->mapVisiblings();
-
     cam->setPosition(screenWidth/2.0f, screenHeight/2.0f);
 
     while (window->isOpen()) {
@@ -80,7 +77,7 @@ void mapEditor() {
         prevTime = currentTime;
         currentTime = clock.getElapsedTime();
 
-        sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);	// Pobierz aktualną pozycję myszy względem bieżącego okna
+        mousePosition = sf::Mouse::getPosition(*window);	// Pobierz aktualną pozycję myszy względem bieżącego okna
         worldMousePosition = window->mapPixelToCoords(mousePosition);
 
         // events
@@ -257,6 +254,7 @@ void mapEditor() {
                 prefabToPaint->position.x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
                 prefabToPaint->position.y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
                 prefabToPaint->update(dt);
+                prefabToPaint->mouseIsOver = false;
             }
             else {
 
@@ -306,10 +304,6 @@ void mapEditor() {
 }
 
 void addPrefabToLists() {
-     
-    sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);	// Pobierz aktualną pozycję myszy względem bieżącego okna
-    sf::Vector2f worldMousePosition = window->mapPixelToCoords(mousePosition);	// Zamień na współrzędne świata, uwzględniając aktualny widok
-    //cout << "cursor at position: " << worldPosition.x << " " << worldPosition.y << "\n";
 
     int x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
     int y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);

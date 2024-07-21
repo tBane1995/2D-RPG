@@ -25,7 +25,7 @@ public:
 	void dropLoot() {
 
 		Inventory* loot = new Inventory();
-
+		// TO-DO
 		if (name == "monsters/wilczur") {
 			loot->addItem("items/raw meat");
 			loot->addItem("items/tooth", 2);

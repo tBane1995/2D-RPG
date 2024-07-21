@@ -37,11 +37,15 @@ void loadPrefabs() {
 
     // FURNITURES
     prefabs.push_back(new Furniture("furnitures/table1", 60, 26));
+    prefabs.push_back(new Furniture("furnitures/bench1", 60, 26));
     prefabs.push_back(new Furniture("furnitures/chest1", 60, 26));
     prefabs.push_back(new Furniture("furnitures/wardrobe1", 64, 32));
+    prefabs.push_back(new Furniture("furnitures/bookshelf1", 64, 32));
     prefabs.push_back(new Furniture("furnitures/furnace1", 60, 26));
     prefabs.push_back(new Furniture("furnitures/bed1", 64, 32));
-    prefabs.push_back(new Furniture("furnitures/chair1", 16, 8));
+    prefabs.push_back(new Furniture("furnitures/chair1", 16, 16));
+    prefabs.push_back(new Furniture("furnitures/barrel1", 16, 16));
+    prefabs.push_back(new Furniture("furnitures/lectern1", 24, 16));
 
     // WALLS
     prefabs.push_back(new Wall("walls/wooden_wall_bottom", 32, 32));
@@ -91,6 +95,7 @@ void loadPrefabs() {
     prefabs.push_back(new Character("characters/jack"));
     prefabs.push_back(new Character("characters/john"));
     prefabs.push_back(new Character("characters/peter"));
+    prefabs.push_back(new Character("characters/pit"));
 
     for (auto& i : items) {
         prefabs.push_back(new ItemOnMap(i, 0, 0));

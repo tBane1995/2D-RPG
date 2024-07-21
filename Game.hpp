@@ -26,7 +26,6 @@ bool talkWithCharacter();
 bool collectItems();
 void deleteCollectedItems();
 void useItem();
-void drawInventory();
 void playerLoadTestBag();   // TO-DO
 
 void game() {
@@ -99,7 +98,8 @@ void game() {
     cam->update();
 
     playerLoadTestBag();    // TO-DO - TEST
-    createInventory();
+    createInventoryPanel();
+    setInventoryPanel(player->bag);
 
     while (window->isOpen()) {
 
@@ -260,8 +260,8 @@ void game() {
 
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 
-                    sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);	// Pobierz aktualną pozycję myszy względem bieżącego okna
-                    sf::Vector2f worldMousePosition = window->mapPixelToCoords(mousePosition);	// Zamień na współrzędne świata, uwzględniając aktualny widok
+                    mousePosition = sf::Mouse::getPosition(*window);	// Pobierz aktualną pozycję myszy względem bieżącego okna
+                    worldMousePosition = window->mapPixelToCoords(mousePosition);	// Zamień na współrzędne świata, uwzględniając aktualny widok
                     cout << "cursor at " << worldMousePosition.x << " " << worldMousePosition.y << "\n";
 
                     Point start(player->position.x, player->position.y);
@@ -328,7 +328,7 @@ void game() {
 
         cam->setPosition(player->position);
         cam->update();
-        updateInventory();
+        updateInventoryPanel();
         refreshLifeBar();
 
 
@@ -351,7 +351,7 @@ void game() {
         }
 
         if (gameState == gameStates::inventory)
-            drawInventory();
+            drawInventoryPanel();
 
         if (gameState == gameStates::dialogue) {
 
@@ -585,27 +585,6 @@ void useItem() {
 
         player->bag = newBag;
     }
-}
-
-void drawInventory() {
-
-    window->draw(bgInventory);
-
-    for (auto& spr : slotInventorySprites) {
-        window->draw(spr);
-    }
-
-    for (auto& spr : itemsInventorySprites) {
-        window->draw(spr);
-    }
-
-    for (auto& t : inventoryCounts) {
-        window->draw(t);
-    }
-
-    window->draw(itemName);
-
-    window->draw(selector);
 }
 
 void playerLoadTestBag() {  // TO-DO
