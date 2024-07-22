@@ -184,7 +184,7 @@ void game() {
                                     useItem();
                             }
                             else {
-                                if (currentInventory != nullptr && (*currentInventory)->items.size() > 0) {
+                                if ((*currentInventory) != nullptr && (*currentInventory)->items.size() > 0) {
                                     transferItem((*currentInventory)->items[bagCursor], *currentInventory, player->bag);
                                 }
                                 else {
