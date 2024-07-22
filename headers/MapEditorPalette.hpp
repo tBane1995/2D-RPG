@@ -182,7 +182,7 @@ void updatePalette() {
     // adding items (herbs, ... )
     i = 0;
     while (i < items.size()) {
-        availableGameObjects.push_back(getPrefab(items[i]->location));
+        availableGameObjects.push_back(getPrefab(items[i]->name));
         i++;
     }
 

@@ -5,7 +5,7 @@ int inventoryItemsInRow = 6;
 int inventoryItemsInCol = 6;
 
 sf::Texture slotTexture;
-Inventory* inventory;
+Inventory** currentInventory;
 std::vector < sf::Sprite > itemsInventorySprites;
 std::vector < sf::Sprite > slotInventorySprites;
 std::vector < sf::Text > inventoryCounts;
@@ -16,7 +16,7 @@ int bagCursor;
 
 void createInventoryPanel() {
 
-    // SLOTS
+    // EMPTY SLOTS
     slotTexture = sf::Texture();
     slotTexture.loadFromFile("assets/GUI/slotTexture1.png");
 
@@ -37,46 +37,50 @@ void createInventoryPanel() {
     selector.setTexture(selectorTexture);
     selector.setOrigin(40.0f, 40.0f);
 
-    inventory = player->bag;
+    currentInventory = &player->bag;
     bagCursor = 0;
 
 }
 
-void setInventoryPanel(Inventory* i) {
+void setInventoryPanel(Inventory*& inventory) {
 
-    inventory = i;
+    currentInventory = &inventory;
 }
 
 void updateInventoryPanel() {
-    // TO-DO
 
     itemsInventorySprites.clear();
     inventoryCounts.clear();
 
-    if (inventory!=nullptr && bagCursor >= inventory->items.size())
-        bagCursor = inventory->items.size() - 1;
+    if (currentInventory == nullptr)
+        bagCursor = 0;
 
+    
+    if ((*currentInventory) != nullptr && bagCursor >= (*currentInventory)->items.size()) {
+        bagCursor = (*currentInventory)->items.size() - 1;
+    }
+    
     if (bagCursor < 0)
         bagCursor = 0;
 
     int x, y, width, height;
+    
+    if ((*currentInventory) != nullptr) {
 
-    // TO-DO
-    for (int i = 0; i < inventoryItemsInRow * inventoryItemsInCol; i++) {
-        x = cam->position.x - (inventoryItemsInRow / 2 - i % inventoryItemsInRow) * 80 + 40;
-        y = cam->position.y - (inventoryItemsInCol / 2 - i / inventoryItemsInRow) * 80 + 40;
-        slotInventorySprites[i].setPosition(x, y);
+        for (int i = 0; i < inventoryItemsInRow * inventoryItemsInCol; i++) {
+            x = cam->position.x - (inventoryItemsInRow / 2 - i % inventoryItemsInRow) * 80 + 40;
+            y = cam->position.y - (inventoryItemsInCol / 2 - i / inventoryItemsInRow) * 80 + 40;
+            slotInventorySprites[i].setPosition(x, y);
 
-        if (inventory != nullptr) {
+            if (i < (*currentInventory)->items.size()) {
 
-            if (i < inventory->items.size()) {
                 itemsInventorySprites.emplace_back();
-                string location = inventory->items[i]->location;
+                string location = (*currentInventory)->items[i]->name;
                 itemsInventorySprites[i].setPosition(x, y);
                 itemsInventorySprites[i].setOrigin(32, 32);
                 itemsInventorySprites[i].setTexture(*getTexture(location)->texture);
 
-                inventoryCounts.emplace_back(to_string(inventory->counts[i]), basicFont, 16);
+                inventoryCounts.emplace_back(to_string((*currentInventory)->counts[i]), basicFont, 16);
                 inventoryCounts[i].setPosition(x, y);
                 width = inventoryCounts[i].getLocalBounds().width;
                 height = inventoryCounts[i].getLocalBounds().height;
@@ -86,11 +90,10 @@ void updateInventoryPanel() {
             }
         }
     }
-
-    // TO-DO
+    
     x = cam->position.x - (inventoryItemsInRow / 2 - bagCursor % inventoryItemsInRow) * 80 + 40;
     y = cam->position.y - (inventoryItemsInCol / 2 - bagCursor / inventoryItemsInRow) * 80 + 40;
-    cout << x << " " << y << "\n";
+    //cout << x << " " << y << "\n";
     selector.setPosition(x, y);
 
 }
@@ -112,5 +115,19 @@ void drawInventoryPanel() {
 
     window->draw(selector);
 }
+
+void useItem() {
+
+    // TO-DO
+    Item* item = (*currentInventory)->items[bagCursor];
+
+    if (item->type == itemType::herb || item->type == itemType::potion || item->type == itemType::food) {
+        player->heal(item->attributes[attribute::HP]);
+        (*currentInventory)->removeItem((*currentInventory)->items[bagCursor]);
+    }
+
+    
+}
+
 
 #endif

@@ -1,4 +1,4 @@
-#ifndef Items_hpp
+﻿#ifndef Items_hpp
 #define Items_hpp
 
 // TO-DO
@@ -7,15 +7,15 @@ enum class itemType { herb, potion, food, weapon, helmet, armor, other };
 
 class Item {
 public:
-	string location;
+	string name;
 	Texture* texture;
 	itemType type;
 	std::map < attribute, int > attributes;		// TO-DO
 
-	Item(string location, itemType type) {
-		this->location = location;
+	Item(string name, itemType type) {
+		this->name = name;
 		this->type = type;
-		this->texture = getTexture(location);
+		this->texture = getTexture(name);
 	}
 };
 
@@ -23,7 +23,7 @@ std::vector < Item* > items;
 
 Item* getItem(string location) {
 	for (auto& item : items) {
-		if (item->location == location)
+		if (item->name == location)
 			return item;
 	}
 
@@ -38,13 +38,13 @@ public:
 	int count;
 	bool collected;
 
-	ItemOnMap(Item* item, float x, float y, int count = 1 ) : GameObject(item->location, x, y, 16, 8, false, false) {
+	ItemOnMap(Item* item, float x, float y, int count = 1 ) : GameObject(item->name, x, y, 16, 8, false, false) {
 		type = gameObjectType::ItemOnMap;
 		this->item = item;
 		this->count = count;
 		collected = false;
 
-		texture = getTexture(item->location);
+		texture = getTexture(item->name);
 		sprite = sf::Sprite();
 		sprite.setTexture(*texture->texture);
 		sprite.setOrigin(texture->cx, texture->cy);
@@ -58,7 +58,7 @@ public:
 		this->count = 1;
 		collected = false;
 
-		texture = getTexture(item->location);
+		texture = getTexture(item->name);
 		sprite = sf::Sprite();
 		sprite.setTexture(*texture->texture);
 		sprite.setOrigin(texture->cx, texture->cy);
@@ -208,7 +208,7 @@ public:
 	void addItem(string location, int count = 1) {
 
 		for (int i = 0; i < items.size(); i++)
-			if (items[i]->location == location) {
+			if (items[i]->name == location) {
 				counts[i] += count;
 				return;
 			}
@@ -234,7 +234,7 @@ public:
 	bool hasItemsInInventory(string location, int count=1) {
 		
 		for (int i = 0; i < items.size(); i++)
-			if (items[i]->location == location) {
+			if (items[i]->name == location) {
 				
 				if (counts[i] >= count)
 					return true;
@@ -245,9 +245,9 @@ public:
 		return false;
 	}
 
-	void removeItem(string location, int count = 1) {
+	void removeItem(string name, int count = 1) {
 		for (int i = 0; i < items.size(); i++)
-			if (items[i]->location == location) {
+			if (items[i]->name == name) {
 				counts[i] -= count;
 			}
 
@@ -265,7 +265,28 @@ public:
 
 		items = newItems;
 		counts = newCounts;
-		return;
+	}
+
+	void removeItem(Item* item, int count = 1) {
+		for (int i = 0; i < items.size(); i++)
+			if (items[i] == item) {
+				counts[i] -= count;
+			}
+
+		// delete zeros (count)
+		std::vector < Item* > newItems;
+		std::vector < int > newCounts;
+
+		for (int i = 0; i < items.size(); i++) {
+			if (counts[i] > 0) {
+				newItems.push_back(items[i]);
+				newCounts.push_back(counts[i]);
+			}
+
+		}
+
+		items = newItems;
+		counts = newCounts;
 	}
 
 
@@ -311,5 +332,16 @@ public:
 };
 
 std::vector < InventoryOnMap* > inventoriesOnMap;
+
+void transferItem(Item* item, Inventory* &from, Inventory* to) {
+	from->removeItem(item->name);
+
+	if (from->items.size() < 1) {
+		from = nullptr;
+	}
+		
+
+	to->addItem(item);
+}
 
 #endif 
