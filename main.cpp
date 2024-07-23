@@ -53,6 +53,41 @@
 #include "Game.hpp"
 #include "MapEditor.hpp"
 
+void editPixels() {
+
+    sf::Image i;
+    i.loadFromFile("assets/hero/basicHelmet/attackBottom0.png");
+
+    sf::Color color = sf::Color(255,255,255);
+    sf::Color newColor = i.getPixel(0, 0);
+
+    string folder_path = "assets/hero/basicArmor";
+
+    std::vector < std::string > png_files;
+
+    for (const auto& entry : filesystem::directory_iterator(folder_path)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".png") {
+            png_files.push_back(entry.path().string());
+        }
+    }
+
+    for (auto& png : png_files) {
+        sf::Image img;
+        img.loadFromFile(png.c_str());
+
+        for (int y = 0; y < img.getSize().y; y++)
+            for (int x = 0; x < img.getSize().x; x++) {
+                if (img.getPixel(x, y) == color) {
+                    img.setPixel(x, y, newColor);
+                }
+
+            }
+
+        img.saveToFile(png.c_str());
+    }
+
+}
+
 int main()
 {
 	loadFonts();
@@ -63,6 +98,7 @@ int main()
 
 	window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
+    editPixels();
 	game();
 	mapEditor();
 	

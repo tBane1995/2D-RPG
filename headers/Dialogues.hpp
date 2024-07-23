@@ -101,11 +101,11 @@ void drawDialogBox(sf::RenderWindow* window, int currentPage = 0) {
 	background.setPosition(cam->position.x, cam->position.y + screenHeight / 2.0f - dialogSize.y / 2.0f);
 	window->draw(background);
 
-	for (int i = 0; i < 4; i++) {
-		if (i + 4 * page >= wrappedText.size())
+	for (int i = 0; i < 5; i++) {
+		if (i + 5 * page >= wrappedText.size())
 			break;
 
-		sf::Text text = sf::Text(wrappedText[i + 4 * page], dialogBoxFont, characterSize);
+		sf::Text text = sf::Text(wrappedText[i + 5 * page], dialogBoxFont, characterSize);
 		text.setFillColor(textDialogueColor);
 		textPosition.x = background.getPosition().x - dialogSize.x / 2.f + padding;
 		textPosition.y = background.getPosition().y - dialogSize.y / 2.f + float(i) * lineHeight + padding;

@@ -1,2 +1,1 @@
--now you can take items from furnitures
--added sprites of attack of hero
+-added armor and helmet for hero

@@ -170,12 +170,12 @@ void game() {
                                 bagCursor += 1;
 
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-                        if (bagCursor - 6 >= 0)
-                            bagCursor -= 6;
+                        if (bagCursor - inventoryItemsInRow >= 0)
+                            bagCursor -= inventoryItemsInRow;
 
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-                        if (currentInventory!=nullptr && bagCursor + 6 < (*currentInventory)->items.size())
-                            bagCursor += 6;
+                        if (currentInventory!=nullptr && bagCursor + inventoryItemsInRow < (*currentInventory)->items.size())
+                            bagCursor += inventoryItemsInRow;
 
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
                         if(currentInventory!=nullptr) {
@@ -185,7 +185,8 @@ void game() {
                             }
                             else {
                                 if ((*currentInventory) != nullptr && (*currentInventory)->items.size() > 0) {
-                                    transferItem((*currentInventory)->items[bagCursor], *currentInventory, player->bag);
+                                    if(bagCursor < (*currentInventory)->items.size() )
+                                        transferItem((*currentInventory)->items[bagCursor], *currentInventory, player->bag);
                                 }
                                 else {
                                     gameState = gameStates::game;
@@ -201,7 +202,7 @@ void game() {
                     if (dialogueState == dialogueStates::dialogue) {
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
 
-                            if ((page + 1) * 4 < countOfLines)
+                            if ((page + 1) * 5 < countOfLines)
                                 page += 1;
                             else {
                                 if (currentDialogue->options.size() == 0) {

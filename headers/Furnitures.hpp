@@ -40,7 +40,7 @@ public:
 		// TO-DO (test)
 		if (name == "furnitures/chest1") {
 			inventory = new Inventory();
-			inventory->addItem("items/roasted meat");
+			inventory->addItem("items/roasted meat",3);
 			inventory->addItem("items/wooden club");
 		}
 		//
@@ -64,10 +64,6 @@ public:
 
 		sprite.setPosition(position);
 		takeItSprite.setPosition(position.x, position.y - 50);
-
-		if (mouseIsOver) {
-			setInventoryPanel(inventory);
-		}
 
 		// SHOW HAND
 		float x1, y1, rx1, ry1;

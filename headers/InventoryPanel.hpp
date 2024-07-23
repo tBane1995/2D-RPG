@@ -3,6 +3,7 @@
 
 int inventoryItemsInRow = 6;
 int inventoryItemsInCol = 6;
+int slotSide = 80;
 
 sf::Texture slotTexture;
 Inventory** currentInventory;
@@ -22,10 +23,10 @@ void createInventoryPanel() {
 
     for (int i = 0; i < inventoryItemsInRow * inventoryItemsInCol; i++) {
         slotInventorySprites.emplace_back();
-        int x = cam->position.x - (inventoryItemsInRow / 2 - i % inventoryItemsInRow) * 80 + 40;
-        int y = cam->position.y - (inventoryItemsInCol / 2 - i / inventoryItemsInRow) * 80 + 40;
+        int x = cam->position.x - (inventoryItemsInRow / 2 - i % inventoryItemsInRow) * slotSide + slotSide/2;
+        int y = cam->position.y - (inventoryItemsInCol / 2 - i / inventoryItemsInRow) * slotSide + slotSide/2;
+        slotInventorySprites[i].setOrigin(slotSide / 2, slotSide / 2);
         slotInventorySprites[i].setPosition(x, y);
-        slotInventorySprites[i].setOrigin(40, 40);
         slotInventorySprites[i].setTexture(slotTexture);
 
     }
@@ -35,7 +36,7 @@ void createInventoryPanel() {
     selectorTexture.loadFromFile("assets/GUI/slotSelectorTexture1.png");
     selector = sf::Sprite();
     selector.setTexture(selectorTexture);
-    selector.setOrigin(40.0f, 40.0f);
+    selector.setOrigin(slotSide/2, slotSide/2);
 
     currentInventory = &player->bag;
     bagCursor = 0;
@@ -52,7 +53,7 @@ void updateInventoryPanel() {
     itemsInventorySprites.clear();
     inventoryCounts.clear();
 
-    if (currentInventory == nullptr)
+    if ((*currentInventory) == nullptr)
         bagCursor = 0;
 
     
@@ -68,16 +69,16 @@ void updateInventoryPanel() {
     if ((*currentInventory) != nullptr) {
 
         for (int i = 0; i < inventoryItemsInRow * inventoryItemsInCol; i++) {
-            x = cam->position.x - (inventoryItemsInRow / 2 - i % inventoryItemsInRow) * 80 + 40;
-            y = cam->position.y - (inventoryItemsInCol / 2 - i / inventoryItemsInRow) * 80 + 40;
+            x = cam->position.x - (inventoryItemsInRow / 2 - i % inventoryItemsInRow) * slotSide + slotSide/2;
+            y = cam->position.y - (inventoryItemsInCol / 2 - i / inventoryItemsInRow) * slotSide + slotSide/2;
             slotInventorySprites[i].setPosition(x, y);
 
             if (i < (*currentInventory)->items.size()) {
 
                 itemsInventorySprites.emplace_back();
                 string location = (*currentInventory)->items[i]->name;
-                itemsInventorySprites[i].setPosition(x, y);
                 itemsInventorySprites[i].setOrigin(32, 32);
+                itemsInventorySprites[i].setPosition(x, y);
                 itemsInventorySprites[i].setTexture(*getTexture(location)->texture);
 
                 inventoryCounts.emplace_back(to_string((*currentInventory)->counts[i]), basicFont, 16);
@@ -91,8 +92,8 @@ void updateInventoryPanel() {
         }
     }
     
-    x = cam->position.x - (inventoryItemsInRow / 2 - bagCursor % inventoryItemsInRow) * 80 + 40;
-    y = cam->position.y - (inventoryItemsInCol / 2 - bagCursor / inventoryItemsInRow) * 80 + 40;
+    x = cam->position.x - (inventoryItemsInRow / 2 - bagCursor % inventoryItemsInRow) * slotSide + slotSide/2;
+    y = cam->position.y - (inventoryItemsInCol / 2 - bagCursor / inventoryItemsInRow) * slotSide + slotSide/2;
     //cout << x << " " << y << "\n";
     selector.setPosition(x, y);
 

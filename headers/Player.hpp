@@ -12,8 +12,13 @@ public:
 	sf::Texture helmetRunTextures[16];
 	sf::Texture helmetAttackTextures[16];
 
+	sf::Texture armorIdleTextures[16];
+	sf::Texture armorRunTextures[16];
+	sf::Texture armorAttackTextures[16];
+
 	sf::Sprite bodySprite;
 	sf::Sprite helmetSprite;
+	sf::Sprite armorSprite;
 
 	int direction;
 	int frame;	// current frame number
@@ -40,7 +45,7 @@ public:
 		cooldown = 0.0f;
 		attackTime = 1.0f;
 		HP_max = 100;
-		HP = 90;
+		HP = 40;
 		
 		loadTextures();
 	
@@ -49,6 +54,9 @@ public:
 
 		helmetSprite = sf::Sprite();
 		helmetSprite.setOrigin(32, 58);
+
+		armorSprite = sf::Sprite();
+		armorSprite.setOrigin(32, 58);
 
 		setActionRangeArea();
 
@@ -136,10 +144,40 @@ public:
 
 	}
 
+	void loadArmorTextures() {
+
+		for (int i = 0; i < 16; i++) {
+			armorIdleTextures[i] = sf::Texture();
+			armorRunTextures[i] = sf::Texture();
+			armorAttackTextures[i] = sf::Texture();
+
+		}
+
+		for (int i = 0; i < 4; i++) {
+			armorIdleTextures[i].loadFromFile("assets/hero/basicArmor/idleTop" + to_string(i) + ".png");
+			armorIdleTextures[4 + i].loadFromFile("assets/hero/basicArmor/idleRight" + to_string(i) + ".png");
+			armorIdleTextures[8 + i].loadFromFile("assets/hero/basicArmor/idleBottom" + to_string(i) + ".png");
+			armorIdleTextures[12 + i].loadFromFile("assets/hero/basicArmor/idleLeft" + to_string(i) + ".png");
+
+			armorRunTextures[i].loadFromFile("assets/hero/basicArmor/runTop" + to_string(i) + ".png");
+			armorRunTextures[4 + i].loadFromFile("assets/hero/basicArmor/runRight" + to_string(i) + ".png");
+			armorRunTextures[8 + i].loadFromFile("assets/hero/basicArmor/runBottom" + to_string(i) + ".png");
+			armorRunTextures[12 + i].loadFromFile("assets/hero/basicArmor/runLeft" + to_string(i) + ".png");
+
+			armorAttackTextures[i].loadFromFile("assets/hero/basicArmor/attackTop" + to_string(i) + ".png");
+			armorAttackTextures[4 + i].loadFromFile("assets/hero/basicArmor/attackRight" + to_string(i) + ".png");
+			armorAttackTextures[8 + i].loadFromFile("assets/hero/basicArmor/attackBottom" + to_string(i) + ".png");
+			armorAttackTextures[12 + i].loadFromFile("assets/hero/basicArmor/attackLeft" + to_string(i) + ".png");
+
+		}
+
+	}
+
 	void loadTextures() {
 
 		loadBodyTextures();
 		loadHelmetTextures();
+		loadArmorTextures();
 		
 	}
 
@@ -204,6 +242,7 @@ public:
 				frame = 0;
 			bodySprite.setTexture(bodyAttackTextures[direction * 4 + frame]);
 			helmetSprite.setTexture(helmetAttackTextures[direction * 4 + frame]);
+			armorSprite.setTexture(armorAttackTextures[direction * 4 + frame]);
 		}		
 		else if (state == states::walk) {
 
@@ -217,12 +256,14 @@ public:
 
 			bodySprite.setTexture(bodyRunTextures[direction * 4 + frame]);
 			helmetSprite.setTexture(helmetRunTextures[direction * 4 + frame]);
+			armorSprite.setTexture(armorRunTextures[direction * 4 + frame]);
 		}
 		else if(state == states::idle) {
 
 			calculateCurrentFrame(dt);
 			bodySprite.setTexture(bodyIdleTextures[direction * 4 +frame]);
 			helmetSprite.setTexture(helmetIdleTextures[direction * 4 +frame]);
+			armorSprite.setTexture(armorIdleTextures[direction * 4 +frame]);
 			
 		}
 
@@ -231,6 +272,7 @@ public:
 
 		bodySprite.setPosition(position);
 		helmetSprite.setPosition(position);
+		armorSprite.setPosition(position);
 		actionRangeArea.setPosition(position);
 		
 	}
@@ -242,6 +284,8 @@ public:
 		}
 		
 		window->draw(bodySprite);		
+		window->draw(helmetSprite);		
+		window->draw(armorSprite);		
 		
 	}
 };

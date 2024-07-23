@@ -334,12 +334,11 @@ public:
 std::vector < InventoryOnMap* > inventoriesOnMap;
 
 void transferItem(Item* item, Inventory* &from, Inventory* to) {
-	from->removeItem(item->name);
+	from->removeItem(item);
 
 	if (from->items.size() < 1) {
 		from = nullptr;
 	}
-		
 
 	to->addItem(item);
 }
