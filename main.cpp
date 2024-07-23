@@ -98,7 +98,7 @@ int main()
 
 	window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
-    editPixels();
+    //editPixels();
 	game();
 	mapEditor();
 	
