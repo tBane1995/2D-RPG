@@ -1,1 +1,3 @@
--added armor and helmet for hero
+-helmet, armor and pants added. you can put them on
+-added early quest system
+-added first quest 

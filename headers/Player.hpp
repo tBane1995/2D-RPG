@@ -3,22 +3,36 @@
 
 class Player : public GameObject {
 public:
-	sf::Texture bodyIdleTextures[16];	// idle for top, right, bottom, left
-	sf::Texture bodyRunTextures[16];	// run for top, right, bottom, left
-	sf::Texture bodyAttackTextures[16];	// fight for top, right, bottom, left
+	Item* helmet;
+	Item* armor;
+	Item* pants;
+
+	// TO-DO sf::Texture to Texture*
+	// BODY
+	Texture* bodyIdleTextures[16];	// idle for top, right, bottom, left
+	Texture* bodyRunTextures[16];	// run for top, right, bottom, left
+	Texture* bodyAttackTextures[16];	// fight for top, right, bottom, left
 
 	// HELMET
-	sf::Texture helmetIdleTextures[16];
-	sf::Texture helmetRunTextures[16];
-	sf::Texture helmetAttackTextures[16];
+	Texture* helmetIdleTextures[16];
+	Texture* helmetRunTextures[16];
+	Texture* helmetAttackTextures[16];
 
-	sf::Texture armorIdleTextures[16];
-	sf::Texture armorRunTextures[16];
-	sf::Texture armorAttackTextures[16];
+	// ARMOR
+	Texture* armorIdleTextures[16];
+	Texture* armorRunTextures[16];
+	Texture* armorAttackTextures[16];
 
+	// PANTS
+	Texture* pantsIdleTextures[16];
+	Texture* pantsRunTextures[16];
+	Texture* pantsAttackTextures[16];
+
+	// SPRITES
 	sf::Sprite bodySprite;
 	sf::Sprite helmetSprite;
 	sf::Sprite armorSprite;
+	sf::Sprite pantsSprite;
 
 	int direction;
 	int frame;	// current frame number
@@ -34,7 +48,7 @@ public:
 
 	Inventory* bag;
 
-	Player() : GameObject("hero", 0, 0, 36, 18, true, false) {
+	Player() : GameObject("hero", 0, 0, 24, 12, true, false) {
 		type = gameObjectType::Player;
 		direction = 2;
 		frame = 0;
@@ -47,16 +61,14 @@ public:
 		HP_max = 100;
 		HP = 40;
 		
-		loadTextures();
-	
-		bodySprite = sf::Sprite();
-		bodySprite.setOrigin(32, 58);
+		helmet = nullptr;
+		armor = nullptr;
+		pants = nullptr;
 
-		helmetSprite = sf::Sprite();
-		helmetSprite.setOrigin(32, 58);
-
-		armorSprite = sf::Sprite();
-		armorSprite.setOrigin(32, 58);
+		loadBody();
+		loadHelmet();
+		loadArmor();
+		loadPants();
 
 		setActionRangeArea();
 
@@ -88,97 +100,142 @@ public:
 		this->position.y = y;
 	}
 
-	void loadBodyTextures() {
+	void loadBody() {
 		for (int i = 0; i < 16; i++) {
-			bodyIdleTextures[i] = sf::Texture();
-			bodyRunTextures[i] = sf::Texture();
-			bodyAttackTextures[i] = sf::Texture();
+			bodyIdleTextures[i] = nullptr;
+			bodyRunTextures[i] = nullptr;
+			bodyAttackTextures[i] = nullptr;
 
 		}
 
 		for (int i = 0; i < 4; i++) {
-			bodyIdleTextures[i].loadFromFile("assets/hero/idleTop" + to_string(i) + ".png");
-			bodyIdleTextures[4 + i].loadFromFile("assets/hero/idleRight" + to_string(i) + ".png");
-			bodyIdleTextures[8 + i].loadFromFile("assets/hero/idleBottom" + to_string(i) + ".png");
-			bodyIdleTextures[12 + i].loadFromFile("assets/hero/idleLeft" + to_string(i) + ".png");
 
-			bodyRunTextures[i].loadFromFile("assets/hero/runTop" + to_string(i) + ".png");
-			bodyRunTextures[4 + i].loadFromFile("assets/hero/runRight" + to_string(i) + ".png");
-			bodyRunTextures[8 + i].loadFromFile("assets/hero/runBottom" + to_string(i) + ".png");
-			bodyRunTextures[12 + i].loadFromFile("assets/hero/runLeft" + to_string(i) + ".png");
+			bodyIdleTextures[i] = getTexture("sets/hero/idleTop" + to_string(i));
+			bodyIdleTextures[4 + i] = getTexture("sets/hero/idleRight" + to_string(i));
+			bodyIdleTextures[8 + i] = getTexture("sets/hero/idleBottom" + to_string(i));
+			bodyIdleTextures[12 + i] = getTexture("sets/hero/idleLeft" + to_string(i));
 
-			bodyAttackTextures[i].loadFromFile("assets/hero/attackTop" + to_string(i) + ".png");
-			bodyAttackTextures[4 + i].loadFromFile("assets/hero/attackRight" + to_string(i) + ".png");
-			bodyAttackTextures[8 + i].loadFromFile("assets/hero/attackBottom" + to_string(i) + ".png");
-			bodyAttackTextures[12 + i].loadFromFile("assets/hero/attackLeft" + to_string(i) + ".png");
+			bodyRunTextures[i] = getTexture("sets/hero/runTop" + to_string(i));
+			bodyRunTextures[4 + i] = getTexture("sets/hero/runRight" + to_string(i));
+			bodyRunTextures[8 + i] = getTexture("sets/hero/runBottom" + to_string(i));
+			bodyRunTextures[12 + i] = getTexture("sets/hero/runLeft" + to_string(i));
+
+			bodyAttackTextures[i] = getTexture("sets/hero/attackTop" + to_string(i));
+			bodyAttackTextures[4 + i] = getTexture("sets/hero/attackRight" + to_string(i));
+			bodyAttackTextures[8 + i] = getTexture("sets/hero/attackBottom" + to_string(i));
+			bodyAttackTextures[12 + i] = getTexture("sets/hero/attackLeft" + to_string(i));
 
 		}
+
+		bodySprite = sf::Sprite();
+		bodySprite.setOrigin(32, 58);
+
 	}
 
-	void loadHelmetTextures() {
+	void loadHelmet() {
 
 		for (int i = 0; i < 16; i++) {
-			helmetIdleTextures[i] = sf::Texture();
-			helmetRunTextures[i] = sf::Texture();
-			helmetAttackTextures[i] = sf::Texture();
+			helmetIdleTextures[i] = nullptr;
+			helmetRunTextures[i] = nullptr;
+			helmetAttackTextures[i] = nullptr;
 
 		}
 
-		for (int i = 0; i < 4; i++) {
-			helmetIdleTextures[i].loadFromFile("assets/hero/basicHelmet/idleTop" + to_string(i) + ".png");
-			helmetIdleTextures[4 + i].loadFromFile("assets/hero/basicHelmet/idleRight" + to_string(i) + ".png");
-			helmetIdleTextures[8 + i].loadFromFile("assets/hero/basicHelmet/idleBottom" + to_string(i) + ".png");
-			helmetIdleTextures[12 + i].loadFromFile("assets/hero/basicHelmet/idleLeft" + to_string(i) + ".png");
+		if (helmet != nullptr) {
 
-			helmetRunTextures[i].loadFromFile("assets/hero/basicHelmet/runTop" + to_string(i) + ".png");
-			helmetRunTextures[4 + i].loadFromFile("assets/hero/basicHelmet/runRight" + to_string(i) + ".png");
-			helmetRunTextures[8 + i].loadFromFile("assets/hero/basicHelmet/runBottom" + to_string(i) + ".png");
-			helmetRunTextures[12 + i].loadFromFile("assets/hero/basicHelmet/runLeft" + to_string(i) + ".png");
+			for (int i = 0; i < 4; i++) {
+				helmetIdleTextures[i] = getTexture("sets/" + helmet->name + "/idleTop" + to_string(i));
+				helmetIdleTextures[4 + i] = getTexture("sets/" + helmet->name + "/idleRight" + to_string(i));
+				helmetIdleTextures[8 + i] = getTexture("sets/" + helmet->name + "/idleBottom" + to_string(i));
+				helmetIdleTextures[12 + i] = getTexture("sets/" + helmet->name + "/idleLeft" + to_string(i));
 
-			helmetAttackTextures[i].loadFromFile("assets/hero/basicHelmet/attackTop" + to_string(i) + ".png");
-			helmetAttackTextures[4 + i].loadFromFile("assets/hero/basicHelmet/attackRight" + to_string(i) + ".png");
-			helmetAttackTextures[8 + i].loadFromFile("assets/hero/basicHelmet/attackBottom" + to_string(i) + ".png");
-			helmetAttackTextures[12 + i].loadFromFile("assets/hero/basicHelmet/attackLeft" + to_string(i) + ".png");
+				helmetRunTextures[i] = getTexture("sets/" + helmet->name + "/runTop" + to_string(i));
+				helmetRunTextures[4 + i] = getTexture("sets/" + helmet->name + "/runRight" + to_string(i));
+				helmetRunTextures[8 + i] = getTexture("sets/" + helmet->name + "/runBottom" + to_string(i));
+				helmetRunTextures[12 + i] = getTexture("sets/" + helmet->name + "/runLeft" + to_string(i));
 
+				helmetAttackTextures[i] = getTexture("sets/" + helmet->name + "/attackTop" + to_string(i));
+				helmetAttackTextures[4 + i] = getTexture("sets/" + helmet->name + "/attackRight" + to_string(i));
+				helmetAttackTextures[8 + i] = getTexture("sets/" + helmet->name + "/attackBottom" + to_string(i));
+				helmetAttackTextures[12 + i] = getTexture("sets/" + helmet->name + "/attackLeft" + to_string(i));
+
+			}
 		}
+
+		helmetSprite = sf::Sprite();
+		helmetSprite.setOrigin(32, 58);
 
 	}
 
-	void loadArmorTextures() {
+	void loadArmor() {
 
 		for (int i = 0; i < 16; i++) {
-			armorIdleTextures[i] = sf::Texture();
-			armorRunTextures[i] = sf::Texture();
-			armorAttackTextures[i] = sf::Texture();
+			armorIdleTextures[i] = nullptr;
+			armorRunTextures[i] = nullptr;
+			armorAttackTextures[i] = nullptr;
 
 		}
 
-		for (int i = 0; i < 4; i++) {
-			armorIdleTextures[i].loadFromFile("assets/hero/basicArmor/idleTop" + to_string(i) + ".png");
-			armorIdleTextures[4 + i].loadFromFile("assets/hero/basicArmor/idleRight" + to_string(i) + ".png");
-			armorIdleTextures[8 + i].loadFromFile("assets/hero/basicArmor/idleBottom" + to_string(i) + ".png");
-			armorIdleTextures[12 + i].loadFromFile("assets/hero/basicArmor/idleLeft" + to_string(i) + ".png");
-
-			armorRunTextures[i].loadFromFile("assets/hero/basicArmor/runTop" + to_string(i) + ".png");
-			armorRunTextures[4 + i].loadFromFile("assets/hero/basicArmor/runRight" + to_string(i) + ".png");
-			armorRunTextures[8 + i].loadFromFile("assets/hero/basicArmor/runBottom" + to_string(i) + ".png");
-			armorRunTextures[12 + i].loadFromFile("assets/hero/basicArmor/runLeft" + to_string(i) + ".png");
-
-			armorAttackTextures[i].loadFromFile("assets/hero/basicArmor/attackTop" + to_string(i) + ".png");
-			armorAttackTextures[4 + i].loadFromFile("assets/hero/basicArmor/attackRight" + to_string(i) + ".png");
-			armorAttackTextures[8 + i].loadFromFile("assets/hero/basicArmor/attackBottom" + to_string(i) + ".png");
-			armorAttackTextures[12 + i].loadFromFile("assets/hero/basicArmor/attackLeft" + to_string(i) + ".png");
-
-		}
-
-	}
-
-	void loadTextures() {
-
-		loadBodyTextures();
-		loadHelmetTextures();
-		loadArmorTextures();
+		if (armor != nullptr) {
 		
+			cout << armor->name << "\n";
+
+			for (int i = 0; i < 4; i++) {
+				armorIdleTextures[i] = getTexture("sets/" + armor->name + "/idleTop" + to_string(i));
+				armorIdleTextures[4 + i] = getTexture("sets/" + armor->name + "/idleRight" + to_string(i));
+				armorIdleTextures[8 + i] = getTexture("sets/" + armor->name + "/idleBottom" + to_string(i));
+				armorIdleTextures[12 + i] = getTexture("sets/" + armor->name + "/idleLeft" + to_string(i));
+
+				armorRunTextures[i] = getTexture("sets/" + armor->name + "/runTop" + to_string(i));
+				armorRunTextures[4 + i] = getTexture("sets/" + armor->name + "/runRight" + to_string(i));
+				armorRunTextures[8 + i] = getTexture("sets/" + armor->name + "/runBottom" + to_string(i));
+				armorRunTextures[12 + i] = getTexture("sets/" + armor->name + "/runLeft" + to_string(i));
+
+				armorAttackTextures[i] = getTexture("sets/" + armor->name + "/attackTop" + to_string(i));
+				armorAttackTextures[4 + i] = getTexture("sets/" + armor->name + "/attackRight" + to_string(i));
+				armorAttackTextures[8 + i] = getTexture("sets/" + armor->name + "/attackBottom" + to_string(i));
+				armorAttackTextures[12 + i] = getTexture("sets/" + armor->name + "/attackLeft" + to_string(i));
+
+			}
+		}
+
+		armorSprite = sf::Sprite();
+		armorSprite.setOrigin(32, 58);
+	}
+
+	void loadPants() {
+
+		for (int i = 0; i < 16; i++) {
+			pantsIdleTextures[i] = nullptr;
+			pantsRunTextures[i] = nullptr;
+			pantsAttackTextures[i] = nullptr;
+
+		}
+
+		if (pants != nullptr) {
+
+			for (int i = 0; i < 4; i++) {
+				pantsIdleTextures[i] = getTexture("sets/" + pants->name + "/idleTop" + to_string(i));
+				pantsIdleTextures[4 + i] = getTexture("sets/" + pants->name + "/idleRight" + to_string(i));
+				pantsIdleTextures[8 + i] = getTexture("sets/" + pants->name + "/idleBottom" + to_string(i));
+				pantsIdleTextures[12 + i] = getTexture("sets/" + pants->name + "/idleLeft" + to_string(i));
+
+				pantsRunTextures[i] = getTexture("sets/" + pants->name + "/runTop" + to_string(i));
+				pantsRunTextures[4 + i] = getTexture("sets/" + pants->name + "/runRight" + to_string(i));
+				pantsRunTextures[8 + i] = getTexture("sets/" + pants->name + "/runBottom" + to_string(i));
+				pantsRunTextures[12 + i] = getTexture("sets/" + pants->name + "/runLeft" + to_string(i));
+
+				pantsAttackTextures[i] = getTexture("sets/" + pants->name + "/attackTop" + to_string(i));
+				pantsAttackTextures[4 + i] = getTexture("sets/" + pants->name + "/attackRight" + to_string(i));
+				pantsAttackTextures[8 + i] = getTexture("sets/" + pants->name + "/attackBottom" + to_string(i));
+				pantsAttackTextures[12 + i] = getTexture("sets/" + pants->name + "/attackLeft" + to_string(i));
+
+			}
+		}
+
+		pantsSprite = sf::Sprite();
+		pantsSprite.setOrigin(32, 58);
+
 	}
 
 	void setActionRangeArea() {
@@ -240,9 +297,17 @@ public:
 			frame = cooldown / attackTime * 4.0f - 1.0f;
 			if (frame < 0)
 				frame = 0;
-			bodySprite.setTexture(bodyAttackTextures[direction * 4 + frame]);
-			helmetSprite.setTexture(helmetAttackTextures[direction * 4 + frame]);
-			armorSprite.setTexture(armorAttackTextures[direction * 4 + frame]);
+
+			bodySprite.setTexture(*bodyAttackTextures[direction * 4 + frame]->texture);
+			
+			if(helmet!=nullptr)
+				helmetSprite.setTexture(*helmetAttackTextures[direction * 4 + frame]->texture);
+			
+			if(armor!=nullptr)
+				armorSprite.setTexture(*armorAttackTextures[direction * 4 + frame]->texture);
+			
+			if(pants!=nullptr)
+				pantsSprite.setTexture(*pantsAttackTextures[direction * 4 + frame]->texture);
 		}		
 		else if (state == states::walk) {
 
@@ -254,16 +319,30 @@ public:
 			if (direction == 2) position.y += distance;
 			if (direction == 3) position.x -= distance;
 
-			bodySprite.setTexture(bodyRunTextures[direction * 4 + frame]);
-			helmetSprite.setTexture(helmetRunTextures[direction * 4 + frame]);
-			armorSprite.setTexture(armorRunTextures[direction * 4 + frame]);
+			bodySprite.setTexture(*bodyRunTextures[direction * 4 + frame]->texture);
+			
+			if(helmet!=nullptr)
+				helmetSprite.setTexture(*helmetRunTextures[direction * 4 + frame]->texture);
+			
+			if(armor!=nullptr)
+				armorSprite.setTexture(*armorRunTextures[direction * 4 + frame]->texture);
+			
+			if(pants!=nullptr)
+				pantsSprite.setTexture(*pantsRunTextures[direction * 4 + frame]->texture);
 		}
 		else if(state == states::idle) {
 
 			calculateCurrentFrame(dt);
-			bodySprite.setTexture(bodyIdleTextures[direction * 4 +frame]);
-			helmetSprite.setTexture(helmetIdleTextures[direction * 4 +frame]);
-			armorSprite.setTexture(armorIdleTextures[direction * 4 +frame]);
+			bodySprite.setTexture(*bodyIdleTextures[direction * 4 +frame]->texture);
+			
+			if(helmet!=nullptr)
+				helmetSprite.setTexture(*helmetIdleTextures[direction * 4 +frame]->texture);
+			
+			if(armor!=nullptr)
+				armorSprite.setTexture(*armorIdleTextures[direction * 4 +frame]->texture);
+			
+			if(pants!=nullptr)
+				pantsSprite.setTexture(*pantsIdleTextures[direction * 4 +frame]->texture);
 			
 		}
 
@@ -273,6 +352,7 @@ public:
 		bodySprite.setPosition(position);
 		helmetSprite.setPosition(position);
 		armorSprite.setPosition(position);
+		pantsSprite.setPosition(position);
 		actionRangeArea.setPosition(position);
 		
 	}
@@ -284,8 +364,10 @@ public:
 		}
 		
 		window->draw(bodySprite);		
-		window->draw(helmetSprite);		
+		window->draw(helmetSprite);
+		window->draw(pantsSprite);
 		window->draw(armorSprite);		
+		
 		
 	}
 };
@@ -295,9 +377,9 @@ Player* player = nullptr;
 void createPlayer() {
 	player = new Player();
 
-	player->position.x = 0;
-	player->position.y = 0;
-	
+	player->position.x = 682;
+	player->position.y = 226;
+
 	player->isVisible = true;
 
 	gameObjects.push_back(player);

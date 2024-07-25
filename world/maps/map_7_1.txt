@@ -33,8 +33,9 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // PATHS
-Path "paths/stonepath1" 1808 336
-Path "paths/stonepath1" 1856 336
-Path "paths/stonepath1" 1920 320
-Path "paths/stonepath1" 1984 320
+Path "paths/stonepath2" 2000 336
+Path "paths/stonepath2" 1952 368
+Path "paths/stonepath2" 1920 384
+Path "paths/stonepath2" 1856 400
+Path "paths/stonepath2" 1824 416
 

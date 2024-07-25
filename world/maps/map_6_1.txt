@@ -33,13 +33,12 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // NATURES
-Nature "natures/tree2" 1616 256
+Nature "natures/tree2" 1568 256
+Nature "natures/tree1" 1712 320
 
 // PATHS
-Path "paths/stonepath1" 1552 384
-Path "paths/stonepath1" 1584 384
-Path "paths/stonepath1" 1632 384
-Path "paths/stonepath1" 1680 368
-Path "paths/stonepath1" 1760 352
-Path "paths/stonepath1" 1728 352
+Path "paths/stonepath2" 1776 432
+Path "paths/stonepath2" 1696 448
+Path "paths/stonepath2" 1632 464
+Path "paths/stonepath2" 1584 480
 

@@ -77,9 +77,13 @@ void updateInventoryPanel() {
 
                 itemsInventorySprites.emplace_back();
                 string location = (*currentInventory)->items[i]->name;
-                itemsInventorySprites[i].setOrigin(32, 32);
-                itemsInventorySprites[i].setPosition(x, y);
+                float twidth = getTexture(location)->texture->getSize().x;
+                float theight = getTexture(location)->texture->getSize().y;
                 itemsInventorySprites[i].setTexture(*getTexture(location)->texture);
+                itemsInventorySprites[i].setOrigin(twidth/2, theight/2);
+                itemsInventorySprites[i].setPosition(x, y);
+                itemsInventorySprites[i].setScale(64.0f / twidth, 64.0f / theight);
+
 
                 inventoryCounts.emplace_back(to_string((*currentInventory)->counts[i]), basicFont, 16);
                 inventoryCounts[i].setPosition(x, y);
@@ -121,10 +125,40 @@ void useItem() {
 
     // TO-DO
     Item* item = (*currentInventory)->items[bagCursor];
-
+    
     if (item->type == itemType::herb || item->type == itemType::potion || item->type == itemType::food) {
         player->heal(item->attributes[attribute::HP]);
         (*currentInventory)->removeItem((*currentInventory)->items[bagCursor]);
+    }
+
+    if (item->type == itemType::helmet) {
+
+        if (player->helmet != nullptr)
+            player->bag->addItem(player->helmet);
+
+        player->helmet = item;
+        player->bag->removeItem(item);
+        player->loadHelmet();
+    }
+
+    if (item->type == itemType::armor) {
+
+        if (player->armor != nullptr)
+            player->bag->addItem(player->armor);
+
+        player->armor = item;
+        player->bag->removeItem(item);
+        player->loadArmor();
+    }
+
+    if (item->type == itemType::pants) {
+
+        if (player->pants != nullptr)
+            player->bag->addItem(player->pants);
+
+        player->pants = item;
+        player->bag->removeItem(item);
+        player->loadPants();
     }
 
     

@@ -47,6 +47,7 @@ void loadTextures() {
 	loadTexture("GUI/wideArrowDown1.png", 80, 20);
 	loadTexture("GUI/wideArrowDown2.png", 80, 20);
 	loadTexture("GUI/hand.png", 8, 8);
+	loadTexture("GUI/talk.png", 8, 8);
 
 	// TILES //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -100,6 +101,18 @@ void loadTextures() {
 	loadTexture("items/iron club.png", 32, 32);
 	loadTexture("items/axe.png", 32, 32);
 	loadTexture("items/stone hammer.png", 32, 32);
+
+	// HELMET
+	loadTexture("items/basic helmet.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/skin helmet.png", 32, 32);	// TO-DO to delete
+
+	// ARMORS
+	loadTexture("items/basic armor.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/skin jacket.png", 32, 32);	// TO-DO to delete
+
+	// PANTS
+	loadTexture("items/basic pants.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/skin pants.png", 32, 32);	// TO-DO to delete
 
 	// HERBS
 	loadTexture("items/herb.png", 30, 50);
@@ -233,6 +246,59 @@ void loadTextures() {
 	loadTexture("walls/mud_wall_top_8.png", 16, 16);
 	loadTexture("walls/mud_wall_top_9.png", 16, 16);
 	
+
+	// BODY SET
+	for (int i = 0; i < 4; i++) {
+
+		loadTexture("sets/hero/idleTop" + to_string(i) + ".png", 32, 58);
+		loadTexture("sets/hero/idleRight" + to_string(i) + ".png", 32, 58);
+		loadTexture("sets/hero/idleBottom" + to_string(i) + ".png", 32, 58);
+		loadTexture("sets/hero/idleLeft" + to_string(i) + ".png", 32, 58);
+
+		loadTexture("sets/hero/runTop" + to_string(i) + ".png", 32, 58);
+		loadTexture("sets/hero/runRight" + to_string(i) + ".png", 32, 58);
+		loadTexture("sets/hero/runBottom" + to_string(i) + ".png", 32, 58);
+		loadTexture("sets/hero/runLeft" + to_string(i) + ".png", 32, 58);
+
+		loadTexture("sets/hero/attackTop" + to_string(i) + ".png", 32, 58);
+		loadTexture("sets/hero/attackRight" + to_string(i) + ".png", 32, 58);
+		loadTexture("sets/hero/attackBottom" + to_string(i) + ".png", 32, 58);
+		loadTexture("sets/hero/attackLeft" + to_string(i) + ".png", 32, 58);
+
+	}
+
+	// SETS
+
+	std::vector < string > sets;
+	sets.push_back("basic armor");
+	sets.push_back("basic pants");
+	sets.push_back("basic helmet");
+	sets.push_back("skin jacket");
+	sets.push_back("skin pants");
+	sets.push_back("skin helmet");
+
+
+	for (auto& set : sets) {
+
+		for (int i = 0; i < 4; i++) {
+			
+			loadTexture("sets/items/" + set + "/idleTop" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/items/" + set + "/idleRight" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/items/" + set + "/idleBottom" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/items/" + set + "/idleLeft" + to_string(i) + ".png", 32, 58);
+
+			loadTexture("sets/items/" + set + "/runTop" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/items/" + set + "/runRight" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/items/" + set + "/runBottom" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/items/" + set + "/runLeft" + to_string(i) + ".png", 32, 58);
+
+			loadTexture("sets/items/" + set + "/attackTop" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/items/" + set + "/attackRight" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/items/" + set + "/attackBottom" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/items/" + set + "/attackLeft" + to_string(i) + ".png", 32, 58);
+
+		}
+	}
 }
 
 Texture* getTexture(string name) {

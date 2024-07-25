@@ -33,7 +33,7 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // BUILDINGS
-Building "buildings/building_000" 1024 256
+Building "buildings/building_000" 1280 256
 
 // CHARACTERS
 Character "characters/jack" 1879 183

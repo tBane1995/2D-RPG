@@ -12,8 +12,7 @@ sf::Sprite lifeBarBackgroundSprite;
 sf::Texture lifeBarTexture;         // lifebar
 sf::Sprite lifeBarSprite;
 
-enum class gameStates { start, game, inventory, dialogue };
-gameStates gameState;
+
 
 bool defeatAllBeasts = false;
 bool collectAllItems = false;
@@ -34,6 +33,7 @@ void game() {
     window->setIcon(64, 64, ico.getPixelsPtr());
 
     loadDialogues();
+    loadQuests();
 
     //createView();
     cam = new Camera();
@@ -71,10 +71,7 @@ void game() {
         window->display();
     }
 
-
-    gameState = gameStates::dialogue;
-    page = 0;
-    currentDialogue = getDialogue(0);
+    setDialogue(0);
 
     /*
     sf::Music music;
@@ -91,11 +88,10 @@ void game() {
     world->load();
 
     createPlayer();
-    player->setPosition(480, 220);
     cam->setPosition(player->position);
     cam->update();
 
-    //playerLoadTestBag();    // TO-DO - TEST
+    playerLoadTestBag();    // TO-DO - TEST
     createInventoryPanel();
 
     while (window->isOpen()) {
@@ -335,7 +331,9 @@ void game() {
         dt = currentTime.asSeconds() - prevTime.asSeconds();
 
         world->mapVisiblings();
-
+        
+        checkQuests();
+        
         for (auto& go : gameObjects)
             if(visiblings(go))
                 go->update(dt);
@@ -467,10 +465,8 @@ bool talkWithCharacter() {
             if (intersectionTwoEllipses(x1, y1, rx1, ry1, x2, y2, rx2, ry2)) {
 
                 // talking 
-                gameState = gameStates::dialogue;
-                dialogueState = dialogueStates::dialogue;
-                currentDialogue = character->dialogue;
-                page = 0;
+                // TO-DO
+                setDialogue(character->dialogue);
                 return true;
             }
         }
@@ -596,6 +592,7 @@ void deleteCollectedItems() {
 
 void playerLoadTestBag() {  // TO-DO
 
+    /*
     // weapons
     player->bag->addItem("items/wooden club");
     player->bag->addItem("items/knife");
@@ -628,6 +625,7 @@ void playerLoadTestBag() {  // TO-DO
     player->bag->addItem("items/bone");
     player->bag->addItem("items/wolf skin");
     player->bag->addItem("items/tooth");
+    */
 }
 
 #endif

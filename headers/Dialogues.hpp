@@ -164,7 +164,6 @@ void drawChooseBox(sf::RenderWindow* window) {
 
 void loadDialogue(int dialogID) {
 
-	wcout << L"WCZYTUJE DIALOG: " << dialogID;
 	string textID = to_string(dialogID);
 
 	while (textID.size() < 3)
@@ -209,6 +208,22 @@ void loadDialogue(int dialogID) {
 	file.close();
 }
 
+void setDialogue(int id) {
+
+	gameState = gameStates::dialogue;
+	dialogueState = dialogueStates::dialogue;
+	currentDialogue = getDialogue(id);
+	page = 0;
+}
+
+void setDialogue(Dialogue* dial) {
+
+	gameState = gameStates::dialogue;
+	dialogueState = dialogueStates::dialogue;
+	currentDialogue = dial;
+	page = 0;
+}
+
 void loadDialogues() {
 	dialogues.clear();
 
@@ -230,6 +245,11 @@ void loadDialogues() {
 	loadDialogue(9);
 	loadDialogue(10);
 	loadDialogue(11);
+	loadDialogue(12);
+
+	loadDialogue(13);
+	loadDialogue(14);
+	loadDialogue(15);
 
 }
 #endif

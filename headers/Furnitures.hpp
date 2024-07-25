@@ -40,8 +40,19 @@ public:
 		// TO-DO (test)
 		if (name == "furnitures/chest1") {
 			inventory = new Inventory();
-			inventory->addItem("items/roasted meat",3);
 			inventory->addItem("items/wooden club");
+			inventory->addItem("items/basic armor");   // TO-DO to delete
+			inventory->addItem("items/basic pants");   // TO-DO to delete
+			inventory->addItem("items/basic helmet");   // TO-DO to delete
+			inventory->addItem("items/skin jacket");   // TO-DO to delete
+			inventory->addItem("items/skin pants");   // TO-DO to delete
+			inventory->addItem("items/skin helmet");   // TO-DO to delete
+			
+		}
+
+		if (name == "furnitures/table1") {
+			inventory = new Inventory();
+			inventory->addItem("items/roasted meat", 3);
 		}
 		//
 
@@ -64,27 +75,41 @@ public:
 
 		sprite.setPosition(position);
 		takeItSprite.setPosition(position.x, position.y - 50);
+		showHand = false;
 
-		// SHOW HAND
-		float x1, y1, rx1, ry1;
-		float x2, y2, rx2, ry2;
+		if (player != nullptr) {
 
-		x1 = player->position.x;
-		y1 = player->position.y;
-		rx1 = (player->collider->width / 2.0f + player->actionRange);
-		ry1 = (player->collider->height + player->actionRange) / 2.0f;
+			// SHOW HAND
+			float x1, y1, rx1, ry1;
+			float x2, y2, rx2, ry2;
 
-		x2 = position.x;
-		y2 = position.y;
-		rx2 = collider->width;
-		ry2 = collider->height;
-		
-		if (inventory != nullptr && intersectionRectangleWithElipse(x2, y2, rx2, ry2, x1, y1, rx1, ry1)) {
-			showHand = true;
+			x1 = player->position.x;
+			y1 = player->position.y;
+			rx1 = (player->collider->width / 2.0f + player->actionRange);
+			ry1 = (player->collider->height + player->actionRange) / 2.0f;
+
+			x2 = position.x;
+			y2 = position.y;
+			rx2 = collider->width;
+			ry2 = collider->height;
+
+			if (inventory != nullptr) {
+				if (intersectionRectangleWithElipse(x2, y2, rx2, ry2, x1, y1, rx1, ry1)) {
+					showHand = true;
+				}
+			}
 		}
-		else {
-			showHand = false;
+
+		// TO-DO
+		if (player == nullptr) {
+			if (inventory != nullptr) {
+				if (pointInRectangle(worldMousePosition.x, worldMousePosition.y, position.x, position.y, collider->width, collider->height)) {
+					showHand = true;
+				}
+			}
 		}
+		//
+
 	}
 
 	void draw(sf::RenderWindow* window) {

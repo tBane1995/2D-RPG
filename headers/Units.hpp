@@ -7,10 +7,11 @@ float dist;
 class Unit : public GameObject {
 public:
 	
-	Texture* attackTextures[16];		// TO-DO - must be a Texture*
+	Texture* attackTextures[16];
 	Texture* idleTextures[16];			
-	Texture* walkTextures[16];		// TO-DO
+	Texture* walkTextures[16];
 	sf::Sprite sprite;
+
 	sf::CircleShape viewRangeArea;		// is a range of see of units // in this range player can be a select as target
 	sf::CircleShape actionRangeArea;
 	sf::RectangleShape lifeBarBackground;

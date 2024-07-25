@@ -35,5 +35,4 @@
 // NATURES
 Nature "natures/tree2" 1808 720
 Nature "natures/tree2" 1952 544
-Nature "natures/tree1" 1792 544
 
