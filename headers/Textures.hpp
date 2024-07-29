@@ -42,6 +42,7 @@ void loadTextures() {
 
 	loadTexture("GUI/slotTexture1.png", 40, 40);
 	loadTexture("GUI/slotTexture2.png", 40, 40);
+	loadTexture("GUI/slotSelectorTexture1.png", 40, 40);
 	loadTexture("GUI/wideArrowUp1.png", 80, 20);
 	loadTexture("GUI/wideArrowUp2.png", 80, 20);
 	loadTexture("GUI/wideArrowDown1.png", 80, 20);
@@ -105,17 +106,21 @@ void loadTextures() {
 	// HELMET
 	loadTexture("items/basic helmet.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/skin helmet.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/wool helmet.png", 32, 32);	// TO-DO to delete
 
 	// ARMORS
 	loadTexture("items/basic armor.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/skin jacket.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/torn shirt.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/wool shirt.png", 32, 32);	// TO-DO to delete
 
 	// PANTS
 	loadTexture("items/basic pants.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/skin pants.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/wool pants.png", 32, 32);	// TO-DO to delete
 
 	// HERBS
-	loadTexture("items/herb.png", 30, 50);
+	loadTexture("items/mana plant.png", 30, 50);
 	loadTexture("items/health herb.png", 32, 34);
 	loadTexture("items/health root.png", 31, 46);	
 	loadTexture("items/health plant.png", 30, 44);
@@ -161,10 +166,10 @@ void loadTextures() {
 			loadTexture(c + "/attackBottom" + to_string(i) + ".png", 32, 58);
 			loadTexture(c + "/attackLeft" + to_string(i) + ".png", 32, 58);
 
-			loadTexture(c + "/walkTop" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/walkRight" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/walkBottom" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/walkLeft" + to_string(i) + ".png", 32, 58);
+			loadTexture(c + "/runTop" + to_string(i) + ".png", 32, 58);
+			loadTexture(c + "/runRight" + to_string(i) + ".png", 32, 58);
+			loadTexture(c + "/runBottom" + to_string(i) + ".png", 32, 58);
+			loadTexture(c + "/runLeft" + to_string(i) + ".png", 32, 58);
 
 		}
 	}
@@ -190,10 +195,10 @@ void loadTextures() {
 			loadTexture("monsters/" + m + "/attackBottom" + to_string(i) + ".png", 63, 87);
 			loadTexture("monsters/" + m + "/attackLeft" + to_string(i) + ".png", 63, 87);
 
-			loadTexture("monsters/" + m + "/walkTop" + to_string(i) + ".png", 63, 87);
-			loadTexture("monsters/" + m + "/walkRight" + to_string(i) + ".png", 63, 87);
-			loadTexture("monsters/" + m + "/walkBottom" + to_string(i) + ".png", 63, 87);
-			loadTexture("monsters/" + m + "/walkLeft" + to_string(i) + ".png", 63, 87);
+			loadTexture("monsters/" + m + "/runTop" + to_string(i) + ".png", 63, 87);
+			loadTexture("monsters/" + m + "/runRight" + to_string(i) + ".png", 63, 87);
+			loadTexture("monsters/" + m + "/runBottom" + to_string(i) + ".png", 63, 87);
+			loadTexture("monsters/" + m + "/runLeft" + to_string(i) + ".png", 63, 87);
 
 		}
 	}
@@ -246,39 +251,48 @@ void loadTextures() {
 	loadTexture("walls/mud_wall_top_8.png", 16, 16);
 	loadTexture("walls/mud_wall_top_9.png", 16, 16);
 	
+	// BODY SETS
+	std::vector < string > bodySets;
+	bodySets.clear();
+	bodySets.push_back("hero");
+	
+	for (auto& set : bodySets) {
+		for (int i = 0; i < 4; i++) {
 
-	// BODY SET
-	for (int i = 0; i < 4; i++) {
+			loadTexture("sets/body/" + set + "/idleTop" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/idleRight" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/idleBottom" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/idleLeft" + to_string(i) + ".png", 32, 58);
 
-		loadTexture("sets/hero/idleTop" + to_string(i) + ".png", 32, 58);
-		loadTexture("sets/hero/idleRight" + to_string(i) + ".png", 32, 58);
-		loadTexture("sets/hero/idleBottom" + to_string(i) + ".png", 32, 58);
-		loadTexture("sets/hero/idleLeft" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/runTop" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/runRight" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/runBottom" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/runLeft" + to_string(i) + ".png", 32, 58);
 
-		loadTexture("sets/hero/runTop" + to_string(i) + ".png", 32, 58);
-		loadTexture("sets/hero/runRight" + to_string(i) + ".png", 32, 58);
-		loadTexture("sets/hero/runBottom" + to_string(i) + ".png", 32, 58);
-		loadTexture("sets/hero/runLeft" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/attackTop" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/attackRight" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/attackBottom" + to_string(i) + ".png", 32, 58);
+			loadTexture("sets/body/" + set + "/attackLeft" + to_string(i) + ".png", 32, 58);
 
-		loadTexture("sets/hero/attackTop" + to_string(i) + ".png", 32, 58);
-		loadTexture("sets/hero/attackRight" + to_string(i) + ".png", 32, 58);
-		loadTexture("sets/hero/attackBottom" + to_string(i) + ".png", 32, 58);
-		loadTexture("sets/hero/attackLeft" + to_string(i) + ".png", 32, 58);
-
+		}
 	}
+	
 
-	// SETS
+	// ITEMS SETS
+	std::vector < string > itemSets;
+	itemSets.clear();
+	itemSets.push_back("basic armor");
+	itemSets.push_back("basic pants");
+	itemSets.push_back("basic helmet");
+	itemSets.push_back("skin jacket");
+	itemSets.push_back("skin pants");
+	itemSets.push_back("skin helmet");
+	itemSets.push_back("torn shirt");
+	itemSets.push_back("wool shirt");
+	itemSets.push_back("wool helmet");
+	itemSets.push_back("wool pants");
 
-	std::vector < string > sets;
-	sets.push_back("basic armor");
-	sets.push_back("basic pants");
-	sets.push_back("basic helmet");
-	sets.push_back("skin jacket");
-	sets.push_back("skin pants");
-	sets.push_back("skin helmet");
-
-
-	for (auto& set : sets) {
+	for (auto& set : itemSets) {
 
 		for (int i = 0; i < 4; i++) {
 			
@@ -309,7 +323,7 @@ Texture* getTexture(string name) {
 		}
 	}
 
-	cout << "error - getTexture - texture: \"" << name << "\" not exists\n";
+	std::cout << "error - get Texture - Texture: \"" << name << "\" not exists\n";
 	return nullptr;
 }
 

@@ -30,10 +30,37 @@ void loadPrefabs() {
     prefabs.push_back(new Nature("natures/rocks3", 90, 45));
 
     // MONSTERS
-    // name, radius, width, height
-    prefabs.push_back(new Monster("monsters/wilczur", 70, 35));
-    prefabs.push_back(new Monster("monsters/goblin", 32, 16));
-    prefabs.push_back(new Monster("monsters/dziobak", 72, 36));
+    // name, width, height
+    
+    Monster* wilczur = new Monster("monsters/wilczur", 70, 35);
+    wilczur->HP = 70;
+    wilczur->HP_max = 70;
+    wilczur->MP = 10;
+    wilczur->MP_max = 10;
+    wilczur->STRENGTH = 7;
+    wilczur->DEXTERITY = 5;
+    wilczur->INTELLIGENCE = 2;
+    prefabs.push_back(wilczur);
+
+    Monster* goblin = new Monster("monsters/goblin", 32, 16);
+    goblin->HP = 50;
+    goblin->HP_max = 50;
+    goblin->MP = 10;
+    goblin->MP_max = 10;
+    goblin->STRENGTH = 4;
+    goblin->DEXTERITY = 5;
+    goblin->INTELLIGENCE = 3;
+    prefabs.push_back(goblin);
+
+    Monster* dziobak = new Monster("monsters/dziobak", 72, 36);
+    dziobak->HP = 50;
+    dziobak->HP_max = 50;
+    dziobak->MP = 10;
+    dziobak->MP_max = 10;
+    dziobak->STRENGTH = 3;
+    dziobak->DEXTERITY = 3;
+    dziobak->INTELLIGENCE = 1;
+    prefabs.push_back(dziobak);
 
     // FURNITURES
     prefabs.push_back(new Furniture("furnitures/table1", 60, 26));
@@ -92,10 +119,10 @@ void loadPrefabs() {
 
     // CHARACTERS
     // name, radius, width, height
-    prefabs.push_back(new Character("characters/jack"));
-    prefabs.push_back(new Character("characters/john"));
-    prefabs.push_back(new Character("characters/peter"));
-    prefabs.push_back(new Character("characters/pit"));
+    prefabs.push_back(new Character("characters/jack", "sets/body/hero"));
+    prefabs.push_back(new Character("characters/john", "sets/body/hero"));
+    prefabs.push_back(new Character("characters/peter", "sets/body/hero"));
+    prefabs.push_back(new Character("characters/pit", "sets/body/hero"));
 
     for (auto& i : items) {
         prefabs.push_back(new ItemOnMap(i, 0, 0));

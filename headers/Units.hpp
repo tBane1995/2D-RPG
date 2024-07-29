@@ -9,7 +9,7 @@ public:
 	
 	Texture* attackTextures[16];
 	Texture* idleTextures[16];			
-	Texture* walkTextures[16];
+	Texture* runTextures[16];
 	sf::Sprite sprite;
 
 	sf::CircleShape viewRangeArea;		// is a range of see of units // in this range player can be a select as target
@@ -25,7 +25,11 @@ public:
 	float cooldown;
 	float attackTime;
 
-	float HP, HP_max;
+	int HP, HP_max;
+	int MP, MP_max;
+	int STRENGTH;
+	int DEXTERITY;
+	int INTELLIGENCE;
 
 	states state;
 
@@ -34,13 +38,12 @@ public:
 
 	Unit(string name, float width, float height) : GameObject(name, 0, 0, width, height, true, false) {
 
-		loadTextures();	// TO-DO loadTextures(string texture);
 		frame = 0;
 		countdown = 0.0f;
 		direction = 2;
 
 		sprite = sf::Sprite();
-		sprite.setOrigin(idleTextures[0]->cx, idleTextures[0]->cy);
+		
 
 		viewRange = 200.0f;
 		actionRange = 35.0f;
@@ -48,9 +51,16 @@ public:
 		setViewRangeArea();
 		setActionRangeArea();
 
+		// STATS
 		HP = 50;
 		HP_max = 50;
+		MP = 10;
+		MP_max = 10;
+		STRENGTH = 5;
+		DEXTERITY = 5;
+		INTELLIGENCE = 5;
 
+		// STATE
 		state = states::idle;
 
 		cooldown = 0.0f;
@@ -62,23 +72,26 @@ public:
 		
 		type = gameObjectType::Character;
 
-		loadTextures();	// TO-DO - must be copy
 		frame = 0;
 		countdown = 0.0f;
 		direction = 2;
-		
-		sprite = sf::Sprite();
-		sprite.setOrigin(idleTextures[0]->cx, idleTextures[0]->cy);
-
+				
 		viewRange = 200.0f;
 		actionRange = 25.0f;
 
 		setViewRangeArea();
 		setActionRangeArea();
 
-		HP = 50;
-		HP_max = 50;
-
+		// STATS
+		HP = dynamic_cast < Unit* >(object)->HP;
+		HP_max = dynamic_cast < Unit* >(object)->HP_max;
+		MP = dynamic_cast <Unit*>(object)->MP;
+		MP_max = dynamic_cast <Unit*>(object)->MP_max;
+		STRENGTH = dynamic_cast <Unit*>(object)->STRENGTH;
+		DEXTERITY = dynamic_cast <Unit*>(object)->DEXTERITY;
+		INTELLIGENCE = dynamic_cast <Unit*>(object)->INTELLIGENCE;
+		
+		// STATE
 		state = states::idle;
 
 		cooldown = 0.0f;
@@ -87,27 +100,7 @@ public:
 
 	~Unit() { }
 
-	void loadTextures() {
-
-		for (int i = 0; i < 4; i++) {
-
-			attackTextures[i] = getTexture(name + "/attackTop" + to_string(i));
-			attackTextures[4 + i] = getTexture(name + "/attackRight" + to_string(i));
-			attackTextures[8 + i] = getTexture(name + "/attackBottom" + to_string(i));
-			attackTextures[12 + i] = getTexture(name + "/attackLeft" + to_string(i));
-
-			idleTextures[i] = getTexture(name + "/idleTop" + to_string(i));
-			idleTextures[4+i] = getTexture(name + "/idleRight" + to_string(i));
-			idleTextures[8+i] = getTexture(name + "/idleBottom" + to_string(i));
-			idleTextures[12+i] = getTexture(name + "/idleLeft" + to_string(i));
-
-			walkTextures[i] = getTexture(name + "/walkTop" + to_string(i));
-			walkTextures[4 + i] = getTexture(name + "/walkRight" + to_string(i));
-			walkTextures[8 + i] = getTexture(name + "/walkBottom" + to_string(i));
-			walkTextures[12 + i] = getTexture(name + "/walkLeft" + to_string(i));
-
-		}
-	}
+	
 
 	void setViewRangeArea() {
 		viewRangeArea = sf::CircleShape(viewRange + collider->width/2.0f);
@@ -243,18 +236,19 @@ public:
 		sprite.setTexture(*idleTextures[direction * 4 + frame]->texture);
 	}
 
-	void walk(float dt) {
+	void run(float dt) {
 		
 		goToTarget(dt);
 
 		calculateCurrentFrame(dt);
-		sprite.setTexture(*walkTextures[direction * 4 + frame]->texture);
+		sprite.setTexture(*runTextures[direction * 4 + frame]->texture);
 	}
 
 	void attack(float dt) {
 
 		if (cooldown <= 0.0f) {
-			player->takeDamage(10);
+			//player->takeDamage(10);
+			player->takeDamage(STRENGTH * 3 + DEXTERITY);
 			cooldown = attackTime;
 			frame = 0;
 		}else
@@ -286,7 +280,7 @@ public:
 			idle(dt);
 		}
 		else if (state == states::walk) {
-			walk(dt);
+			run(dt);
 		}
 		else if (state == states::attack) {
 			attack(dt);

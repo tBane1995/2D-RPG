@@ -9,6 +9,7 @@ public:
 
 	// TO-DO sf::Texture to Texture*
 	// BODY
+	string body;
 	Texture* bodyIdleTextures[16];	// idle for top, right, bottom, left
 	Texture* bodyRunTextures[16];	// run for top, right, bottom, left
 	Texture* bodyAttackTextures[16];	// fight for top, right, bottom, left
@@ -41,12 +42,18 @@ public:
 	float actionRange;
 	float viewRange;
 	sf::CircleShape actionRangeArea;
-	float HP, HP_max;
+	
 	float countdown;	 // timer to determine current frame
 	float attackTime;
 	float cooldown;
 
 	Inventory* bag;
+
+	float HP, HP_max;
+	float MP, MP_max;
+	int STRENGTH;
+	int DEXTERITY;
+	int INTELLIGENCE;
 
 	Player() : GameObject("hero", 0, 0, 24, 12, true, false) {
 		type = gameObjectType::Player;
@@ -58,11 +65,24 @@ public:
 		actionRange = 25.0f;
 		cooldown = 0.0f;
 		attackTime = 1.0f;
-		HP_max = 100;
-		HP = 40;
+
+		position.x = 682;
+		position.y = 226;
+
+		isVisible = true;
+
+		HP = 10;
+		HP_max = 50;
+		MP = 5;
+		MP_max = 5;
+		STRENGTH = 5;
+		DEXTERITY = 5;
+		INTELLIGENCE = 5;
+
+		body = "sets/body/hero";
 		
 		helmet = nullptr;
-		armor = nullptr;
+		armor = getItem("items/torn shirt");
 		pants = nullptr;
 
 		loadBody();
@@ -70,9 +90,14 @@ public:
 		loadArmor();
 		loadPants();
 
+		bag = new Inventory();
+		bag->addItem("items/torn shirt");
+
+		
+
 		setActionRangeArea();
 
-		bag = new Inventory();
+		
 		
 		toDelete = false;
 		isVisible = false;
@@ -110,20 +135,20 @@ public:
 
 		for (int i = 0; i < 4; i++) {
 
-			bodyIdleTextures[i] = getTexture("sets/hero/idleTop" + to_string(i));
-			bodyIdleTextures[4 + i] = getTexture("sets/hero/idleRight" + to_string(i));
-			bodyIdleTextures[8 + i] = getTexture("sets/hero/idleBottom" + to_string(i));
-			bodyIdleTextures[12 + i] = getTexture("sets/hero/idleLeft" + to_string(i));
+			bodyIdleTextures[i] = getTexture(body + "/idleTop" + to_string(i));
+			bodyIdleTextures[4 + i] = getTexture(body + "/idleRight" + to_string(i));
+			bodyIdleTextures[8 + i] = getTexture(body + "/idleBottom" + to_string(i));
+			bodyIdleTextures[12 + i] = getTexture(body + "/idleLeft" + to_string(i));
 
-			bodyRunTextures[i] = getTexture("sets/hero/runTop" + to_string(i));
-			bodyRunTextures[4 + i] = getTexture("sets/hero/runRight" + to_string(i));
-			bodyRunTextures[8 + i] = getTexture("sets/hero/runBottom" + to_string(i));
-			bodyRunTextures[12 + i] = getTexture("sets/hero/runLeft" + to_string(i));
+			bodyRunTextures[i] = getTexture(body + "/runTop" + to_string(i));
+			bodyRunTextures[4 + i] = getTexture(body + "/runRight" + to_string(i));
+			bodyRunTextures[8 + i] = getTexture(body + "/runBottom" + to_string(i));
+			bodyRunTextures[12 + i] = getTexture(body + "/runLeft" + to_string(i));
 
-			bodyAttackTextures[i] = getTexture("sets/hero/attackTop" + to_string(i));
-			bodyAttackTextures[4 + i] = getTexture("sets/hero/attackRight" + to_string(i));
-			bodyAttackTextures[8 + i] = getTexture("sets/hero/attackBottom" + to_string(i));
-			bodyAttackTextures[12 + i] = getTexture("sets/hero/attackLeft" + to_string(i));
+			bodyAttackTextures[i] = getTexture(body + "/attackTop" + to_string(i));
+			bodyAttackTextures[4 + i] = getTexture(body + "/attackRight" + to_string(i));
+			bodyAttackTextures[8 + i] = getTexture(body + "/attackBottom" + to_string(i));
+			bodyAttackTextures[12 + i] = getTexture(body + "/attackLeft" + to_string(i));
 
 		}
 
@@ -260,13 +285,30 @@ public:
 	}
 
 	void takeDamage(float damage) {
-		HP -= damage;
-		if (HP < 0)
-			HP = 0;
+
+		int defend = 0;
+
+		if (armor != nullptr)
+			defend += armor->attributes[attribute::DEFEND];
+
+		if (helmet != nullptr)
+			defend += helmet->attributes[attribute::DEFEND];
+
+		if (pants != nullptr)
+			defend += pants->attributes[attribute::DEFEND];
+
+		int dam = damage - defend;
+
+		if (dam > 0) {
+			HP = HP - dam;
+
+			if (HP < 0)
+				HP = 0;
+		}
 	}
 	
 	float getDamage() {
-		return 10;
+		return STRENGTH * 3 + DEXTERITY;
 	}
 
 	void heal(float HP) {
@@ -376,12 +418,6 @@ Player* player = nullptr;
 
 void createPlayer() {
 	player = new Player();
-
-	player->position.x = 682;
-	player->position.y = 226;
-
-	player->isVisible = true;
-
 	gameObjects.push_back(player);
 }
 #endif

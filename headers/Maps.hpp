@@ -405,8 +405,24 @@ public:
 
                 Character* character = new Character(getPrefab(objectName), x, y);
                 _characters.push_back(character);
-                if (character->name == "characters/jack")   // TO-DO
+                
+                if (character->name == "characters/jack") {
+                    // TO-DO
                     character->dialogue = getDialogue(1);
+                    character->armor = getItem("items/wool shirt");
+                    character->pants = getItem("items/wool pants");
+                    character->helmet = getItem("items/wool helmet");
+                    character->loadTextures();
+                }
+
+                if (character->name == "characters/pit") {
+                    // TO-DO
+                    character->dialogue = getDialogue(5);
+                    character->armor = getItem("items/wool shirt");
+                    character->pants = getItem("items/wool pants");
+                    character->helmet = getItem("items/wool helmet");
+                    character->loadTextures();
+                }
                 //cout << "Character: " << objectName << "\n";
             }
 
@@ -756,6 +772,7 @@ public:
             map->isVisible = intersectionTwoRectangles(cam->position.x, cam->position.y, width, height, map_position.x, map_position.y, 16 * tileSide, 16 * tileSide);
 
         }
+
 
     }
 

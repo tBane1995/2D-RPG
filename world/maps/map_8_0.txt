@@ -34,4 +34,5 @@
 
 // NATURES
 Nature "natures/tree1" 2128 160
+Nature "natures/tree1" 2272 48
 

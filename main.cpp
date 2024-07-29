@@ -43,6 +43,7 @@
 #include "headers/Monsters.hpp"
 #include "headers/Natures.hpp"
 #include "headers/InventoryPanel.hpp"
+#include "headers/TradePanel.hpp"
 #include "headers/Furnitures.hpp"
 #include "headers/Walls.hpp"
 #include "headers/Dialogues.hpp"
@@ -60,13 +61,14 @@
 void editPixels() {
 
     sf::Image i;
-    i.loadFromFile("assets/sets/basic helmet/attackBottom0.png");
+    i.loadFromFile("assets/sets/items/basic helmet/attackBottom0.png");
 
-    sf::Color color = sf::Color(127,127,127);
-    //sf::Color newColor = i.getPixel(0, 0);
-    sf::Color newColor = sf::Color(150, 94, 63);
+    //sf::Color color = sf::Color(127,127,127);
+    sf::Color color = sf::Color(255,255,255);
+    sf::Color newColor = i.getPixel(0, 0);
+    //sf::Color newColor = sf::Color(150, 94, 63);
 
-    string folder_path = "assets/sets/items/skin helmet";
+    string folder_path = "assets/sets/items/torn shirt";
 
     std::vector < std::string > png_files;
 
@@ -103,7 +105,7 @@ int main()
 
 	window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
-    //editPixels();
+    editPixels();
 	game();
 	mapEditor();
 	    

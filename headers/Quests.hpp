@@ -1,7 +1,7 @@
 ﻿#ifndef Quests_hpp
 #define Quests_hpp
 
-enum class questCondition { currentHP, dialogue, haveArmor, haveHelmet, havePants, position_x, position_y };
+enum class questCondition { currentHP, showDialogue, haveArmor, haveHelmet, havePants, position_x, position_y };
 enum class questState { unstarted, actual, ended };
 
 class Step {
@@ -21,7 +21,7 @@ public:
 				return true;
 		}
 
-		if (condition == questCondition::dialogue) {
+		if (condition == questCondition::showDialogue) {
 			setDialogue(atoi(value.c_str()));
 			return true;
 		}
@@ -123,15 +123,15 @@ void loadQuests() {
 	quests.clear();
 
 	Quest* quest1 = new Quest(0, "Zjedz coś, ubierz się a potem pójdź w wyznaczone miejsce");
-	quest1->addStep(questCondition::currentHP, "80");
-	quest1->addStep(questCondition::dialogue, "13");
+	quest1->addStep(questCondition::currentHP, "40");
+	quest1->addStep(questCondition::showDialogue, "13");
 	quest1->addStep(questCondition::haveArmor, "true");
 	quest1->addStep(questCondition::haveHelmet, "true");
 	quest1->addStep(questCondition::havePants, "true");
-	quest1->addStep(questCondition::dialogue, "14");
+	quest1->addStep(questCondition::showDialogue, "14");
 	quest1->addStep(questCondition::position_x, "2750");
 	quest1->addStep(questCondition::position_y, "340");
-	quest1->addStep(questCondition::dialogue, "15");
+	quest1->addStep(questCondition::showDialogue, "15");
 	quest1->state = questState::actual;
 	quests.push_back(quest1);
 

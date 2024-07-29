@@ -13,6 +13,9 @@ public:
 		direction = 2;
 		isAlive = true;
 		base = position;
+		
+		loadTextures();
+
 	}
 
 	Monster(GameObject* object, float x, float y) : Unit(object, x, y) {
@@ -20,6 +23,33 @@ public:
 		direction = 2;
 		isAlive = true;
 		base = position;
+
+		loadTextures();
+	}
+
+	void loadTextures() {
+
+		for (int i = 0; i < 4; i++) {
+
+			attackTextures[i] = getTexture(name + "/attackTop" + to_string(i));
+			attackTextures[4 + i] = getTexture(name + "/attackRight" + to_string(i));
+			attackTextures[8 + i] = getTexture(name + "/attackBottom" + to_string(i));
+			attackTextures[12 + i] = getTexture(name + "/attackLeft" + to_string(i));
+
+			idleTextures[i] = getTexture(name + "/idleTop" + to_string(i));
+			idleTextures[4 + i] = getTexture(name + "/idleRight" + to_string(i));
+			idleTextures[8 + i] = getTexture(name + "/idleBottom" + to_string(i));
+			idleTextures[12 + i] = getTexture(name + "/idleLeft" + to_string(i));
+
+			runTextures[i] = getTexture(name + "/runTop" + to_string(i));
+			runTextures[4 + i] = getTexture(name + "/runRight" + to_string(i));
+			runTextures[8 + i] = getTexture(name + "/runBottom" + to_string(i));
+			runTextures[12 + i] = getTexture(name + "/runLeft" + to_string(i));
+
+		}
+
+		sprite = sf::Sprite();
+		sprite.setOrigin(idleTextures[0]->cx, idleTextures[0]->cy);
 	}
 
 	void dropLoot() {
@@ -99,7 +129,7 @@ public:
 				idle(dt);
 			}
 			else if (state == states::walk) {
-				walk(dt);
+				run(dt);
 			}
 			else if (state == states::attack) {
 				attack(dt);

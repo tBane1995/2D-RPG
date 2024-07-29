@@ -12,8 +12,6 @@ sf::Sprite lifeBarBackgroundSprite;
 sf::Texture lifeBarTexture;         // lifebar
 sf::Sprite lifeBarSprite;
 
-
-
 bool defeatAllBeasts = false;
 bool collectAllItems = false;
 
@@ -139,6 +137,19 @@ void game() {
                         gameState = gameStates::inventory;
                     }
 
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+                        Inventory* test1Inventory = new Inventory();
+                        test1Inventory->addItem("items/axe");
+                        test1Inventory->addItem("items/long sword");
+
+                        Inventory* test2Inventory = new Inventory();
+                        test2Inventory->addItem("items/basic helmet");
+                        test2Inventory->addItem("items/wool shirt");
+
+                        inventoryLeft = new InventoryPanel(test1Inventory, -300, 0);   // TO_DO - to delete
+                        inventoryRight = new InventoryPanel(test2Inventory, 300, 0);   // TO_DO - to delete
+                        gameState = gameStates::trade;
+                    }
 
                 }
                 else if (gameState == gameStates::inventory) {
@@ -191,6 +202,89 @@ void game() {
                         }
                     }
                             
+                }
+                else if (gameState == gameStates::trade) {
+                    // TRADE
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                        gameState = gameStates::game;
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                        if (activePanel == activeInventoryPanel::Right) {
+                            if (cursor % itemsInRow == 0) {
+                                activePanel = activeInventoryPanel::Left;
+                                cursor = cursor + itemsInRow - 1;
+                            }
+                            else
+                                cursor -= 1;
+                        }
+                        else {  
+                            if((cursor%itemsInRow!=0))
+                                cursor -= 1;
+                        }
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                        
+                        if (activePanel == activeInventoryPanel::Left) {
+                            if (cursor % itemsInRow == itemsInRow - 1) {
+                                activePanel = activeInventoryPanel::Right;
+                                cursor = cursor - itemsInRow + 1;
+                            }
+                            else
+                                cursor += 1;
+                        }
+                        else {
+                            if(cursor%itemsInRow != itemsInRow - 1)
+                                cursor += 1;
+                        }
+                        
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                        if(cursor > itemsInRow)
+                            cursor -= itemsInRow;
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                        if(cursor < (itemsInCol-1)*itemsInRow)
+                            cursor += itemsInRow;
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+
+                        if (activePanel == activeInventoryPanel::Left) {
+                            
+                            if (inventoryLeft->inventory->items.size() > 0) {
+                                if (cursor < inventoryLeft->inventory->items.size()) {
+                                    
+                                    transferItem(inventoryLeft->inventory->items[cursor], inventoryLeft->inventory, inventoryRight->inventory);
+
+                                    if (cursor != 0 && cursor >= inventoryLeft->inventory->items.size())
+                                        cursor = inventoryLeft->inventory->items.size() - 1;
+                                }
+                                
+                            }
+                        }
+
+                        if (activePanel == activeInventoryPanel::Right) {
+                            if (inventoryRight->inventory->items.size() > 0) {
+                                if (cursor < inventoryRight->inventory->items.size()) {
+                                    
+                                    transferItem(inventoryRight->inventory->items[cursor], inventoryRight->inventory, inventoryLeft->inventory);
+
+                                    if (cursor != 0 && cursor >= inventoryRight->inventory->items.size())
+                                        cursor = inventoryRight->inventory->items.size() - 1;
+                                }
+                                
+                            }
+                        }
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+                        gameState = gameStates::game;
+                    }
                 }
                 else if (gameState == gameStates::dialogue) {
 
@@ -344,7 +438,9 @@ void game() {
         cam->update();
         
         updateInventoryPanel();
-
+        if(gameState == gameStates::trade)
+            updateTradePanel(); 
+        
         refreshLifeBar();
 
 
@@ -368,6 +464,11 @@ void game() {
 
         if (gameState == gameStates::inventory)
             drawInventoryPanel();
+
+        if (gameState == gameStates::trade) {
+            inventoryLeft->draw();  // TO-DO - to delete
+            inventoryRight->draw();  // TO-DO - to delete
+        }
 
         if (gameState == gameStates::dialogue) {
 

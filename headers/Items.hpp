@@ -2,7 +2,7 @@
 #define Items_hpp
 
 // TO-DO
-enum class attribute { attack, defend, HP, MP, HP_max, MP_max, strength, dexterity };
+enum class attribute { ATTACK, DEFEND, HP, MP, HP_max, MP_max, STRENGTH, DEXTERITY, INTELLIGENCE };
 enum class itemType { herb, potion, food, weapon, helmet, armor, pants, other };
 
 class Item {
@@ -11,10 +11,13 @@ public:
 	Texture* texture;
 	itemType type;
 	std::map < attribute, int > attributes;		// TO-DO
+	wstring description;
 
-	Item(string name, itemType type) {
+	Item(string name, itemType type, wstring description) {
+
 		this->name = name;
 		this->type = type;
+		this->description = description;
 		this->texture = getTexture(name);
 	}
 };
@@ -28,6 +31,49 @@ Item* getItem(string location) {
 	}
 
 	return nullptr;
+}
+
+string getItemName(Item* item) {
+
+	string name = "";
+	for (int i = item->name.size()-1; i >= 0 && item->name[i] != '/'; i--)
+		name = item->name[i] + name;
+
+	return name;
+}
+
+wstring getItemDescription(Item* item) {
+	
+	wstring description = item->description + L"\n\n";
+
+	if (item->attributes[attribute::ATTACK])
+		description += L"ATTACK " + to_wstring(item->attributes[attribute::ATTACK]) + L"\n";
+
+	if (item->attributes[attribute::DEFEND])
+		description += L"DEFEND " + to_wstring(item->attributes[attribute::DEFEND]) + L"\n";
+
+	if (item->attributes[attribute::STRENGTH])
+		description += L"STRENGTH " + to_wstring(item->attributes[attribute::STRENGTH]) + L"\n";
+
+	if (item->attributes[attribute::DEXTERITY])
+		description += L"DEXTERITY " + to_wstring(item->attributes[attribute::DEXTERITY]) + L"\n";
+
+	if (item->attributes[attribute::INTELLIGENCE])
+		description += L"INTELLIGENCE " + to_wstring(item->attributes[attribute::INTELLIGENCE]) + L"\n";
+
+	if (item->attributes[attribute::HP])
+		description += L"HP " + to_wstring(item->attributes[attribute::HP]) + L"\n";
+
+	if (item->attributes[attribute::HP_max])
+		description += L"HP_max " + to_wstring(item->attributes[attribute::HP_max]) + L"\n";
+
+	if (item->attributes[attribute::MP])
+		description += L"MP " + to_wstring(item->attributes[attribute::MP]) + L"\n";
+
+	if (item->attributes[attribute::MP_max])
+		description += L"MP_max " + to_wstring(item->attributes[attribute::MP_max]) + L"\n";
+
+	return description;
 }
 
 class ItemOnMap : public GameObject {
@@ -93,129 +139,148 @@ void loadItems() {
 	Item* item;
 	
 	// WEAPONS
-	item = new Item("items/wooden club", itemType::weapon);
-	item->attributes[attribute::attack] = 2;
+
+	item = new Item("items/axe", itemType::weapon, L"do rąbania głów");
+	item->attributes[attribute::ATTACK] = 14;
 	items.push_back(item);
 
-	item = new Item("items/knife", itemType::weapon);
-	item->attributes[attribute::attack] = 2;
+	item = new Item("items/iron club", itemType::weapon, L"żelazna pałka");
+	item->attributes[attribute::ATTACK] = 12;
 	items.push_back(item);
 	
-	item = new Item("items/hatchet", itemType::weapon);
-	item->attributes[attribute::attack] = 3;
+	item = new Item("items/wide blade", itemType::weapon, L"szerokie ostrze");
+	item->attributes[attribute::ATTACK] = 10;
 	items.push_back(item);
 
-	item = new Item("items/dagger", itemType::weapon);
-	item->attributes[attribute::attack] = 4;
+	item = new Item("items/long sword", itemType::weapon, L"długi miecz");
+	item->attributes[attribute::ATTACK] = 8;
+	items.push_back(item);
+	
+	item = new Item("items/curved sword", itemType::weapon, L"zakrzywiony miecz");
+	item->attributes[attribute::ATTACK] = 7;
 	items.push_back(item);
 
-	item = new Item("items/sword", itemType::weapon);
-	item->attributes[attribute::attack] = 5;
+	item = new Item("items/club", itemType::weapon, L"pałka");
+	item->attributes[attribute::ATTACK] = 6;
 	items.push_back(item);
 
-	item = new Item("items/gladius", itemType::weapon);
-	item->attributes[attribute::attack] = 5;
+	item = new Item("items/stone hammer", itemType::weapon, L"prymitywna broń");
+	item->attributes[attribute::ATTACK] = 5;
 	items.push_back(item);
 
-	item = new Item("items/stone hammer", itemType::weapon);
-	item->attributes[attribute::attack] = 5;
+	item = new Item("items/gladius", itemType::weapon, L"ceniony przez wojowników");
+	item->attributes[attribute::ATTACK] = 5;
 	items.push_back(item);
 
-	item = new Item("items/club", itemType::weapon);
-	item->attributes[attribute::attack] = 6;
+	item = new Item("items/sword", itemType::weapon, L"miecz");
+	item->attributes[attribute::ATTACK] = 5;
 	items.push_back(item);
 
-	item = new Item("items/curved sword", itemType::weapon);
-	item->attributes[attribute::attack] = 7;
+	item = new Item("items/dagger", itemType::weapon, L"zdradziecka broń");
+	item->attributes[attribute::ATTACK] = 4;
 	items.push_back(item);
 
-	item = new Item("items/long sword", itemType::weapon);
-	item->attributes[attribute::attack] = 8;
+	item = new Item("items/hatchet", itemType::weapon, L"zazwyczaj służy do rąbania drewna");
+	item->attributes[attribute::ATTACK] = 3;
 	items.push_back(item);
 
-	item = new Item("items/wide blade", itemType::weapon);
-	item->attributes[attribute::attack] = 10;
+	item = new Item("items/knife", itemType::weapon, L"zwykly nóż");
+	item->attributes[attribute::ATTACK] = 2;
 	items.push_back(item);
 
-	item = new Item("items/iron club", itemType::weapon);
-	item->attributes[attribute::attack] = 12;
+
+	item = new Item("items/wooden club", itemType::weapon, L"drewniana pałka");
+	item->attributes[attribute::ATTACK] = 1;
 	items.push_back(item);
 
-	item = new Item("items/axe", itemType::weapon);
-	item->attributes[attribute::attack] = 14;
-	items.push_back(item);
-
+	
 	// ARMORS
-	item = new Item("items/basic armor", itemType::armor);
-	item->attributes[attribute::defend] = 10;
+	item = new Item("items/basic armor", itemType::armor, L"bazowy pancerz");
+	item->attributes[attribute::DEFEND] = 10;
 	items.push_back(item);
 
-	item = new Item("items/skin jacket", itemType::armor);
-	item->attributes[attribute::defend] = 5;
+	item = new Item("items/skin jacket", itemType::armor, L"skórzana kurtka");
+	item->attributes[attribute::DEFEND] = 5;
+	items.push_back(item);
+
+	item = new Item("items/wool shirt", itemType::armor, L"wełniana koszula");
+	item->attributes[attribute::DEFEND] = 2;
+	items.push_back(item);
+
+	item = new Item("items/torn shirt", itemType::armor, L"podarta koszula");
+	item->attributes[attribute::DEFEND] = 1;
 	items.push_back(item);
 
 	// PANTS
-	item = new Item("items/basic pants", itemType::pants);
-	item->attributes[attribute::defend] = 10;
+	item = new Item("items/basic pants", itemType::pants, L"bazowe spodnie");
+	item->attributes[attribute::DEFEND] = 10;
 	items.push_back(item);
 
-	item = new Item("items/skin pants", itemType::pants);
-	item->attributes[attribute::defend] = 5;
+	item = new Item("items/skin pants", itemType::pants, L"skórzane spodnie");
+	item->attributes[attribute::DEFEND] = 5;
+	items.push_back(item);
+
+	item = new Item("items/wool pants", itemType::pants, L"wełniane spodnie");
+	item->attributes[attribute::DEFEND] = 2;
 	items.push_back(item);
 
 	// HELMETS
-	item = new Item("items/basic helmet", itemType::helmet);
-	item->attributes[attribute::defend] = 5;
+	item = new Item("items/basic helmet", itemType::helmet, L"bazowy hełm");
+	item->attributes[attribute::DEFEND] = 5;
 	items.push_back(item);
 
-	item = new Item("items/skin helmet", itemType::helmet);
-	item->attributes[attribute::defend] = 5;
+	item = new Item("items/skin helmet", itemType::helmet, L"skórzany helm");
+	item->attributes[attribute::DEFEND] = 2;
+	items.push_back(item);
+
+	item = new Item("items/wool helmet", itemType::helmet, L"wełniana czapka");
+	item->attributes[attribute::DEFEND] = 1;
 	items.push_back(item);
 
 	// HERBS
-	item = new Item("items/herb", itemType::herb);
-	item->attributes[attribute::HP] = 5;
+	
+	item = new Item("items/health plant", itemType::herb, L"roślina życia");
+	item->attributes[attribute::HP] = 50;
 	items.push_back(item);
 
-	item = new Item("items/health herb", itemType::herb);
+	item = new Item("items/mana plant", itemType::herb, L"roślina many");
+	item->attributes[attribute::MP] = 50;
+	items.push_back(item);
+
+	item = new Item("items/health root", itemType::herb, L"korzeń życia");
+	item->attributes[attribute::HP] = 25;
+	items.push_back(item);
+
+	item = new Item("items/health herb", itemType::herb, L"zioło życia");
 	item->attributes[attribute::HP] = 15;
 	items.push_back(item);
 
-	item = new Item("items/health root", itemType::herb);
-	item->attributes[attribute::HP] = 25;
-	items.push_back(item);
-	
-	item = new Item("items/health plant", itemType::herb);
-	item->attributes[attribute::HP] = 50;
-	items.push_back(item);
-
-	item = new Item("items/mushroom", itemType::herb);
-	item->attributes[attribute::HP] = 50;
+	item = new Item("items/mushroom", itemType::herb, L"grzyb");
+	item->attributes[attribute::HP] = 5;
 	items.push_back(item);
 
 	// POTIONS
-
-	item = new Item("items/potion", itemType::potion);
+	item = new Item("items/potion", itemType::potion, L"mikstura");
 	item->attributes[attribute::HP] = 30;
 	items.push_back(item);
 
 	// FOOD
-	item = new Item("items/raw meat", itemType::food);
-	item->attributes[attribute::HP] = 10;
-	items.push_back(item);
-
-	item = new Item("items/roasted meat", itemType::food);
+	item = new Item("items/roasted meat", itemType::food, L"pieczone mięso");
 	item->attributes[attribute::HP] = 20;
 	items.push_back(item);
 
+	item = new Item("items/raw meat", itemType::food, L"surowe mięso");
+	item->attributes[attribute::HP] = 10;
+	items.push_back(item);
+
 	// OTHERS
-	item = new Item("items/bone", itemType::other);
+	item = new Item("items/bone", itemType::other, L"kość");
 	items.push_back(item);
 
-	item = new Item("items/tooth", itemType::other);
+	item = new Item("items/tooth", itemType::other, L"kieł zwierza");
 	items.push_back(item);
 
-	item = new Item("items/wolf skin", itemType::other);
+	item = new Item("items/wolf skin", itemType::other, L"skóra wilka");
 	items.push_back(item);
 
 }
@@ -359,13 +424,9 @@ public:
 
 std::vector < InventoryOnMap* > inventoriesOnMap;
 
-void transferItem(Item* item, Inventory* &from, Inventory* to) {
+void transferItem(Item* item, Inventory* &from, Inventory* &to) {
+	
 	from->removeItem(item);
-
-	if (from->items.size() < 1) {
-		from = nullptr;
-	}
-
 	to->addItem(item);
 }
 

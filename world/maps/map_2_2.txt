@@ -36,5 +36,5 @@
 Nature "natures/tree2" 624 672
 
 // ITEMS
-Item "items/herb" 704 576
+Item "items/mana plant" 704 576
 
