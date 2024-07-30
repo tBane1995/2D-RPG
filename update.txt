@@ -1,3 +1,1 @@
--helmet, armor and pants added. you can put them on
--added early quest system
--added first quest 
+-added worked trade system

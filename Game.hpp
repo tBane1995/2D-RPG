@@ -90,7 +90,6 @@ void game() {
     cam->update();
 
     playerLoadTestBag();    // TO-DO - TEST
-    createInventoryPanel();
 
     while (window->isOpen()) {
 
@@ -133,22 +132,8 @@ void game() {
                     }
 
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-                        currentInventory = &player->bag;
+                        inventory = new InventoryPanel(player->bag);
                         gameState = gameStates::inventory;
-                    }
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
-                        Inventory* test1Inventory = new Inventory();
-                        test1Inventory->addItem("items/axe");
-                        test1Inventory->addItem("items/long sword");
-
-                        Inventory* test2Inventory = new Inventory();
-                        test2Inventory->addItem("items/basic helmet");
-                        test2Inventory->addItem("items/wool shirt");
-
-                        inventoryLeft = new InventoryPanel(test1Inventory, -300, 0);   // TO_DO - to delete
-                        inventoryRight = new InventoryPanel(test2Inventory, 300, 0);   // TO_DO - to delete
-                        gameState = gameStates::trade;
                     }
 
                 }
@@ -157,56 +142,42 @@ void game() {
                     // INVENTORY
 
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                        currentInventory = &player->bag;
                         gameState = gameStates::game;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-                        currentInventory = &player->bag;
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
                         gameState = gameStates::game;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-                        if (bagCursor - 1 >= 0)
-                            if ((bagCursor - 1) % inventoryItemsInRow != inventoryItemsInRow - 1)
-                                bagCursor -= 1;
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-                        if ((*currentInventory)!=nullptr && bagCursor + 1 < (*currentInventory)->items.size())
-                            if ((bagCursor + 1) % inventoryItemsInRow != 0)
-                                bagCursor += 1;
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-                        if (bagCursor - inventoryItemsInRow >= 0)
-                            bagCursor -= inventoryItemsInRow;
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-                        if (currentInventory!=nullptr && bagCursor + inventoryItemsInRow < (*currentInventory)->items.size())
-                            bagCursor += inventoryItemsInRow;
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-                        if(currentInventory!=nullptr) {
-                            if ((*currentInventory) == player->bag) {
-                                if ((*currentInventory)->items.size() > 0)
-                                    useItem();
-                            }
-                            else {
-                                if ((*currentInventory) != nullptr && (*currentInventory)->items.size() > 0) {
-                                    if(bagCursor < (*currentInventory)->items.size() )
-                                        transferItem((*currentInventory)->items[bagCursor], *currentInventory, player->bag);
-                                }
-                                else {
-                                    gameState = gameStates::game;
-                                }
-                            }
-                        }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                        // TO-DO - to precise
+                        useItem();
                     }
-                            
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                        cursor -= 1;
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                        cursor += 1;
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                        cursor -= itemsInRow;
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                        cursor += itemsInRow;
+                    }
                 }
                 else if (gameState == gameStates::trade) {
                     // TRADE
 
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                        gameState = gameStates::game;
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
                         gameState = gameStates::game;
                     }
 
@@ -243,7 +214,7 @@ void game() {
                     }
 
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-                        if(cursor > itemsInRow)
+                        if(cursor >= itemsInRow)
                             cursor -= itemsInRow;
                     }
 
@@ -437,7 +408,9 @@ void game() {
         cam->setPosition(player->position);
         cam->update();
         
-        updateInventoryPanel();
+        if(gameState == gameStates::inventory)
+            updateInventoryPanel();
+
         if(gameState == gameStates::trade)
             updateTradePanel(); 
         
@@ -466,8 +439,7 @@ void game() {
             drawInventoryPanel();
 
         if (gameState == gameStates::trade) {
-            inventoryLeft->draw();  // TO-DO - to delete
-            inventoryRight->draw();  // TO-DO - to delete
+            drawTradePanel();
         }
 
         if (gameState == gameStates::dialogue) {
@@ -632,13 +604,16 @@ bool collectItems() {
             ry2 = furniture->collider->height;
 
             if (intersectionRectangleWithElipse(x2, y2, rx2, ry2, x1, y1, rx1, ry1)) {
-                gameState = gameStates::inventory;
-                currentInventory = &furniture->inventory;
+                inventoryLeft = new InventoryPanel(furniture->inventory, -300);
+                inventoryRight = new InventoryPanel(player->bag, 300);
+                cursor = 0;
+                activePanel = activeInventoryPanel::Left;
+                gameState = gameStates::trade;
                 return true;
             }
         }
     }
-
+     
     return false;
 }
 

@@ -43,6 +43,7 @@ void loadTextures() {
 	loadTexture("GUI/slotTexture1.png", 40, 40);
 	loadTexture("GUI/slotTexture2.png", 40, 40);
 	loadTexture("GUI/slotSelectorTexture1.png", 40, 40);
+	loadTexture("GUI/dialogBoxTexture.png", 300, 75);
 	loadTexture("GUI/wideArrowUp1.png", 80, 20);
 	loadTexture("GUI/wideArrowUp2.png", 80, 20);
 	loadTexture("GUI/wideArrowDown1.png", 80, 20);
@@ -104,18 +105,15 @@ void loadTextures() {
 	loadTexture("items/stone hammer.png", 32, 32);
 
 	// HELMET
-	loadTexture("items/basic helmet.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/skin helmet.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/wool helmet.png", 32, 32);	// TO-DO to delete
 
 	// ARMORS
-	loadTexture("items/basic armor.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/skin jacket.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/torn shirt.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/wool shirt.png", 32, 32);	// TO-DO to delete
 
 	// PANTS
-	loadTexture("items/basic pants.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/skin pants.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/wool pants.png", 32, 32);	// TO-DO to delete
 
@@ -135,7 +133,7 @@ void loadTextures() {
 
 	// OTHERS
 	loadTexture("items/bone.png", 32, 32);
-	loadTexture("items/bone1.png", 40, 40);
+	loadTexture("items/bone.png", 40, 40);
 	loadTexture("items/tooth.png", 32, 32);
 	loadTexture("items/wolf skin.png", 32, 32);
 
@@ -281,9 +279,6 @@ void loadTextures() {
 	// ITEMS SETS
 	std::vector < string > itemSets;
 	itemSets.clear();
-	itemSets.push_back("basic armor");
-	itemSets.push_back("basic pants");
-	itemSets.push_back("basic helmet");
 	itemSets.push_back("skin jacket");
 	itemSets.push_back("skin pants");
 	itemSets.push_back("skin helmet");

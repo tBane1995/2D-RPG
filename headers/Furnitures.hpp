@@ -41,12 +41,10 @@ public:
 		if (name == "furnitures/chest1") {
 			inventory = new Inventory();
 			inventory->addItem("items/wooden club");
-			inventory->addItem("items/basic armor");   // TO-DO to delete
-			inventory->addItem("items/basic pants");   // TO-DO to delete
-			inventory->addItem("items/basic helmet");   // TO-DO to delete
-			inventory->addItem("items/skin jacket");   // TO-DO to delete
-			inventory->addItem("items/skin pants");   // TO-DO to delete
-			inventory->addItem("items/skin helmet");   // TO-DO to delete
+			inventory->addItem("items/wool shirt");   // TO-DO to delete
+			inventory->addItem("items/wool pants");   // TO-DO to delete
+			inventory->addItem("items/wool helmet");   // TO-DO to delete
+
 			
 		}
 

@@ -92,7 +92,7 @@ public:
 
 		texture = getTexture(item->name);
 		sprite = sf::Sprite();
-		sprite.setTexture(*texture->texture);
+ 		sprite.setTexture(*texture->texture);
 		sprite.setOrigin(texture->cx, texture->cy);
 		sprite.setPosition(x, y);
 		sprite.setScale(0.5f, 0.5f);
@@ -195,9 +195,6 @@ void loadItems() {
 
 	
 	// ARMORS
-	item = new Item("items/basic armor", itemType::armor, L"bazowy pancerz");
-	item->attributes[attribute::DEFEND] = 10;
-	items.push_back(item);
 
 	item = new Item("items/skin jacket", itemType::armor, L"skórzana kurtka");
 	item->attributes[attribute::DEFEND] = 5;
@@ -212,9 +209,6 @@ void loadItems() {
 	items.push_back(item);
 
 	// PANTS
-	item = new Item("items/basic pants", itemType::pants, L"bazowe spodnie");
-	item->attributes[attribute::DEFEND] = 10;
-	items.push_back(item);
 
 	item = new Item("items/skin pants", itemType::pants, L"skórzane spodnie");
 	item->attributes[attribute::DEFEND] = 5;
@@ -225,9 +219,6 @@ void loadItems() {
 	items.push_back(item);
 
 	// HELMETS
-	item = new Item("items/basic helmet", itemType::helmet, L"bazowy hełm");
-	item->attributes[attribute::DEFEND] = 5;
-	items.push_back(item);
 
 	item = new Item("items/skin helmet", itemType::helmet, L"skórzany helm");
 	item->attributes[attribute::DEFEND] = 2;

@@ -61,7 +61,7 @@
 void editPixels() {
 
     sf::Image i;
-    i.loadFromFile("assets/sets/items/basic helmet/attackBottom0.png");
+    i.loadFromFile("assets/sets/items/wool helmet/attackBottom0.png");
 
     //sf::Color color = sf::Color(127,127,127);
     sf::Color color = sf::Color(255,255,255);
@@ -105,7 +105,7 @@ int main()
 
 	window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
-    editPixels();
+    //editPixels();
 	game();
 	mapEditor();
 	    
