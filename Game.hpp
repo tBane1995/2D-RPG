@@ -145,28 +145,28 @@ void game() {
                         gameState = gameStates::game;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
                         gameState = gameStates::game;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
                         // TO-DO - to precise
                         useItem();
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                         cursor -= 1;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
                         cursor += 1;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
                         cursor -= itemsInRow;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
                         cursor += itemsInRow;
                     }
                 }
@@ -177,11 +177,11 @@ void game() {
                         gameState = gameStates::game;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
                         gameState = gameStates::game;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                         if (activePanel == activeInventoryPanel::Right) {
                             if (cursor % itemsInRow == 0) {
                                 activePanel = activeInventoryPanel::Left;
@@ -196,7 +196,7 @@ void game() {
                         }
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
                         
                         if (activePanel == activeInventoryPanel::Left) {
                             if (cursor % itemsInRow == itemsInRow - 1) {
@@ -213,17 +213,17 @@ void game() {
                         
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
                         if(cursor >= itemsInRow)
                             cursor -= itemsInRow;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
                         if(cursor < (itemsInCol-1)*itemsInRow)
                             cursor += itemsInRow;
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
 
                         if (activePanel == activeInventoryPanel::Left) {
                             
@@ -253,9 +253,6 @@ void game() {
                         }
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
-                        gameState = gameStates::game;
-                    }
                 }
                 else if (gameState == gameStates::dialogue) {
 
