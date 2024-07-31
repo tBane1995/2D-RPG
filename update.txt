@@ -1,1 +1,1 @@
--added worked trade system
+-now you can use weapon - wooden club or axe - and fight with it

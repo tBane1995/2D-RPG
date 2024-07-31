@@ -21,7 +21,6 @@ bool playerAttack();
 bool talkWithCharacter();
 bool collectItems();
 void deleteCollectedItems();
-void playerLoadTestBag();   // TO-DO
 
 void game() {
 
@@ -88,8 +87,6 @@ void game() {
     createPlayer();
     cam->setPosition(player->position);
     cam->update();
-
-    playerLoadTestBag();    // TO-DO - TEST
 
     while (window->isOpen()) {
 
@@ -661,44 +658,6 @@ void deleteCollectedItems() {
     gameObjects = newGameObjectsList;
     inventoriesOnMap = newInventoriesOnMapList;
 
-}
-
-void playerLoadTestBag() {  // TO-DO
-
-    /*
-    // weapons
-    player->bag->addItem("items/wooden club");
-    player->bag->addItem("items/knife");
-    player->bag->addItem("items/hatchet");
-    player->bag->addItem("items/dagger");
-    player->bag->addItem("items/sword");
-    player->bag->addItem("items/gladius");
-    player->bag->addItem("items/stone hammer");
-    player->bag->addItem("items/club");
-    player->bag->addItem("items/curved sword");
-    player->bag->addItem("items/long sword");
-    player->bag->addItem("items/wide blade");
-    player->bag->addItem("items/iron club");
-    player->bag->addItem("items/axe");
-
-    // herbs
-    player->bag->addItem("items/herb");
-    player->bag->addItem("items/health herb");
-    player->bag->addItem("items/health root");
-    player->bag->addItem("items/health plant");
-
-    // potions
-    player->bag->addItem("items/potion");
-
-    // food
-    player->bag->addItem("items/raw meat");
-    player->bag->addItem("items/roasted meat");
-
-    // other
-    player->bag->addItem("items/bone");
-    player->bag->addItem("items/wolf skin");
-    player->bag->addItem("items/tooth");
-    */
 }
 
 #endif

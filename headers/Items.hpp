@@ -224,7 +224,7 @@ void loadItems() {
 	item->attributes[attribute::DEFEND] = 2;
 	items.push_back(item);
 
-	item = new Item("items/wool helmet", itemType::helmet, L"wełniana czapka");
+	item = new Item("items/wool hat", itemType::helmet, L"wełniana czapka");
 	item->attributes[attribute::DEFEND] = 1;
 	items.push_back(item);
 

@@ -61,14 +61,14 @@
 void editPixels() {
 
     sf::Image i;
-    i.loadFromFile("assets/sets/items/wool helmet/attackBottom0.png");
+    i.loadFromFile("assets/sets/items/wool hat/attackBottom0.png");
 
     //sf::Color color = sf::Color(127,127,127);
     sf::Color color = sf::Color(255,255,255);
     sf::Color newColor = i.getPixel(0, 0);
     //sf::Color newColor = sf::Color(150, 94, 63);
 
-    string folder_path = "assets/sets/items/torn shirt";
+    string folder_path = "assets/sets/items/axe";
 
     std::vector < std::string > png_files;
 
@@ -97,6 +97,8 @@ void editPixels() {
 
 int main()
 {
+    editPixels();   // TO-DO
+
 	loadFonts();
 	loadTextures();		// TO-DO "FROM FILE"
 	loadItems();		// TO-DO "FROM FILE"
@@ -105,7 +107,7 @@ int main()
 
 	window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
-    //editPixels();
+    
 	game();
 	mapEditor();
 	    

@@ -62,9 +62,10 @@ public:
 				if (i < inventory->items.size()) {
 
 					Item* item = inventory->items[i];
-
-					if (item == player->helmet || item == player->armor || item == player->pants)
-						slots[i].setColor(sf::Color::Red);
+					
+					if(inventory == player->bag)
+						if (item == player->helmet || item == player->armor || item == player->pants || item==player->weapon)
+							slots[i].setColor(sf::Color::Red);
 
 					items.emplace_back();
 
@@ -228,6 +229,16 @@ void useItem() {
         
         player->loadPants();
     }
+
+	if (item->type == itemType::weapon) {
+
+		if (player->weapon == item)
+			player->weapon = nullptr;
+		else
+			player->weapon = item;
+
+		player->loadWeapon();
+	}
 
     
 }

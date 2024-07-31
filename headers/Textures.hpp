@@ -49,6 +49,7 @@ void loadTextures() {
 	loadTexture("GUI/wideArrowDown1.png", 80, 20);
 	loadTexture("GUI/wideArrowDown2.png", 80, 20);
 	loadTexture("GUI/hand.png", 8, 8);
+	loadTexture("GUI/grey_hand.png", 8, 8);
 	loadTexture("GUI/talk.png", 8, 8);
 
 	// TILES //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +107,7 @@ void loadTextures() {
 
 	// HELMET
 	loadTexture("items/skin helmet.png", 32, 32);	// TO-DO to delete
-	loadTexture("items/wool helmet.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/wool hat.png", 32, 32);	// TO-DO to delete
 
 	// ARMORS
 	loadTexture("items/skin jacket.png", 32, 32);	// TO-DO to delete
@@ -284,8 +285,11 @@ void loadTextures() {
 	itemSets.push_back("skin helmet");
 	itemSets.push_back("torn shirt");
 	itemSets.push_back("wool shirt");
-	itemSets.push_back("wool helmet");
+	itemSets.push_back("wool hat");
 	itemSets.push_back("wool pants");
+	itemSets.push_back("wooden club");
+	itemSets.push_back("axe");
+
 
 	for (auto& set : itemSets) {
 
