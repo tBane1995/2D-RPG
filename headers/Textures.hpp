@@ -289,6 +289,8 @@ void loadTextures() {
 	itemSets.push_back("wool pants");
 	itemSets.push_back("wooden club");
 	itemSets.push_back("axe");
+	itemSets.push_back("club");
+	itemSets.push_back("iron club");
 
 
 	for (auto& set : itemSets) {

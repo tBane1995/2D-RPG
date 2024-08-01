@@ -71,7 +71,7 @@ public:
 		state = states::idle;
 		actionRange = 25.0f;
 		cooldown = 0.0f;
-		attackTime = 1.0f;
+		attackTime = 0.7f;
 
 		position.x = 682;
 		position.y = 226;
@@ -88,18 +88,6 @@ public:
 
 		body = "sets/body/hero";
 		
-		helmet = nullptr;
-		armor = getItem("items/torn shirt");
-		pants = nullptr;
-		weapon = nullptr;
-		weapon = getItem("items/wooden club");
-
-		loadBody();
-		loadHelmet();
-		loadArmor();
-		loadPants();
-		loadWeapon();
-
 		bag = new Inventory();
 
 		bag->addItem("items/torn shirt");
@@ -107,7 +95,36 @@ public:
 		bag->addItem("items/bone");
 		bag->addItem("items/health herb");
 		bag->addItem("items/skin helmet");
+		bag->addItem("items/skin pants");
 		bag->addItem("items/wooden club");
+		bag->addItem("items/skin jacket");
+		bag->addItem("items/club");
+		bag->addItem("items/iron club");
+
+		// ITEMS TO-DO - CREATE ITEM SETS
+		bag->addItem("items/curved sword");
+		bag->addItem("items/dagger");
+		bag->addItem("items/gladius");
+		bag->addItem("items/hatchet");
+		bag->addItem("items/knife");
+		bag->addItem("items/long sword");
+		bag->addItem("items/skin pants");
+		bag->addItem("items/stone hammer");
+		bag->addItem("items/sword");
+		bag->addItem("items/wide blade");
+
+		helmet = getItem("items/skin helmet");
+		armor = getItem("items/skin jacket");
+		pants = getItem("items/skin pants");
+		weapon = getItem("items/club");
+
+		loadBody();
+		loadHelmet();
+		loadArmor();
+		loadPants();
+		loadWeapon();
+
+		
 
 		setActionRangeArea();
 		

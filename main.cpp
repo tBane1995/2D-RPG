@@ -68,7 +68,7 @@ void editPixels() {
     sf::Color newColor = i.getPixel(0, 0);
     //sf::Color newColor = sf::Color(150, 94, 63);
 
-    string folder_path = "assets/sets/items/axe";
+    string folder_path = "assets/sets/items/iron club";
 
     std::vector < std::string > png_files;
 
