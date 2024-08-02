@@ -291,6 +291,13 @@ void loadTextures() {
 	itemSets.push_back("axe");
 	itemSets.push_back("club");
 	itemSets.push_back("iron club");
+	itemSets.push_back("stone hammer");
+	itemSets.push_back("sword");
+	itemSets.push_back("long sword");
+	itemSets.push_back("gladius");
+	itemSets.push_back("wide blade");
+	itemSets.push_back("knife");
+	itemSets.push_back("dagger");
 
 
 	for (auto& set : itemSets) {

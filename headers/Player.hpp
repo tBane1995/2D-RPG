@@ -100,18 +100,18 @@ public:
 		bag->addItem("items/skin jacket");
 		bag->addItem("items/club");
 		bag->addItem("items/iron club");
-
-		// ITEMS TO-DO - CREATE ITEM SETS
-		bag->addItem("items/curved sword");
-		bag->addItem("items/dagger");
-		bag->addItem("items/gladius");
-		bag->addItem("items/hatchet");
-		bag->addItem("items/knife");
-		bag->addItem("items/long sword");
-		bag->addItem("items/skin pants");
 		bag->addItem("items/stone hammer");
 		bag->addItem("items/sword");
+		bag->addItem("items/long sword");
+		bag->addItem("items/gladius");
 		bag->addItem("items/wide blade");
+		bag->addItem("items/knife");
+		bag->addItem("items/dagger");
+
+		// ITEMS TO-DO - CREATE ITEM SETS
+		//bag->addItem("items/curved sword");
+		//bag->addItem("items/hatchet");
+		//bag->addItem("items/skin pants");
 
 		helmet = getItem("items/skin helmet");
 		armor = getItem("items/skin jacket");
