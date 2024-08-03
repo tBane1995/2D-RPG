@@ -44,6 +44,7 @@ void loadTextures() {
 	loadTexture("GUI/slotTexture2.png", 40, 40);
 	loadTexture("GUI/slotSelectorTexture1.png", 40, 40);
 	loadTexture("GUI/dialogBoxTexture.png", 300, 75);
+	loadTexture("GUI/journalTexture.png", 300, 200);
 	loadTexture("GUI/wideArrowUp1.png", 80, 20);
 	loadTexture("GUI/wideArrowUp2.png", 80, 20);
 	loadTexture("GUI/wideArrowDown1.png", 80, 20);
@@ -110,6 +111,7 @@ void loadTextures() {
 	loadTexture("items/wool hat.png", 32, 32);	// TO-DO to delete
 
 	// ARMORS
+	loadTexture("items/chain mail.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/skin jacket.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/torn shirt.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/wool shirt.png", 32, 32);	// TO-DO to delete
@@ -298,6 +300,9 @@ void loadTextures() {
 	itemSets.push_back("wide blade");
 	itemSets.push_back("knife");
 	itemSets.push_back("dagger");
+	itemSets.push_back("hatchet");
+	itemSets.push_back("curved sword");
+	itemSets.push_back("chain mail");
 
 
 	for (auto& set : itemSets) {

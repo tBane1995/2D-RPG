@@ -196,6 +196,10 @@ void loadItems() {
 	
 	// ARMORS
 
+	item = new Item("items/chain mail", itemType::armor, L"kolczuga");
+	item->attributes[attribute::DEFEND] = 10;
+	items.push_back(item);
+
 	item = new Item("items/skin jacket", itemType::armor, L"skórzana kurtka");
 	item->attributes[attribute::DEFEND] = 5;
 	items.push_back(item);

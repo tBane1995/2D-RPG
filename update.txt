@@ -1,1 +1,1 @@
--added some sets of weapons
+-fixed inventory scrolling

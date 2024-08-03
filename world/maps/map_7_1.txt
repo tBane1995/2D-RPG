@@ -32,6 +32,9 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
+// ITEMS
+Item "items/health herb" 1984 288
+
 // PATHS
 Path "paths/stonepath2" 2000 336
 Path "paths/stonepath2" 1952 368

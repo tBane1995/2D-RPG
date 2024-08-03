@@ -39,4 +39,35 @@ void replaceAll(std::string& str, const std::string& from, const std::string& to
     }
 }
 
+std::vector < std::wstring > wrapText(std::wstring text, int characterSize, int maxWidth) {
+    
+    std::vector < std::wstring > wrappedText;
+
+    wrappedText.clear();
+
+	std::wistringstream wordsStream(text);
+	std::wstring word;
+	std::wstring currentLine;
+
+	while (wordsStream >> word) {
+		
+		std::wstring testLine = currentLine.empty() ? word : currentLine + L" " + word;
+		sf::Text testText(testLine, dialogBoxFont, characterSize);
+		
+		if (testText.getLocalBounds().width > maxWidth) {
+			wrappedText.push_back(currentLine);
+			currentLine = word;
+		}
+		else {
+			currentLine = testLine;
+		}
+	}
+
+	if (!currentLine.empty()) {
+		wrappedText.push_back(currentLine);
+	}
+
+	return wrappedText;
+}
+
 #endif

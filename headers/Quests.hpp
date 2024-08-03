@@ -8,10 +8,12 @@ class Step {
 public:
 	questCondition condition;
 	string value;
+	std::wstring text;
 
-	Step(questCondition condition, string value) {
+	Step(questCondition condition, string value, std::wstring text) {
 		this->condition = condition;
 		this->value = value;
+		this->text = text;
 	}
 
 	bool check() {
@@ -84,12 +86,12 @@ public:
 class Quest {
 public:
 	int id;
-	string name;
+	std::wstring name;
 	questState state;
 	std::vector < Step* > steps;
 	int currentStep;
 
-	Quest(int id, string name) {
+	Quest(int id, std::wstring name) {
 		
 		this->id = id;
 		this->name = name;
@@ -99,8 +101,8 @@ public:
 
 	}
 	
-	void addStep(questCondition condition, string value) {
-		Step* step = new Step(condition, value);
+	void addStep(questCondition condition, string value, std::wstring text) {
+		Step* step = new Step(condition, value, text);
 		steps.push_back(step);
 	}
 
@@ -122,16 +124,16 @@ std::vector < Quest* > quests;
 void loadQuests() {
 	quests.clear();
 
-	Quest* quest1 = new Quest(0, "Zjedz coś, ubierz się a potem pójdź w wyznaczone miejsce");
-	quest1->addStep(questCondition::currentHP, "40");
-	quest1->addStep(questCondition::showDialogue, "13");
-	quest1->addStep(questCondition::haveArmor, "true");
-	quest1->addStep(questCondition::haveHelmet, "true");
-	quest1->addStep(questCondition::havePants, "true");
-	quest1->addStep(questCondition::showDialogue, "14");
-	quest1->addStep(questCondition::position_x, "2750");
-	quest1->addStep(questCondition::position_y, "340");
-	quest1->addStep(questCondition::showDialogue, "15");
+	Quest* quest1 = new Quest(0, L"Zjedz coś.");
+	quest1->addStep(questCondition::currentHP, "40", L"jestem głodny, powinienem coś zjeść");
+	quest1->addStep(questCondition::showDialogue, "13", L"już się najadłem. Powinienem poszukać jakichś ubrań");
+	quest1->addStep(questCondition::haveArmor, "true", L"powinienem ubrać koszule");
+	quest1->addStep(questCondition::haveHelmet, "true", L"powinienem założyć czapkę");
+	quest1->addStep(questCondition::havePants, "true", L"powiniene ubrać spodnie");
+	quest1->addStep(questCondition::showDialogue, "14", L"ubralem się");
+	quest1->addStep(questCondition::position_x, "2750", L"powinienem dojść na pozycję x");
+	quest1->addStep(questCondition::position_y, "340", L"powinienem dojść na pozycję y ");
+	quest1->addStep(questCondition::showDialogue, "15", L"ścieżka się skończyła, nie wiem co robić dalej.");
 	quest1->state = questState::actual;
 	quests.push_back(quest1);
 

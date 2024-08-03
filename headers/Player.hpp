@@ -107,16 +107,21 @@ public:
 		bag->addItem("items/wide blade");
 		bag->addItem("items/knife");
 		bag->addItem("items/dagger");
+		bag->addItem("items/hatchet");
+		bag->addItem("items/curved sword");
+		bag->addItem("items/chain mail");
+		bag->addItem("items/wool hat");
+		bag->addItem("items/wool pants");
+		bag->addItem("items/wool shirt");
+		bag->addItem("items/raw meat");
 
 		// ITEMS TO-DO - CREATE ITEM SETS
-		//bag->addItem("items/curved sword");
-		//bag->addItem("items/hatchet");
 		//bag->addItem("items/skin pants");
 
 		helmet = getItem("items/skin helmet");
 		armor = getItem("items/skin jacket");
 		pants = getItem("items/skin pants");
-		weapon = getItem("items/club");
+		weapon = getItem("items/hatchet");
 
 		loadBody();
 		loadHelmet();

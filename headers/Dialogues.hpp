@@ -50,39 +50,16 @@ sf::Vector2f textPosition;
 int countOfLines = 0;
 int page = 0;
 std::vector < wstring > lines;
-std::vector<std::wstring> wrappedText;
+std::vector < wstring > wrappedText;
 std::vector < DialogueOption > availableOptions;
 int dialogScroll;
 
-void wrapText(const std::wstring text) {
 
-	std::wistringstream wordsStream(text);
-	std::wstring word;
-	std::wstring currentLine;
+void setTextToDialogBox(std::wstring text) {
 
-	wrappedText.clear();
 	float maxWidth = dialogSize.x - 2.0f * padding;
 
-	while (wordsStream >> word) {
-		std::wstring testLine = currentLine.empty() ? word : currentLine + L" " + word;
-		sf::Text testText(testLine, dialogBoxFont, characterSize);
-		if (testText.getLocalBounds().width > maxWidth) {
-			wrappedText.push_back(currentLine);
-			currentLine = word;
-		}
-		else {
-			currentLine = testLine;
-		}
-	}
-
-	if (!currentLine.empty()) {
-		wrappedText.push_back(currentLine);
-	}
-
-}
-
-void setTextToDialogBox(std::wstring s) {
-	wrapText(s);
+	wrappedText = wrapText(text, characterSize, maxWidth);
 	countOfLines = wrappedText.size();
 }
 

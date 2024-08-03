@@ -12,6 +12,7 @@ public:
 	Inventory* inventory;
 	int position_x;
 	int position_y;
+	int scroll;
 
 	std::vector < sf::Sprite > slots;
 	std::vector <sf::Sprite > items;
@@ -23,7 +24,7 @@ public:
 		this->inventory = inventory;
 		this->position_x = position_x;
 		this->position_y = position_y;
-
+		scroll = 0;
 
 		// SLOTS
 		for (int i = 0; i < itemsInRow * itemsInCol; i++) {
@@ -56,12 +57,13 @@ public:
 		// ITEMS
 		items.clear();
 		counts.clear();
+
 		if (inventory != nullptr) {
 			for (int i = 0; i < itemsInRow * itemsInCol; i++) {
 
-				if (i < inventory->items.size()) {
+				if (i+scroll*itemsInRow < inventory->items.size()) {
 
-					Item* item = inventory->items[i];
+					Item* item = inventory->items[i + scroll * itemsInRow];
 					
 					if(inventory == player->bag)
 						if (item == player->helmet || item == player->armor || item == player->pants || item==player->weapon)
@@ -79,7 +81,7 @@ public:
 					items[i].setPosition(x, y);
 					items[i].setScale(64.0f / twidth, 64.0f / theight);
 
-					counts.emplace_back(to_string(inventory->counts[i]), basicFont, 16);
+					counts.emplace_back(to_string(inventory->counts[i+scroll*itemsInRow]), basicFont, 16);
 					counts[i].setPosition(x, y);
 					int width = counts[i].getLocalBounds().width;
 					int height = counts[i].getLocalBounds().height;
@@ -141,9 +143,9 @@ void updateInventoryPanel() {
 	background.setOrigin(300,75);
 
 	Item* item = nullptr;
-	
-	if (inventory->inventory != nullptr && cursor < inventory->inventory->items.size())
-		item = inventory->inventory->items[cursor];
+	int itemIndex = cursor + inventory->scroll * itemsInRow;
+	if (inventory->inventory != nullptr &&  itemIndex< inventory->inventory->items.size())
+		item = inventory->inventory->items[itemIndex];
 
 	if (item!=nullptr)
 	{
@@ -159,14 +161,14 @@ void updateInventoryPanel() {
 		itemName.setFillColor(textDialogueColor);
 		itemName.setFont(basicFont);
 		itemName.setPosition(cam->position.x-300 + 192, cam->position.y+275-64);
-		itemName.setString(getItemName(inventory->inventory->items[cursor]));
+		itemName.setString(getItemName(item));
 
 		itemDescription = sf::Text();
 		itemDescription.setCharacterSize(16);
 		itemDescription.setFillColor(textDialogueColor);
 		itemDescription.setFont(basicFont);
 		itemDescription.setPosition(cam->position.x - 300 + 192, cam->position.y + 275 - 32);
-		itemDescription.setString(getItemDescription(inventory->inventory->items[cursor]));
+		itemDescription.setString(getItemDescription(item));
 	}
 	
 }
@@ -190,10 +192,10 @@ void useItem() {
 	if (inventory->inventory == nullptr)
 		return;
 
-	if (cursor >= inventory->inventory->items.size())
+	if (cursor+inventory->scroll*itemsInRow >= inventory->inventory->items.size())
 		return;
 
-	Item* item = inventory->inventory->items[cursor];
+	Item* item = inventory->inventory->items[cursor+inventory->scroll*itemsInRow];
 
     if (item->type == itemType::herb || item->type == itemType::potion || item->type == itemType::food) {
         player->heal(item->attributes[attribute::HP]);

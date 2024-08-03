@@ -35,3 +35,6 @@
 // NATURES
 Nature "natures/tree1" 1520 752
 
+// ITEMS
+Item "items/health herb" 1280 672
+

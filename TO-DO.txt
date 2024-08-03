@@ -1,0 +1,9 @@
+Item Sets:
+-skórzana zbroja - skin armor
+-kolczuga - chain mail
+-zbroja płytowa - plate armor
+-skórzane nogawice - skin legs
+-kolcze nogawice - chain mail legs
+-płytowe spodnie - plate legs
+
+-add journal panel

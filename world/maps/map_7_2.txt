@@ -36,3 +36,6 @@
 Nature "natures/tree2" 1808 720
 Nature "natures/tree2" 1952 544
 
+// ITEMS
+Item "items/health herb" 1840 528
+

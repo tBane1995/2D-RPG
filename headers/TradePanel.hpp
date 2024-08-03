@@ -5,8 +5,8 @@
 enum class activeInventoryPanel { Left, Right };
 activeInventoryPanel activePanel = activeInventoryPanel::Right;
 
-InventoryPanel* inventoryLeft;  // TO-DO - to delete
-InventoryPanel* inventoryRight;  // TO-DO - to delete
+InventoryPanel* inventoryLeft;
+InventoryPanel* inventoryRight;
 
 void updateTradePanel() {
 	
