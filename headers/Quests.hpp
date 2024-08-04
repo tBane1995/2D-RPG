@@ -1,7 +1,7 @@
 ﻿#ifndef Quests_hpp
 #define Quests_hpp
 
-enum class questCondition { currentHP, showDialogue, haveArmor, haveHelmet, havePants, position_x, position_y };
+enum class questCondition { currentHP, showDialogue, haveArmor, haveHelmet, havePants, position };
 enum class questState { unstarted, actual, ended };
 
 class Step {
@@ -64,18 +64,15 @@ public:
 			}
 		}
 
-		if (condition == questCondition::position_x)
+		if (condition == questCondition::position)
 		{
-			if (abs(player->position.x - atoi(value.c_str())) < 50) {
-				return true;
-			}
-		}
+			std::istringstream iss(value);
+			int pos_x, pos_y;
 
-		if (condition == questCondition::position_y)
-		{
-			if (abs(player->position.y - atoi(value.c_str())) < 50) {
+			iss >> pos_x >> pos_y;
+
+			if (abs(player->position.x - pos_x) < 50 && abs(player->position.y - pos_y) < 50)
 				return true;
-			}
 		}
 
 		return false;
@@ -131,8 +128,7 @@ void loadQuests() {
 	quest1->addStep(questCondition::haveHelmet, "true", L"powinienem założyć czapkę");
 	quest1->addStep(questCondition::havePants, "true", L"powiniene ubrać spodnie");
 	quest1->addStep(questCondition::showDialogue, "14", L"ubralem się");
-	quest1->addStep(questCondition::position_x, "2750", L"powinienem dojść na pozycję x");
-	quest1->addStep(questCondition::position_y, "340", L"powinienem dojść na pozycję y ");
+	quest1->addStep(questCondition::position, "2750 340", L"powinienem iść wzdłóż ścieżki");
 	quest1->addStep(questCondition::showDialogue, "15", L"ścieżka się skończyła, nie wiem co robić dalej.");
 	quest1->state = questState::actual;
 	quests.push_back(quest1);

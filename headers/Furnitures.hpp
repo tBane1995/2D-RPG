@@ -70,6 +70,9 @@ public:
 			inventory->addItem("items/wool pants");
 			inventory->addItem("items/wool shirt");
 			inventory->addItem("items/raw meat");
+			inventory->addItem("items/roasted meat");
+			inventory->addItem("items/chain mail pants");
+			inventory->addItem("items/plate armor");
 			
 		}
 

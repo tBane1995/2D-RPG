@@ -110,10 +110,12 @@ public:
 		bag->addItem("items/hatchet");
 		bag->addItem("items/curved sword");
 		bag->addItem("items/chain mail");
+		bag->addItem("items/chain mail pants");
 		bag->addItem("items/wool hat");
 		bag->addItem("items/wool pants");
 		bag->addItem("items/wool shirt");
 		bag->addItem("items/raw meat");
+		bag->addItem("items/plate armor");
 
 		// ITEMS TO-DO - CREATE ITEM SETS
 		//bag->addItem("items/skin pants");
@@ -486,7 +488,6 @@ public:
 		
 		if (direction == 0) {
 			// TOP
-
 			window->draw(weaponSprite);
 
 			window->draw(bodySprite);
@@ -500,7 +501,6 @@ public:
 
 		if (direction == 1) {
 			// RIGHT
-			
 			window->draw(bodySprite);
 			window->draw(helmetSprite);
 			window->draw(pantsSprite);
@@ -511,7 +511,6 @@ public:
 
 		if (direction == 2) {
 			// BOTTOM
-			
 			window->draw(bodySprite);
 			window->draw(helmetSprite);
 			window->draw(pantsSprite);
@@ -522,7 +521,6 @@ public:
 
 		if (direction == 3) {
 			// LEFT
-			
 			window->draw(weaponSprite);
 
 			window->draw(bodySprite);

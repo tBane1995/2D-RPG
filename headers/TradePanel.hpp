@@ -18,8 +18,8 @@ void updateTradePanel() {
 
 		if (inventoryLeft->inventory != nullptr )
 			if(inventoryLeft->inventory->items.size() > 0 )
-				if(cursor < inventoryLeft->inventory->items.size())
-					item = inventoryLeft->inventory->items[cursor];
+				if(cursor + inventoryLeft->scroll * itemsInRow < inventoryLeft->inventory->items.size())
+					item = inventoryLeft->inventory->items[cursor + inventoryLeft->scroll * itemsInRow];
 	}
 
 	if (activePanel == activeInventoryPanel::Right) {
@@ -28,8 +28,8 @@ void updateTradePanel() {
 
 		if (inventoryRight->inventory != nullptr)
 			if (inventoryRight->inventory->items.size() > 0)
-				if (cursor < inventoryRight->inventory->items.size())
-					item = inventoryRight->inventory->items[cursor];
+				if (cursor + inventoryRight->scroll * itemsInRow < inventoryRight->inventory->items.size())
+					item = inventoryRight->inventory->items[cursor + inventoryRight->scroll * itemsInRow];
 	}
 	
 	drawItemStats = false;

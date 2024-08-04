@@ -196,6 +196,10 @@ void loadItems() {
 	
 	// ARMORS
 
+	item = new Item("items/plate armor", itemType::armor, L"zbroja płytowa");
+	item->attributes[attribute::DEFEND] = 20;
+	items.push_back(item);
+
 	item = new Item("items/chain mail", itemType::armor, L"kolczuga");
 	item->attributes[attribute::DEFEND] = 10;
 	items.push_back(item);
@@ -213,6 +217,10 @@ void loadItems() {
 	items.push_back(item);
 
 	// PANTS
+
+	item = new Item("items/chain mail pants", itemType::pants, L"nogawice kolcze");
+	item->attributes[attribute::DEFEND] = 10;
+	items.push_back(item);
 
 	item = new Item("items/skin pants", itemType::pants, L"skórzane spodnie");
 	item->attributes[attribute::DEFEND] = 5;

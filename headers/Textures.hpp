@@ -111,12 +111,14 @@ void loadTextures() {
 	loadTexture("items/wool hat.png", 32, 32);	// TO-DO to delete
 
 	// ARMORS
+	loadTexture("items/plate armor.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/chain mail.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/skin jacket.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/torn shirt.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/wool shirt.png", 32, 32);	// TO-DO to delete
 
 	// PANTS
+	loadTexture("items/chain mail pants.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/skin pants.png", 32, 32);	// TO-DO to delete
 	loadTexture("items/wool pants.png", 32, 32);	// TO-DO to delete
 
@@ -303,6 +305,9 @@ void loadTextures() {
 	itemSets.push_back("hatchet");
 	itemSets.push_back("curved sword");
 	itemSets.push_back("chain mail");
+	itemSets.push_back("chain mail pants");
+	itemSets.push_back("plate armor");
+
 
 
 	for (auto& set : itemSets) {

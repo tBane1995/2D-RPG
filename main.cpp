@@ -68,7 +68,7 @@ void editPixels() {
     sf::Color color = sf::Color(255,255,255);
     sf::Color newColor = i.getPixel(0, 0);
 
-    string folder_path = "assets/sets/items/hatchet";
+    string folder_path = "assets/sets/items/plate armor";
 
     std::vector < std::string > png_files;
 
@@ -97,7 +97,7 @@ void editPixels() {
 
 int main()
 {
-    //editPixels();   // TO-DO
+    editPixels();   // TO-DO
 
 	loadFonts();
 	loadTextures();		// TO-DO "FROM FILE"

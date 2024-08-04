@@ -98,6 +98,45 @@ void game() {
     cam->setPosition(player->position);
     cam->update();
 
+    // TEST TRADE   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Inventory* in = new Inventory();
+    in->addItem("items/torn shirt");
+    in->addItem("items/axe");
+    in->addItem("items/bone");
+    in->addItem("items/health herb");
+    in->addItem("items/skin helmet");
+    in->addItem("items/skin pants");
+    in->addItem("items/wooden club");
+    in->addItem("items/skin jacket");
+    in->addItem("items/club");
+    in->addItem("items/iron club");
+    in->addItem("items/stone hammer");
+    in->addItem("items/sword");
+    in->addItem("items/long sword");
+    in->addItem("items/gladius");
+    in->addItem("items/wide blade");
+    in->addItem("items/knife");
+    in->addItem("items/dagger");
+    in->addItem("items/hatchet");
+    in->addItem("items/curved sword");
+    in->addItem("items/chain mail");
+    in->addItem("items/wool hat");
+    in->addItem("items/wool pants");
+    in->addItem("items/wool shirt");
+    in->addItem("items/raw meat");
+    in->addItem("items/roasted meat");
+    in->addItem("items/chain mail pants");
+    in->addItem("items/plate armor");
+
+    inventoryLeft = new InventoryPanel(in, -300);
+    inventoryRight = new InventoryPanel(player->bag, 300);
+    cursor = 0;
+    activePanel = activeInventoryPanel::Left;
+    gameState = gameStates::trade;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     while (window->isOpen()) {
 
         prevTime = currentTime;
@@ -117,7 +156,7 @@ void game() {
                     inventoryEvents();
                 }
                 else if (gameState == gameStates::trade) {
-                    tradeEvents();
+                    tradeEvents();  // TO-DO
                 }
                 else if (gameState == gameStates::dialogue) {
                     dialogueEvents();
@@ -208,7 +247,7 @@ void game() {
             updateInventoryPanel();
 
         if(gameState == gameStates::trade)
-            updateTradePanel(); 
+            updateTradePanel();
         
         if (gameState == gameStates::journal)
             journal->update();
@@ -483,6 +522,7 @@ void gameEvents() {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
         inventory = new InventoryPanel(player->bag);
+        cursor = 0;
         gameState = gameStates::inventory;
     }
 
@@ -511,13 +551,15 @@ void inventoryEvents() {
 
         if (cursor + inventory->scroll * itemsInRow >= inventory->inventory->items.size()) {
             
-            int maxScroll = (inventory->inventory->items.size()-1) / itemsInRow - (itemsInCol - 1);
+            int maxScroll = (inventory->inventory->items.size() + itemsInRow - 1) / itemsInRow - itemsInCol;
             if (maxScroll < 0)
                 maxScroll = 0;
 
             if (inventory->scroll > maxScroll) {
-                inventory->scroll -= 1;
-                cursor = cursor + itemsInRow - 1;
+
+                cursor = cursor + (inventory->scroll-maxScroll)*itemsInRow - 1;
+                inventory->scroll = maxScroll;
+                
             }
             else
                 cursor -= 1;
@@ -552,7 +594,7 @@ void inventoryEvents() {
         if( (cursor/itemsInRow*itemsInRow)+itemsInRow < inventory->inventory->items.size() )
             cursor += itemsInRow;
 
-        int maxScroll = inventory->inventory->items.size() / itemsInRow - (itemsInCol - 1);
+        int maxScroll = (inventory->inventory->items.size() + itemsInRow - 1) / itemsInRow - itemsInCol;
         if (maxScroll < 0)
             maxScroll = 0;
 
@@ -579,6 +621,8 @@ void inventoryEvents() {
 
 void tradeEvents() {
 
+    // TO-DO - whole function to repair
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         gameState = gameStates::game;
     }
@@ -590,9 +634,11 @@ void tradeEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         if (activePanel == activeInventoryPanel::Right) {
             // ACTIVE PANEL RIGHT
+            // TO-DO
             if (cursor % itemsInRow == 0) {
                 activePanel = activeInventoryPanel::Left;
                 cursor = cursor + itemsInRow - 1;
+                
             }
             else
                 cursor -= 1;
@@ -607,31 +653,101 @@ void tradeEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 
         if (activePanel == activeInventoryPanel::Left) {
-            if (cursor % itemsInRow == itemsInRow - 1) {
+            if (cursor + inventoryLeft->scroll * itemsInRow >= inventoryLeft->inventory->items.size()-1) {
+                activePanel = activeInventoryPanel::Right;
+                cursor = cursor / itemsInRow * itemsInRow;
+            }
+            else if (cursor % itemsInRow == itemsInRow - 1) {
                 activePanel = activeInventoryPanel::Right;
                 cursor = cursor - itemsInRow + 1;
             }
             else {
-
                 cursor += 1;
             }
                
         }
         else {
-            if (cursor % itemsInRow != itemsInRow - 1)
-                cursor += 1;
+
+            if (cursor % itemsInRow != itemsInRow - 1) {
+                if(cursor + 1 + inventoryRight->scroll*itemsInRow < inventoryRight->inventory->items.size())
+                    cursor += 1;
+            }
         }
 
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        if (cursor >= itemsInRow)
-            cursor -= itemsInRow;
+        cursor -= itemsInRow;
+
+        if (cursor < 0)
+        {
+            if (activePanel == activeInventoryPanel::Right) {
+                if(inventoryRight->scroll > 0)
+                    inventoryRight->scroll -= 1;
+            }
+
+            if (activePanel == activeInventoryPanel::Left) {
+                if (inventoryLeft->scroll > 0)
+                    inventoryLeft->scroll -= 1;
+            }
+
+            cursor += itemsInRow;
+        }
+
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        if (cursor < (itemsInCol - 1) * itemsInRow)
-            cursor += itemsInRow;
+       
+        if (activePanel == activeInventoryPanel::Right) {
+
+            if ((cursor / itemsInRow * itemsInRow) + itemsInRow < inventoryRight->inventory->items.size())
+                cursor += itemsInRow;
+
+            int maxScroll = (inventoryRight->inventory->items.size() + itemsInRow - 1) / itemsInRow - itemsInCol;
+            if (maxScroll < 0)
+                maxScroll = 0;
+
+            if (cursor >= itemsInRow * itemsInCol) {
+                inventoryRight->scroll += 1;
+
+                if (inventoryRight->scroll > maxScroll) {
+                    inventoryRight->scroll = maxScroll;
+                }
+
+                cursor -= itemsInRow;
+            }
+
+            if (cursor + inventoryRight->scroll * itemsInRow >= inventoryRight->inventory->items.size()) {
+                cursor = inventoryRight->inventory->items.size() - inventoryRight->scroll * itemsInRow - 1;
+            }
+            
+        }
+
+        if (activePanel == activeInventoryPanel::Left) {
+
+            if ((cursor / itemsInRow * itemsInRow) + itemsInRow < inventoryLeft->inventory->items.size())
+                cursor += itemsInRow;
+
+            int maxScroll = (inventoryLeft->inventory->items.size() + itemsInRow - 1) / itemsInRow - itemsInCol;
+            if (maxScroll < 0)
+                maxScroll = 0;
+
+            if (cursor >= itemsInRow * itemsInCol) {
+                inventoryLeft->scroll += 1;
+
+                if (inventoryLeft->scroll > maxScroll)
+                    inventoryLeft->scroll = maxScroll;
+
+                cursor -= itemsInRow;
+            }
+
+            if (cursor + inventoryLeft->scroll * itemsInRow >= inventoryLeft->inventory->items.size()) {
+                cursor = inventoryLeft->inventory->items.size() - inventoryLeft->scroll * itemsInRow - 1;
+            }
+
+
+        }
+
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
@@ -641,17 +757,17 @@ void tradeEvents() {
             if (inventoryLeft->inventory->items.size() > 0) {
                 if (cursor < inventoryLeft->inventory->items.size()) {
 
-                    transferItem(inventoryLeft->inventory->items[cursor], inventoryLeft->inventory, inventoryRight->inventory);
+                    transferItem(inventoryLeft->inventory->items[cursor + inventoryLeft->scroll * itemsInRow], inventoryLeft->inventory, inventoryRight->inventory);
 
                     if (cursor + inventoryLeft->scroll * itemsInRow >= inventoryLeft->inventory->items.size()) {
 
-                        int maxScroll = (inventoryLeft->inventory->items.size() - 1) / itemsInRow - (itemsInCol - 1);
+                        int maxScroll = (inventoryLeft->inventory->items.size() + itemsInRow - 1) / itemsInRow - itemsInCol;
                         if (maxScroll < 0)
                             maxScroll = 0;
 
                         if (inventoryLeft->scroll > maxScroll) {
-                            inventoryLeft->scroll -= 1;
-                            cursor = cursor + itemsInRow - 1;
+                            cursor = cursor + (inventoryLeft->scroll - maxScroll) * itemsInRow - 1;
+                            inventoryLeft->scroll = maxScroll;
                         }
                         else
                             cursor -= 1;
@@ -659,23 +775,23 @@ void tradeEvents() {
                 }
 
             }
-        }
+        } 
 
         if (activePanel == activeInventoryPanel::Right) {
             if (inventoryRight->inventory->items.size() > 0) {
                 if (cursor < inventoryRight->inventory->items.size()) {
 
-                    transferItem(inventoryRight->inventory->items[cursor], inventoryRight->inventory, inventoryLeft->inventory);
+                    transferItem(inventoryRight->inventory->items[cursor + inventoryRight->scroll * itemsInRow], inventoryRight->inventory, inventoryLeft->inventory);
 
                     if (cursor + inventoryRight->scroll * itemsInRow >= inventoryRight->inventory->items.size()) {
 
-                        int maxScroll = (inventoryRight->inventory->items.size() - 1) / itemsInRow - (itemsInCol - 1);
+                        int maxScroll = (inventoryRight->inventory->items.size() + itemsInRow - 1) / itemsInRow - itemsInCol;
                         if (maxScroll < 0)
                             maxScroll = 0;
 
                         if (inventoryRight->scroll > maxScroll) {
-                            inventoryRight->scroll -= 1;
-                            cursor = cursor + itemsInRow - 1;
+                            cursor = cursor + (inventoryRight->scroll - maxScroll) * itemsInRow - 1;
+                            inventoryRight->scroll = maxScroll;
                         }
                         else
                             cursor -= 1;
