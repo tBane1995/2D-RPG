@@ -97,7 +97,7 @@ void editPixels() {
 
 int main()
 {
-    editPixels();   // TO-DO
+    //editPixels();   // TO-DO
 
 	loadFonts();
 	loadTextures();		// TO-DO "FROM FILE"
