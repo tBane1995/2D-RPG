@@ -107,20 +107,23 @@ void loadTextures() {
 	loadTexture("items/stone hammer.png", 32, 32);
 
 	// HELMET
-	loadTexture("items/skin helmet.png", 32, 32);	// TO-DO to delete
-	loadTexture("items/wool hat.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/skin helmet.png", 32, 32);
+	loadTexture("items/wool hat.png", 32, 32);
 
 	// ARMORS
-	loadTexture("items/plate armor.png", 32, 32);	// TO-DO to delete
-	loadTexture("items/chain mail.png", 32, 32);	// TO-DO to delete
-	loadTexture("items/skin jacket.png", 32, 32);	// TO-DO to delete
-	loadTexture("items/torn shirt.png", 32, 32);	// TO-DO to delete
-	loadTexture("items/wool shirt.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/plate armor.png", 32, 32);
+	loadTexture("items/chain mail.png", 32, 32);
+	loadTexture("items/skin jacket.png", 32, 32);
+	loadTexture("items/torn shirt.png", 32, 32);
+	loadTexture("items/wool shirt.png", 32, 32);
 
 	// PANTS
-	loadTexture("items/chain mail pants.png", 32, 32);	// TO-DO to delete
-	loadTexture("items/skin pants.png", 32, 32);	// TO-DO to delete
-	loadTexture("items/wool pants.png", 32, 32);	// TO-DO to delete
+	loadTexture("items/chain mail pants.png", 32, 32);
+	loadTexture("items/skin pants.png", 32, 32);
+	loadTexture("items/wool pants.png", 32, 32);
+
+	// SHIELDS
+	loadTexture("items/shield.png", 32, 32);	// TO-DO to delete
 
 	// HERBS
 	loadTexture("items/mana plant.png", 30, 50);
@@ -146,7 +149,6 @@ void loadTextures() {
 
 	loadTexture("paths/stonepath1.png", 32, 32);
 	loadTexture("paths/stonepath2.png", 32, 32);
-
 
 	// CHARACTERS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -307,6 +309,7 @@ void loadTextures() {
 	itemSets.push_back("chain mail");
 	itemSets.push_back("chain mail pants");
 	itemSets.push_back("plate armor");
+	itemSets.push_back("shield");
 
 
 

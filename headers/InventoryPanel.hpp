@@ -66,7 +66,7 @@ public:
 					Item* item = inventory->items[i + scroll * itemsInRow];
 					
 					if(inventory == player->bag)
-						if (item == player->helmet || item == player->armor || item == player->pants || item==player->weapon)
+						if (item == player->helmet || item == player->armor || item == player->pants || item==player->weapon || item == player->shield)
 							slots[i].setColor(sf::Color::Red);
 
 					items.emplace_back();
@@ -240,6 +240,16 @@ void useItem() {
 			player->weapon = item;
 
 		player->loadWeapon();
+	}
+
+	if (item->type == itemType::shield) {
+
+		if (player->shield == item)
+			player->shield = nullptr;
+		else
+			player->shield = item;
+
+		player->loadShield();
 	}
 
     

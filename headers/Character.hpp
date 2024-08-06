@@ -8,6 +8,8 @@ public:
 	Item* helmet;
 	Item* armor;
 	Item* pants;
+	Item* leftHand;
+	Item* rightHand;
 
 	// HELMET
 	Texture* helmetIdleTextures[16];
@@ -24,16 +26,27 @@ public:
 	Texture* pantsRunTextures[16];
 	Texture* pantsAttackTextures[16];
 
+	// LEFT HAND
+	Texture* leftHandIdleTextures[16];
+	Texture* leftHandRunTextures[16];
+	Texture* leftHandAttackTextures[16];
+
+	// RIGHT HAND
+	Texture* rightHandIdleTextures[16];
+	Texture* rightHandRunTextures[16];
+	Texture* rightHandAttackTextures[16];
+
 	// SPRITES
-	sf::Sprite bodySprite;
 	sf::Sprite helmetSprite;
 	sf::Sprite armorSprite;
 	sf::Sprite pantsSprite;
+	sf::Sprite leftHandSprite;
+	sf::Sprite rightHandSprite;
 	
 	Dialogue* dialogue;
 
 	Texture* takeItTexture;
-	sf::Sprite takeItSprite;
+	sf::Sprite talkIcoSprite;
 	bool showHand;
 
 
@@ -41,17 +54,21 @@ public:
 		type = gameObjectType::Character;
 		
 		this->body = body;
+
 		helmet = nullptr;
 		armor = nullptr;
 		pants = nullptr;
+		leftHand = nullptr;
+		rightHand = nullptr;
 
 		loadTextures();
 
+		dialogue = nullptr;
 
 		takeItTexture = getTexture("GUI/talk");
-		takeItSprite = sf::Sprite();
-		takeItSprite.setTexture(*takeItTexture->texture);
-		takeItSprite.setOrigin(takeItTexture->cx, takeItTexture->cy);
+		talkIcoSprite = sf::Sprite();
+		talkIcoSprite.setTexture(*takeItTexture->texture);
+		talkIcoSprite.setOrigin(takeItTexture->cx, takeItTexture->cy);
 		showHand = false;
 
 	}
@@ -60,16 +77,21 @@ public:
 		type = gameObjectType::Character;
 		
 		this->body = dynamic_cast<Character*>(object)->body;
-		helmet = nullptr;
-		armor = nullptr;
-		pants = nullptr;
+		
+		helmet = dynamic_cast <Character*>(object)->helmet ;
+		armor = dynamic_cast <Character*>(object)->armor;
+		pants = dynamic_cast <Character*>(object)->pants;
+		leftHand = dynamic_cast <Character*>(object)->leftHand;
+		rightHand = dynamic_cast <Character*>(object)->rightHand;
+
+		dialogue = dynamic_cast <Character*>(object)->dialogue;
 
 		loadTextures();
 		
 		takeItTexture = getTexture("GUI/talk");
-		takeItSprite = sf::Sprite();
-		takeItSprite.setTexture(*takeItTexture->texture);
-		takeItSprite.setOrigin(takeItTexture->cx, takeItTexture->cy);
+		talkIcoSprite = sf::Sprite();
+		talkIcoSprite.setTexture(*takeItTexture->texture);
+		talkIcoSprite.setOrigin(takeItTexture->cx, takeItTexture->cy);
 		showHand = false;
 	}
 
@@ -79,6 +101,8 @@ public:
 		loadHelmet();
 		loadArmor();
 		loadPants();
+		loadLeftHand();
+		loadRightHand();
 	}
 
 	void loadBody() {
@@ -218,12 +242,80 @@ public:
 
 	}
 
+	void loadLeftHand() {
+
+		for (int i = 0; i < 16; i++) {
+			leftHandIdleTextures[i] = nullptr;
+			leftHandRunTextures[i] = nullptr;
+			leftHandAttackTextures[i] = nullptr;
+
+		}
+
+		if (leftHand != nullptr) {
+
+			for (int i = 0; i < 4; i++) {
+				leftHandIdleTextures[i] = getTexture("sets/" + leftHand->name + "/idleTop" + to_string(i));
+				leftHandIdleTextures[4 + i] = getTexture("sets/" + leftHand->name + "/idleRight" + to_string(i));
+				leftHandIdleTextures[8 + i] = getTexture("sets/" + leftHand->name + "/idleBottom" + to_string(i));
+				leftHandIdleTextures[12 + i] = getTexture("sets/" + leftHand->name + "/idleLeft" + to_string(i));
+
+				leftHandRunTextures[i] = getTexture("sets/" + leftHand->name + "/runTop" + to_string(i));
+				leftHandRunTextures[4 + i] = getTexture("sets/" + leftHand->name + "/runRight" + to_string(i));
+				leftHandRunTextures[8 + i] = getTexture("sets/" + leftHand->name + "/runBottom" + to_string(i));
+				leftHandRunTextures[12 + i] = getTexture("sets/" + leftHand->name + "/runLeft" + to_string(i));
+
+				leftHandAttackTextures[i] = getTexture("sets/" + leftHand->name + "/attackTop" + to_string(i));
+				leftHandAttackTextures[4 + i] = getTexture("sets/" + leftHand->name + "/attackRight" + to_string(i));
+				leftHandAttackTextures[8 + i] = getTexture("sets/" + leftHand->name + "/attackBottom" + to_string(i));
+				leftHandAttackTextures[12 + i] = getTexture("sets/" + leftHand->name + "/attackLeft" + to_string(i));
+
+			}
+		}
+
+		leftHandSprite = sf::Sprite();
+		leftHandSprite.setOrigin(32, 58);
+
+	}
+
+	void loadRightHand() {
+
+		for (int i = 0; i < 16; i++) {
+			rightHandIdleTextures[i] = nullptr;
+			rightHandRunTextures[i] = nullptr;
+			rightHandAttackTextures[i] = nullptr;
+
+		}
+
+		if (rightHand != nullptr) {
+
+			for (int i = 0; i < 4; i++) {
+				rightHandIdleTextures[i] = getTexture("sets/" + rightHand->name + "/idleTop" + to_string(i));
+				rightHandIdleTextures[4 + i] = getTexture("sets/" + rightHand->name + "/idleRight" + to_string(i));
+				rightHandIdleTextures[8 + i] = getTexture("sets/" + rightHand->name + "/idleBottom" + to_string(i));
+				rightHandIdleTextures[12 + i] = getTexture("sets/" + rightHand->name + "/idleLeft" + to_string(i));
+
+				rightHandRunTextures[i] = getTexture("sets/" + rightHand->name + "/runTop" + to_string(i));
+				rightHandRunTextures[4 + i] = getTexture("sets/" + rightHand->name + "/runRight" + to_string(i));
+				rightHandRunTextures[8 + i] = getTexture("sets/" + rightHand->name + "/runBottom" + to_string(i));
+				rightHandRunTextures[12 + i] = getTexture("sets/" + rightHand->name + "/runLeft" + to_string(i));
+
+				rightHandAttackTextures[i] = getTexture("sets/" + rightHand->name + "/attackTop" + to_string(i));
+				rightHandAttackTextures[4 + i] = getTexture("sets/" + rightHand->name + "/attackRight" + to_string(i));
+				rightHandAttackTextures[8 + i] = getTexture("sets/" + rightHand->name + "/attackBottom" + to_string(i));
+				rightHandAttackTextures[12 + i] = getTexture("sets/" + rightHand->name + "/attackLeft" + to_string(i));
+
+			}
+		}
+
+		rightHandSprite = sf::Sprite();
+		rightHandSprite.setOrigin(32, 58);
+
+	}
+
 
 	void update(float dt) {
 		GameObject::update(dt);
 		
-		// only state = states::idle !!
-
 		calculateCurrentFrame(dt);
 
 		sprite.setTexture(*idleTextures[direction * 4 + frame]->texture);
@@ -237,10 +329,18 @@ public:
 		if (pants != nullptr)
 			pantsSprite.setTexture(*pantsIdleTextures[direction * 4 + frame]->texture);
 
+		if (rightHand != nullptr)
+			rightHandSprite.setTexture(*rightHandIdleTextures[direction * 4 + frame]->texture);
+
+		if (leftHand != nullptr)
+			leftHandSprite.setTexture(*leftHandIdleTextures[direction * 4 + frame]->texture);
+
 		sprite.setPosition(position);
 		helmetSprite.setPosition(position);
 		armorSprite.setPosition(position);
 		pantsSprite.setPosition(position);
+		rightHandSprite.setPosition(position);
+		leftHandSprite.setPosition(position);
 
 		viewRangeArea.setPosition(position);
 		actionRangeArea.setPosition(position);
@@ -248,7 +348,10 @@ public:
 		setLifeBar();
 
 		showHand = false;
-		takeItSprite.setPosition(position.x, position.y - 80);
+		talkIcoSprite.setPosition(position.x, position.y - 80);
+
+		if (dialogue == nullptr)
+			cout << name << " not have a dialog\n";
 
 		if (dialogue != nullptr) {
 
@@ -283,13 +386,51 @@ public:
 			GameObject::draw(window);
 		}
 
-		window->draw(sprite);
-		window->draw(helmetSprite);
-		window->draw(pantsSprite);
-		window->draw(armorSprite);
+		if (direction == 0) {
+			// TOP
+			window->draw(rightHandSprite);
+			window->draw(leftHandSprite);
+			window->draw(sprite);
+			window->draw(helmetSprite);
+			window->draw(pantsSprite);
+			window->draw(armorSprite);
+
+		}
+
+		if (direction == 1) {
+			// RIGHT
+
+			window->draw(leftHandSprite);
+			window->draw(sprite);
+			window->draw(helmetSprite);
+			window->draw(pantsSprite);
+			window->draw(armorSprite);
+			window->draw(rightHandSprite);
+		}
+
+		if (direction == 2) {
+			// BOTTOM
+			window->draw(sprite);
+			window->draw(helmetSprite);
+			window->draw(pantsSprite);
+			window->draw(armorSprite);
+			window->draw(leftHandSprite);
+			window->draw(rightHandSprite);
+		}
+
+		if (direction == 3) {
+			// LEFT
+			window->draw(rightHandSprite);
+			window->draw(sprite);
+			window->draw(helmetSprite);
+			window->draw(pantsSprite);
+			window->draw(armorSprite);
+			window->draw(leftHandSprite);
+
+		}
 		
 		if (showHand == true)
-			window->draw(takeItSprite);
+			window->draw(talkIcoSprite);
 		
 		//window->draw(lifeBarBackground);
 		//window->draw(lifeBar);

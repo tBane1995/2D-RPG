@@ -68,7 +68,7 @@ void editPixels() {
     sf::Color color = sf::Color(255,255,255);
     sf::Color newColor = i.getPixel(0, 0);
 
-    string folder_path = "assets/sets/items/plate armor";
+    string folder_path = "assets/sets/items/shield";
 
     std::vector < std::string > png_files;
 
@@ -102,6 +102,8 @@ int main()
 	loadFonts();
 	loadTextures();		// TO-DO "FROM FILE"
 	loadItems();		// TO-DO "FROM FILE"
+    loadDialogues();
+    loadQuests();
 	loadPrefabs();		// TO-DO "FROM FILE"
 	
 

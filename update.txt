@@ -1,4 +1,3 @@
--added plate armor
--added chain mail pants
 -fix the panel inventory scrolling
 -fix the panel trade scrolling
+-added first shield

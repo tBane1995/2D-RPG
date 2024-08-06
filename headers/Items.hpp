@@ -3,7 +3,7 @@
 
 // TO-DO
 enum class attribute { ATTACK, DEFEND, HP, MP, HP_max, MP_max, STRENGTH, DEXTERITY, INTELLIGENCE };
-enum class itemType { herb, potion, food, weapon, helmet, armor, pants, other };
+enum class itemType { herb, potion, food, weapon, helmet, armor, pants, shield, other };
 
 class Item {
 public:
@@ -239,6 +239,13 @@ void loadItems() {
 	item = new Item("items/wool hat", itemType::helmet, L"wełniana czapka");
 	item->attributes[attribute::DEFEND] = 1;
 	items.push_back(item);
+
+	// SHIELDS
+
+	item = new Item("items/shield", itemType::shield, L"zwyczajna tarcza");
+	item->attributes[attribute::DEFEND] = 2;
+	items.push_back(item);
+
 
 	// HERBS
 	
