@@ -133,6 +133,10 @@ void game() {
     activePanel = activeInventoryPanel::Left;
     gameState = gameStates::trade;
 
+    cursor = 0;
+    journal = new JournalPanel();
+    gameState = gameStates::journal;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     while (window->isOpen()) {
@@ -154,7 +158,7 @@ void game() {
                     inventoryEvents();
                 }
                 else if (gameState == gameStates::trade) {
-                    tradeEvents();  // TO-DO
+                    tradeEvents();
                 }
                 else if (gameState == gameStates::dialogue) {
                     dialogueEvents();
@@ -519,14 +523,15 @@ void gameEvents() {
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-        inventory = new InventoryPanel(player->bag);
         cursor = 0;
+        inventory = new InventoryPanel(player->bag);
         gameState = gameStates::inventory;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
-        gameState = gameStates::journal;
+        cursor = 0;
         journal = new JournalPanel();
+        gameState = gameStates::journal;
     }
 
 }
@@ -541,6 +546,13 @@ void inventoryEvents() {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
         gameState = gameStates::game;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+
+        cursor = 0;
+        journal = new JournalPanel();
+        gameState = gameStates::journal;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
@@ -927,6 +939,14 @@ void journalEvents() {
         gameState = gameStates::inventory;
         inventory = new InventoryPanel(player->bag);
         cursor = 0;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        cursor -= 1;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        cursor += 1;
     }
 }
 

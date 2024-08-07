@@ -83,7 +83,7 @@ void drawDialogBox(sf::RenderWindow* window, int currentPage = 0) {
 			break;
 
 		sf::Text text = sf::Text(wrappedText[i + 5 * page], dialogBoxFont, characterSize);
-		text.setFillColor(textDialogueColor);
+		text.setFillColor(textColor);
 		textPosition.x = background.getPosition().x - dialogSize.x / 2.f + padding;
 		textPosition.y = background.getPosition().y - dialogSize.y / 2.f + float(i) * lineHeight + padding;
 		text.setPosition(textPosition);
@@ -125,9 +125,9 @@ void drawChooseBox(sf::RenderWindow* window) {
 
 		sf::Text text = sf::Text(availableOptions[i + dialogScroll].text, dialogBoxFont, characterSize);
 		if (i == chooseOption)
-			text.setFillColor(sf::Color(255, 201, 14));
+			text.setFillColor(textActiveColor);
 		else
-			text.setFillColor(textDialogueColor);
+			text.setFillColor(textColor);
 		textPosition.x = background.getPosition().x - dialogSize.x / 2.f + padding;
 		textPosition.y = background.getPosition().y - dialogSize.y / 2.f + float(i) * lineHeight + padding;
 		text.setPosition(textPosition);

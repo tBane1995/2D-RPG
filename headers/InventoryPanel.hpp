@@ -66,7 +66,7 @@ public:
 					Item* item = inventory->items[i + scroll * itemsInRow];
 					
 					if(inventory == player->bag)
-						if (item == player->helmet || item == player->armor || item == player->pants || item==player->weapon || item == player->shield)
+						if (item == player->helmet || item == player->armor || item == player->pants || item==player->rightHand || item == player->leftHand)
 							slots[i].setColor(sf::Color::Red);
 
 					items.emplace_back();
@@ -158,14 +158,14 @@ void updateInventoryPanel() {
 
 		itemName = sf::Text();
 		itemName.setCharacterSize(28);
-		itemName.setFillColor(textDialogueColor);
+		itemName.setFillColor(textColor);
 		itemName.setFont(basicFont);
 		itemName.setPosition(cam->position.x-300 + 192, cam->position.y+275-64);
 		itemName.setString(getItemName(item));
 
 		itemDescription = sf::Text();
 		itemDescription.setCharacterSize(16);
-		itemDescription.setFillColor(textDialogueColor);
+		itemDescription.setFillColor(textColor);
 		itemDescription.setFont(basicFont);
 		itemDescription.setPosition(cam->position.x - 300 + 192, cam->position.y + 275 - 32);
 		itemDescription.setString(getItemDescription(item));
@@ -234,22 +234,22 @@ void useItem() {
 
 	if (item->type == itemType::weapon) {
 
-		if (player->weapon == item)
-			player->weapon = nullptr;
+		if (player->rightHand == item)
+			player->rightHand = nullptr;
 		else
-			player->weapon = item;
+			player->rightHand = item;
 
-		player->loadWeapon();
+		player->loadRightHand();
 	}
 
 	if (item->type == itemType::shield) {
 
-		if (player->shield == item)
-			player->shield = nullptr;
+		if (player->leftHand == item)
+			player->leftHand = nullptr;
 		else
-			player->shield = item;
+			player->leftHand = item;
 
-		player->loadShield();
+		player->loadLeftHand();
 	}
 
     

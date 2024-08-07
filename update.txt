@@ -1,3 +1,1 @@
--fix the panel inventory scrolling
--fix the panel trade scrolling
--added first shield
+-added journal panel

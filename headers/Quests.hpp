@@ -121,19 +121,28 @@ std::vector < Quest* > quests;
 void loadQuests() {
 	quests.clear();
 
-	Quest* quest1 = new Quest(0, L"Zjedz coś.");
-	quest1->addStep(questCondition::currentHP, "40", L"jestem głodny, powinienem coś zjeść");
-	quest1->addStep(questCondition::showDialogue, "13", L"już się najadłem. Powinienem poszukać jakichś ubrań");
-	quest1->addStep(questCondition::haveArmor, "true", L"powinienem ubrać koszule");
-	quest1->addStep(questCondition::haveHelmet, "true", L"powinienem założyć czapkę");
-	quest1->addStep(questCondition::havePants, "true", L"powiniene ubrać spodnie");
-	quest1->addStep(questCondition::showDialogue, "14", L"ubralem się");
-	quest1->addStep(questCondition::position, "2750 340", L"powinienem iść wzdłóż ścieżki");
-	quest1->addStep(questCondition::showDialogue, "15", L"ścieżka się skończyła, nie wiem co robić dalej.");
-	quest1->state = questState::actual;
-	quests.push_back(quest1);
+	Quest* quest;
 
+	quest = new Quest(0, L"Zjedz coś.");
+	quest->addStep(questCondition::currentHP, "40", L"jestem głodny, powinienem coś zjeść. W tej chacie pewnie znajdzie się jakieś pożywienie. Powinienem się tam udać");
+	quest->addStep(questCondition::showDialogue, "13", L"już się najadłem.");
+	quests.push_back(quest);
 
+	quest = new Quest(1, L"Potrzebne ubranie");
+	quest-> addStep(questCondition::haveArmor, "true", L"powinienem ubrać koszule");
+	quest->addStep(questCondition::haveHelmet, "true", L"powinienem założyć czapkę");
+	quest->addStep(questCondition::havePants, "true", L"powiniene ubrać spodnie");
+	quest->addStep(questCondition::showDialogue, "14", L"ubralem się");
+	quests.push_back(quest);
+
+	quest = new Quest(2, L"Wzdłóż ścieżki");
+	quest->addStep(questCondition::position, "2750 340", L"powinienem iść wzdłóż ścieżki");
+	quest->addStep(questCondition::showDialogue, "15", L"ścieżka się skończyła, nie wiem co robić dalej.");
+	quests.push_back(quest);
+
+	quests[0]->state = questState::actual;
+	//quests[1]->state = questState::actual;
+	//quests[2]->state = questState::actual;
 
 }
 

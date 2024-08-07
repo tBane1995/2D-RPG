@@ -51,14 +51,14 @@ void updateTradePanel() {
 
 		itemName = sf::Text();
 		itemName.setCharacterSize(28);
-		itemName.setFillColor(textDialogueColor);
+		itemName.setFillColor(textColor);
 		itemName.setFont(basicFont);
 		itemName.setPosition(cam->position.x - 300 + 192, cam->position.y + 275 - 64);
 		itemName.setString(getItemName(item));
 
 		itemDescription = sf::Text();
 		itemDescription.setCharacterSize(16);
-		itemDescription.setFillColor(textDialogueColor);
+		itemDescription.setFillColor(textColor);
 		itemDescription.setFont(basicFont);
 		itemDescription.setPosition(cam->position.x - 300 + 192, cam->position.y + 275 - 32);
 		itemDescription.setString(getItemDescription(item));
