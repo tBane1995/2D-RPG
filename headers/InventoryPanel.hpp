@@ -1,4 +1,4 @@
-#ifndef InventoryPanel_hpp
+﻿#ifndef InventoryPanel_hpp
 #define InventoryPanel_hpp
 
 int itemsInRow = 6;
@@ -14,8 +14,11 @@ public:
 	int position_y;
 	int scroll;
 
-	std::vector < sf::Sprite > slots;
-	std::vector <sf::Sprite > items;
+	std::vector < Item* > sortedItems;
+	std::vector < int > sortedItemsCounts;
+
+	std::vector < sf::Sprite > slotsSprites;
+	std::vector <sf::Sprite > itemsSprites;
 	std::vector < sf::Text > counts;
 	bool drawSelector;
 	sf::Sprite selector;
@@ -28,12 +31,12 @@ public:
 
 		// SLOTS
 		for (int i = 0; i < itemsInRow * itemsInCol; i++) {
-			slots.emplace_back();
+			slotsSprites.emplace_back();
 			int x = cam->position.x + position_x - (itemsInRow / 2 - i % itemsInRow) * slotSide + slotSide / 2;
 			int y = cam->position.y + position_y - (itemsInCol / 2 - i / itemsInRow) * slotSide + slotSide / 2;
-			slots[i].setOrigin(slotSide / 2, slotSide / 2);
-			slots[i].setPosition(x, y);
-			slots[i].setTexture(*getTexture("GUI/slotTexture1")->texture);
+			slotsSprites[i].setOrigin(slotSide / 2, slotSide / 2);
+			slotsSprites[i].setPosition(x, y);
+			slotsSprites[i].setTexture(*getTexture("GUI/slotTexture1")->texture);
 		}
 
 		// SELECTOR
@@ -45,43 +48,80 @@ public:
 	}
 
 	void update(int cursor) {
+		
+		// SORT THE ITEMS
 
-		// SLOTS
+		sortedItems.clear();
+		sortedItemsCounts.clear();
+
+		for (auto& item : items) {
+			// create sorted items list
+			sortedItems.push_back(item);
+			sortedItemsCounts.push_back(0);
+		}
+
+		for (int i = 0; i < inventory->items.size(); i++)
+			for (int j = 0; j < sortedItems.size(); j++) {
+				// adding items to sorted items list
+				if (inventory->items[i] == sortedItems[j])
+					sortedItemsCounts[j] += inventory->counts[i];
+
+			}
+
+
+		std::vector < Item* > s;
+		std::vector < int > c;
+
+		s.clear();
+		c.clear();
+
+		for (int i = 0; i < sortedItems.size(); i++) {
+			// delete items who count is zero
+			if (sortedItemsCounts[i] > 0) {
+				s.push_back(sortedItems[i]);
+				c.push_back(sortedItemsCounts[i]);
+			}
+		}
+
+		sortedItems = s;
+		sortedItemsCounts = c;
+
+		// SLOTS SPRITES
 		for (int i = 0; i < itemsInRow * itemsInCol; i++) {
 			int x = cam->position.x + position_x - (itemsInRow / 2 - i % itemsInRow) * slotSide + slotSide / 2;
 			int y = cam->position.y + position_y - (itemsInCol / 2 - i / itemsInRow) * slotSide + slotSide / 2;
-			slots[i].setPosition(x, y);
-			slots[i].setColor(sf::Color::White);
+			slotsSprites[i].setPosition(x, y);
+			slotsSprites[i].setColor(sf::Color::White);
 		}
 
-		// ITEMS
-		items.clear();
+		// ITEMS SPRITES
+		itemsSprites.clear();
 		counts.clear();
 
 		if (inventory != nullptr) {
 			for (int i = 0; i < itemsInRow * itemsInCol; i++) {
 
-				if (i+scroll*itemsInRow < inventory->items.size()) {
+				if (i+scroll*itemsInRow < sortedItems.size()) {
 
-					Item* item = inventory->items[i + scroll * itemsInRow];
+					Item* item = sortedItems[i + scroll * itemsInRow];
 					
 					if(inventory == player->bag)
 						if (item == player->helmet || item == player->armor || item == player->pants || item==player->rightHand || item == player->leftHand)
-							slots[i].setColor(sf::Color::Red);
+							slotsSprites[i].setColor(sf::Color::Red);
 
-					items.emplace_back();
+					itemsSprites.emplace_back();
 
 					int x = cam->position.x + position_x - (itemsInRow / 2 - i % itemsInRow) * slotSide + slotSide / 2;
 					int y = cam->position.y + position_y - (itemsInCol / 2 - i / itemsInRow) * slotSide + slotSide / 2;
 
 					float twidth = item->texture->texture->getSize().x;
 					float theight = item->texture->texture->getSize().y;
-					items[i].setTexture(*item->texture->texture);
-					items[i].setOrigin(twidth / 2, theight / 2);
-					items[i].setPosition(x, y);
-					items[i].setScale(64.0f / twidth, 64.0f / theight);
+					itemsSprites[i].setTexture(*item->texture->texture);
+					itemsSprites[i].setOrigin(twidth / 2, theight / 2);
+					itemsSprites[i].setPosition(x, y);
+					itemsSprites[i].setScale(64.0f / twidth, 64.0f / theight);
 
-					counts.emplace_back(to_string(inventory->counts[i+scroll*itemsInRow]), basicFont, 16);
+					counts.emplace_back(to_string(sortedItemsCounts[i+scroll*itemsInRow]), basicFont, 16);
 					counts[i].setPosition(x, y);
 					int width = counts[i].getLocalBounds().width;
 					int height = counts[i].getLocalBounds().height;
@@ -109,10 +149,10 @@ public:
 	}
 
 	void draw() {
-		for (auto& slot : slots)
+		for (auto& slot : slotsSprites)
 			window->draw(slot);
 
-		for (auto& item : items)
+		for (auto& item : itemsSprites)
 			window->draw(item);
 
 		for (auto& count : counts)
@@ -144,8 +184,10 @@ void updateInventoryPanel() {
 
 	Item* item = nullptr;
 	int itemIndex = cursor + inventory->scroll * itemsInRow;
-	if (inventory->inventory != nullptr &&  itemIndex< inventory->inventory->items.size())
-		item = inventory->inventory->items[itemIndex];
+	if (itemIndex < inventory->sortedItems.size()) {
+		item = inventory->sortedItems[itemIndex];
+	}
+		
 
 	if (item!=nullptr)
 	{
@@ -195,7 +237,7 @@ void useItem() {
 	if (cursor+inventory->scroll*itemsInRow >= inventory->inventory->items.size())
 		return;
 
-	Item* item = inventory->inventory->items[cursor+inventory->scroll*itemsInRow];
+	Item* item = inventory->sortedItems[cursor+inventory->scroll*itemsInRow];
 
     if (item->type == itemType::herb || item->type == itemType::potion || item->type == itemType::food) {
         player->heal(item->attributes[attribute::HP]);

@@ -1,7 +1,7 @@
 ﻿#ifndef Quests_hpp
 #define Quests_hpp
 
-enum class questCondition { currentHP, showDialogue, haveArmor, haveHelmet, havePants, position };
+enum class questCondition { currentHP, showDialogue, haveArmor, haveHelmet, havePants, position, is_dressed };
 enum class questState { unstarted, actual, ended };
 
 class Step {
@@ -75,6 +75,13 @@ public:
 				return true;
 		}
 
+		if (condition == questCondition::is_dressed)
+		{
+			if (player->armor != nullptr && player->pants != nullptr) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -123,26 +130,24 @@ void loadQuests() {
 
 	Quest* quest;
 
-	quest = new Quest(0, L"Zjedz coś.");
-	quest->addStep(questCondition::currentHP, "40", L"jestem głodny, powinienem coś zjeść. W tej chacie pewnie znajdzie się jakieś pożywienie. Powinienem się tam udać");
-	quest->addStep(questCondition::showDialogue, "13", L"już się najadłem.");
+	quest = new Quest(0, L"Jeść!");
+	quest->addStep(questCondition::currentHP, "40", L"jestem głodny, powinienem coś zjeść. W tej chacie pewnie znajdzie się jakieś pożywienie.");
+	quest->addStep(questCondition::showDialogue, "13", L"Nie ma to jak się dobrze najeść");
 	quests.push_back(quest);
 
-	quest = new Quest(1, L"Potrzebne ubranie");
-	quest-> addStep(questCondition::haveArmor, "true", L"powinienem ubrać koszule");
-	quest->addStep(questCondition::haveHelmet, "true", L"powinienem założyć czapkę");
-	quest->addStep(questCondition::havePants, "true", L"powiniene ubrać spodnie");
-	quest->addStep(questCondition::showDialogue, "14", L"ubralem się");
+	quest = new Quest(1, L"Ubranie!");
+	quest-> addStep(questCondition::is_dressed, "true", L"powinienem się w coś ubrać");
+	quest->addStep(questCondition::showDialogue, "14", L"Ubralem się. Przynajmniej nie wyglądam jak obdartus.");
 	quests.push_back(quest);
 
 	quest = new Quest(2, L"Wzdłóż ścieżki");
-	quest->addStep(questCondition::position, "2750 340", L"powinienem iść wzdłóż ścieżki");
-	quest->addStep(questCondition::showDialogue, "15", L"ścieżka się skończyła, nie wiem co robić dalej.");
+	quest->addStep(questCondition::position, "2750 340", L"Powinienem sprawdzić dokąd zaprowadzi mnie ta ścieżka.");
+	quest->addStep(questCondition::showDialogue, "15", L"ścieżka się skończyła, jak na razie nic więcej nie wymyślę.");
 	quests.push_back(quest);
 
 	quests[0]->state = questState::actual;
-	//quests[1]->state = questState::actual;
-	//quests[2]->state = questState::actual;
+	quests[1]->state = questState::actual;
+	quests[2]->state = questState::actual;
 
 }
 

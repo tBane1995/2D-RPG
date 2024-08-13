@@ -1,1 +1,1 @@
--added journal panel
+-added two monsters "troll" and "bies"

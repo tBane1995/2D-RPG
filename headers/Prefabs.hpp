@@ -160,8 +160,25 @@ void loadPrefabs() {
     dziobak->INTELLIGENCE = 1;
     prefabs.push_back(dziobak);
 
-    
+    Monster* troll = new Monster("monsters/troll", 90, 60);
+    troll->HP = 400;
+    troll->HP_max = 400;
+    troll->MP = 10;
+    troll->MP_max = 10;
+    troll->STRENGTH = 20;
+    troll->DEXTERITY = 5;
+    troll->INTELLIGENCE = 2;
+    prefabs.push_back(troll);
 
+    Monster* bies = new Monster("monsters/bies", 90, 60);
+    bies->HP = 400;
+    bies->HP_max = 400;
+    bies->MP = 10;
+    bies->MP_max = 10;
+    bies->STRENGTH = 20;
+    bies->DEXTERITY = 5;
+    bies->INTELLIGENCE = 2;
+    prefabs.push_back(bies);
 }
 
 

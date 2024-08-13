@@ -184,6 +184,8 @@ void loadTextures() {
 	monsters.push_back("wilczur");
 	monsters.push_back("goblin");
 	monsters.push_back("dziobak");
+	monsters.push_back("troll");
+	monsters.push_back("bies");
 
 	for (auto& m : monsters) {
 		for (int i = 0; i < 4; i++) {

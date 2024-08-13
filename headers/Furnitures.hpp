@@ -42,38 +42,7 @@ public:
 			inventory = new Inventory();
 			inventory->addItem("items/wooden club");
 			inventory->addItem("items/wool shirt");   // TO-DO to delete
-			inventory->addItem("items/wool pants");   // TO-DO to delete
-			inventory->addItem("items/wool hat");   // TO-DO to delete
-
-			// TO-DO - to delete
-			inventory->addItem("items/torn shirt");
-			inventory->addItem("items/axe");
-			inventory->addItem("items/bone");
-			inventory->addItem("items/health herb");
-			inventory->addItem("items/skin helmet");
-			inventory->addItem("items/skin pants");
-			inventory->addItem("items/wooden club");
-			inventory->addItem("items/skin jacket");
-			inventory->addItem("items/club");
-			inventory->addItem("items/iron club");
-			inventory->addItem("items/stone hammer");
-			inventory->addItem("items/sword");
-			inventory->addItem("items/long sword");
-			inventory->addItem("items/gladius");
-			inventory->addItem("items/wide blade");
-			inventory->addItem("items/knife");
-			inventory->addItem("items/dagger");
-			inventory->addItem("items/hatchet");
-			inventory->addItem("items/curved sword");
-			inventory->addItem("items/chain mail");
-			inventory->addItem("items/wool hat");
-			inventory->addItem("items/wool pants");
-			inventory->addItem("items/wool shirt");
-			inventory->addItem("items/raw meat");
-			inventory->addItem("items/roasted meat");
-			inventory->addItem("items/chain mail pants");
-			inventory->addItem("items/plate armor");
-			
+			inventory->addItem("items/wool pants");   // TO-DO to delete			
 		}
 
 		if (name == "furnitures/table1") {

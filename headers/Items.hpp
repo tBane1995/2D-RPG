@@ -193,6 +193,12 @@ void loadItems() {
 	item->attributes[attribute::ATTACK] = 1;
 	items.push_back(item);
 
+	// SHIELDS
+
+	item = new Item("items/shield", itemType::shield, L"zwyczajna tarcza");
+	item->attributes[attribute::DEFEND] = 2;
+	items.push_back(item);
+
 	
 	// ARMORS
 
@@ -240,12 +246,7 @@ void loadItems() {
 	item->attributes[attribute::DEFEND] = 1;
 	items.push_back(item);
 
-	// SHIELDS
-
-	item = new Item("items/shield", itemType::shield, L"zwyczajna tarcza");
-	item->attributes[attribute::DEFEND] = 2;
-	items.push_back(item);
-
+	
 
 	// HERBS
 	

@@ -75,7 +75,7 @@ public:
 	}
 
 	void idle(float dt) {
-		if (rand() % 30 == 0) {
+		if (rand() % 300 == 0) {
 			state = states::walk;
 			target.x = base.x + rand() % 100 - 50;
 			target.y = base.y + rand() % 100 - 50;

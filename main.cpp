@@ -60,19 +60,16 @@
 #include "Game.hpp"
 #include "MapEditor.hpp"
 
-void editPixels() {
+void editWhitePixelsToTransparent(string monster_path) {
 
-    sf::Image i;
-    i.loadFromFile("assets/sets/items/wool hat/attackBottom0.png");
+    cout << "editing white pixels to transparent: " << monster_path << "\n";
 
-    sf::Color color = sf::Color(255,255,255);
-    sf::Color newColor = i.getPixel(0, 0);
-
-    string folder_path = "assets/sets/items/plate armor";
+    sf::Color whiteColor = sf::Color(255,255,255);
+    sf::Color transparentColor = sf::Color(0, 0, 0, 0);
 
     std::vector < std::string > png_files;
 
-    for (const auto& entry : filesystem::directory_iterator(folder_path)) {
+    for (const auto& entry : filesystem::directory_iterator(monster_path)) {
         if (entry.is_regular_file() && entry.path().extension() == ".png") {
             png_files.push_back(entry.path().string());
         }
@@ -84,8 +81,8 @@ void editPixels() {
 
         for (int y = 0; y < img.getSize().y; y++)
             for (int x = 0; x < img.getSize().x; x++) {
-                if (img.getPixel(x, y) == color) {
-                    img.setPixel(x, y, newColor);
+                if (img.getPixel(x, y) == whiteColor) {
+                    img.setPixel(x, y, transparentColor);
                 }
 
             }
@@ -95,10 +92,88 @@ void editPixels() {
 
 }
 
+void createSets(string idlePath) {
+
+    cout << "creating set for monster: " << idlePath;
+
+    sf::Image idle_0;
+    sf::Image idle_1;
+
+    idle_0.loadFromFile(idlePath + "0.png");
+    idle_1.loadFromFile(idlePath + "1.png");
+
+    // IDLE
+    idle_0.saveToFile(idlePath + "idleBottom0.png");
+    idle_1.saveToFile(idlePath + "idleBottom1.png");
+    idle_0.saveToFile(idlePath + "idleBottom2.png");
+    idle_1.saveToFile(idlePath + "idleBottom3.png");
+
+    idle_0.saveToFile(idlePath + "idleTop0.png");
+    idle_1.saveToFile(idlePath + "idleTop1.png");
+    idle_0.saveToFile(idlePath + "idleTop2.png");
+    idle_1.saveToFile(idlePath + "idleTop3.png");
+
+    idle_0.saveToFile(idlePath + "idleLeft0.png");
+    idle_1.saveToFile(idlePath + "idleLeft1.png");
+    idle_0.saveToFile(idlePath + "idleLeft2.png");
+    idle_1.saveToFile(idlePath + "idleLeft3.png");
+
+    idle_0.saveToFile(idlePath + "idleRight0.png");
+    idle_1.saveToFile(idlePath + "idleRight1.png");
+    idle_0.saveToFile(idlePath + "idleRight2.png");
+    idle_1.saveToFile(idlePath + "idleRight3.png");
+
+    // RUN
+    idle_0.saveToFile(idlePath + "runBottom0.png");
+    idle_1.saveToFile(idlePath + "runBottom1.png");
+    idle_0.saveToFile(idlePath + "runBottom2.png");
+    idle_1.saveToFile(idlePath + "runBottom3.png");
+
+    idle_0.saveToFile(idlePath + "runTop0.png");
+    idle_1.saveToFile(idlePath + "runTop1.png");
+    idle_0.saveToFile(idlePath + "runTop2.png");
+    idle_1.saveToFile(idlePath + "runTop3.png");
+
+    idle_0.saveToFile(idlePath + "runLeft0.png");
+    idle_1.saveToFile(idlePath + "runLeft1.png");
+    idle_0.saveToFile(idlePath + "runLeft2.png");
+    idle_1.saveToFile(idlePath + "runLeft3.png");
+
+    idle_0.saveToFile(idlePath + "runRight0.png");
+    idle_1.saveToFile(idlePath + "runRight1.png");
+    idle_0.saveToFile(idlePath + "runRight2.png");
+    idle_1.saveToFile(idlePath + "runRight3.png");
+
+    // ATTACK
+    idle_0.saveToFile(idlePath + "attackBottom0.png");
+    idle_1.saveToFile(idlePath + "attackBottom1.png");
+    idle_0.saveToFile(idlePath + "attackBottom2.png");
+    idle_1.saveToFile(idlePath + "attackBottom3.png");
+
+    idle_0.saveToFile(idlePath + "attackTop0.png");
+    idle_1.saveToFile(idlePath + "attackTop1.png");
+    idle_0.saveToFile(idlePath + "attackTop2.png");
+    idle_1.saveToFile(idlePath + "attackTop3.png");
+
+    idle_0.saveToFile(idlePath + "attackLeft0.png");
+    idle_1.saveToFile(idlePath + "attackLeft1.png");
+    idle_0.saveToFile(idlePath + "attackLeft2.png");
+    idle_1.saveToFile(idlePath + "attackLeft3.png");
+
+    idle_0.saveToFile(idlePath + "attackRight0.png");
+    idle_1.saveToFile(idlePath + "attackRight1.png");
+    idle_0.saveToFile(idlePath + "attackRight2.png");
+    idle_1.saveToFile(idlePath + "attackRight3.png");
+
+}
+
 int main()
 {
-    editPixels();   // TO-DO
-
+    // TOOLS - be careful with that
+    //createSets("assets/monsters/troll/");     // TO-DO
+    //editWhitePixelsToTransparent("assets/monsters/troll/");     // TO-DO
+    
+    // LOADS
 	loadFonts();
 	loadTextures();		// TO-DO "FROM FILE"
 	loadItems();		// TO-DO "FROM FILE"
@@ -109,8 +184,8 @@ int main()
 
 	window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
-    
-	game();
+    // PROGRAMS
+	//game();
 	mapEditor();
 	    
 	
