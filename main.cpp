@@ -60,37 +60,7 @@
 #include "Game.hpp"
 #include "MapEditor.hpp"
 
-void editWhitePixelsToTransparent(string monster_path) {
 
-    cout << "editing white pixels to transparent: " << monster_path << "\n";
-
-    sf::Color whiteColor = sf::Color(255,255,255);
-    sf::Color transparentColor = sf::Color(0, 0, 0, 0);
-
-    std::vector < std::string > png_files;
-
-    for (const auto& entry : filesystem::directory_iterator(monster_path)) {
-        if (entry.is_regular_file() && entry.path().extension() == ".png") {
-            png_files.push_back(entry.path().string());
-        }
-    }
-
-    for (auto& png : png_files) {
-        sf::Image img;
-        img.loadFromFile(png.c_str());
-
-        for (int y = 0; y < img.getSize().y; y++)
-            for (int x = 0; x < img.getSize().x; x++) {
-                if (img.getPixel(x, y) == whiteColor) {
-                    img.setPixel(x, y, transparentColor);
-                }
-
-            }
-
-        img.saveToFile(png.c_str());
-    }
-
-}
 
 void createSets(string idlePath) {
 
@@ -167,11 +137,43 @@ void createSets(string idlePath) {
 
 }
 
+void editWhitePixelsToTransparent(string monster_path) {
+
+    cout << "editing white pixels to transparent: " << monster_path << "\n";
+
+    sf::Color whiteColor = sf::Color(255, 255, 255);
+    sf::Color transparentColor = sf::Color(0, 0, 0, 0);
+
+    std::vector < std::string > png_files;
+
+    for (const auto& entry : filesystem::directory_iterator(monster_path)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".png") {
+            png_files.push_back(entry.path().string());
+        }
+    }
+
+    for (auto& png : png_files) {
+        sf::Image img;
+        img.loadFromFile(png.c_str());
+
+        for (int y = 0; y < img.getSize().y; y++)
+            for (int x = 0; x < img.getSize().x; x++) {
+                if (img.getPixel(x, y) == whiteColor) {
+                    img.setPixel(x, y, transparentColor);
+                }
+
+            }
+
+        img.saveToFile(png.c_str());
+    }
+
+}
+
 int main()
 {
     // TOOLS - be careful with that
-    //createSets("assets/monsters/troll/");     // TO-DO
-    //editWhitePixelsToTransparent("assets/monsters/troll/");     // TO-DO
+    // createSets("assets/monsters/kolcorozec/");     // TO-DO
+    // editWhitePixelsToTransparent("assets/monsters/kolcorozec/");     // TO-DO
     
     // LOADS
 	loadFonts();

@@ -1,1 +1,1 @@
--added two monsters "troll" and "bies"
+-added new monsters "szpon" and "kolcorozec"

@@ -160,6 +160,16 @@ void loadPrefabs() {
     dziobak->INTELLIGENCE = 1;
     prefabs.push_back(dziobak);
 
+    Monster* kolcorozec = new Monster("monsters/kolcorozec", 70, 35);
+    kolcorozec->HP = 150;
+    kolcorozec->HP_max = 150;
+    kolcorozec->MP = 10;
+    kolcorozec->MP_max = 10;
+    kolcorozec->STRENGTH = 30;
+    kolcorozec->DEXTERITY = 15;
+    kolcorozec->INTELLIGENCE = 2;
+    prefabs.push_back(kolcorozec);
+
     Monster* troll = new Monster("monsters/troll", 90, 60);
     troll->HP = 400;
     troll->HP_max = 400;
