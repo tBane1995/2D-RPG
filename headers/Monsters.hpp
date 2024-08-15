@@ -58,11 +58,29 @@ public:
 		// TO-DO
 		if (name == "monsters/wilczur") {
 			loot->addItem("items/raw meat");
-			loot->addItem("items/tooth", 2);
+			loot->addItem("items/tooth", 1);
 			loot->addItem("items/wolf skin");
 		}
-		else if (name == "monsters/dziobak") {
+		
+		if (name == "monsters/dziobak") {
 			loot->addItem("items/raw meat", 2);
+		}
+
+		if (name == "monsters/goblin") {
+			loot->addItem("items/wooden club", 1);
+		}
+
+		if (name == "monsters/troll") {
+			
+		}
+
+		if (name == "monsters/bies") {
+
+		}
+
+		if (name == "monsters/kolcorozec") {
+			loot->addItem("items/tooth", 1);
+			loot->addItem("items/spike", 1);
 		}
 
 		if (loot->items.size() > 0) {

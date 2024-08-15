@@ -1,1 +1,1 @@
--added new monsters "szpon" and "kolcorozec"
+-added new monster "niedziedz"

@@ -62,9 +62,9 @@
 
 
 
-void createSets(string idlePath) {
+void createSetsFromIdle(string idlePath) {
 
-    cout << "creating set for monster: " << idlePath;
+    cout << "creating set from idles for monster: " << idlePath;
 
     sf::Image idle_0;
     sf::Image idle_1;
@@ -137,6 +137,86 @@ void createSets(string idlePath) {
 
 }
 
+void createSetsFromRuns(string path) {
+
+    cout << "creating set from runs for monster: " << path;
+
+    sf::Image run_0;
+    sf::Image run_1;
+    sf::Image run_2;
+    sf::Image run_3;
+
+    run_0.loadFromFile(path + "0.png");
+    run_1.loadFromFile(path + "1.png");
+    run_2.loadFromFile(path + "2.png");
+    run_3.loadFromFile(path + "3.png");
+
+    // IDLE
+    run_0.saveToFile(path + "idleBottom0.png");
+    run_1.saveToFile(path + "idleBottom1.png");
+    run_2.saveToFile(path + "idleBottom2.png");
+    run_3.saveToFile(path + "idleBottom3.png");
+
+    run_0.saveToFile(path + "idleTop0.png");
+    run_1.saveToFile(path + "idleTop1.png");
+    run_2.saveToFile(path + "idleTop2.png");
+    run_3.saveToFile(path + "idleTop3.png");
+
+    run_0.saveToFile(path + "idleLeft0.png");
+    run_1.saveToFile(path + "idleLeft1.png");
+    run_2.saveToFile(path + "idleLeft2.png");
+    run_3.saveToFile(path + "idleLeft3.png");
+
+    run_0.saveToFile(path + "idleRight0.png");
+    run_1.saveToFile(path + "idleRight1.png");
+    run_2.saveToFile(path + "idleRight2.png");
+    run_3.saveToFile(path + "idleRight3.png");
+
+    // RUN
+    run_0.saveToFile(path + "runBottom0.png");
+    run_1.saveToFile(path + "runBottom1.png");
+    run_2.saveToFile(path + "runBottom2.png");
+    run_3.saveToFile(path + "runBottom3.png");
+
+    run_0.saveToFile(path + "runTop0.png");
+    run_1.saveToFile(path + "runTop1.png");
+    run_2.saveToFile(path + "runTop2.png");
+    run_3.saveToFile(path + "runTop3.png");
+
+    run_0.saveToFile(path + "runLeft0.png");
+    run_1.saveToFile(path + "runLeft1.png");
+    run_2.saveToFile(path + "runLeft2.png");
+    run_3.saveToFile(path + "runLeft3.png");
+
+    run_0.saveToFile(path + "runRight0.png");
+    run_1.saveToFile(path + "runRight1.png");
+    run_2.saveToFile(path + "runRight2.png");
+    run_3.saveToFile(path + "runRight3.png");
+
+    // ATTACK
+    run_0.saveToFile(path + "attackBottom0.png");
+    run_1.saveToFile(path + "attackBottom1.png");
+    run_2.saveToFile(path + "attackBottom2.png");
+    run_3.saveToFile(path + "attackBottom3.png");
+
+    run_0.saveToFile(path + "attackTop0.png");
+    run_1.saveToFile(path + "attackTop1.png");
+    run_2.saveToFile(path + "attackTop2.png");
+    run_3.saveToFile(path + "attackTop3.png");
+
+    run_0.saveToFile(path + "attackLeft0.png");
+    run_1.saveToFile(path + "attackLeft1.png");
+    run_2.saveToFile(path + "attackLeft2.png");
+    run_3.saveToFile(path + "attackLeft3.png");
+
+    run_0.saveToFile(path + "attackRight0.png");
+    run_1.saveToFile(path + "attackRight1.png");
+    run_2.saveToFile(path + "attackRight2.png");
+    run_3.saveToFile(path + "attackRight3.png");
+
+}
+
+
 void editWhitePixelsToTransparent(string monster_path) {
 
     cout << "editing white pixels to transparent: " << monster_path << "\n";
@@ -172,8 +252,9 @@ void editWhitePixelsToTransparent(string monster_path) {
 int main()
 {
     // TOOLS - be careful with that
-    // createSets("assets/monsters/kolcorozec/");     // TO-DO
-    // editWhitePixelsToTransparent("assets/monsters/kolcorozec/");     // TO-DO
+    //createSetsFromIdle("assets/monsters/niedzwiedz/");             // TO-DO
+    //createSetsFromRuns("assets/monsters/bies/");               // TO-DO
+    //editWhitePixelsToTransparent("assets/monsters/niedzwiedz/");   // TO-DO
     
     // LOADS
 	loadFonts();

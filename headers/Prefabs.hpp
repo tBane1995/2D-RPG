@@ -160,6 +160,16 @@ void loadPrefabs() {
     dziobak->INTELLIGENCE = 1;
     prefabs.push_back(dziobak);
 
+    Monster* niedzwiedz = new Monster("monsters/niedzwiedz", 70, 35);
+    niedzwiedz->HP = 200;
+    niedzwiedz->HP_max = 150;
+    niedzwiedz->MP = 10;
+    niedzwiedz->MP_max = 10;
+    niedzwiedz->STRENGTH = 30;
+    niedzwiedz->DEXTERITY = 15;
+    niedzwiedz->INTELLIGENCE = 2;
+    prefabs.push_back(niedzwiedz);
+
     Monster* kolcorozec = new Monster("monsters/kolcorozec", 70, 35);
     kolcorozec->HP = 150;
     kolcorozec->HP_max = 150;
@@ -169,6 +179,16 @@ void loadPrefabs() {
     kolcorozec->DEXTERITY = 15;
     kolcorozec->INTELLIGENCE = 2;
     prefabs.push_back(kolcorozec);
+
+    Monster* szpon = new Monster("monsters/szpon", 66, 32);
+    szpon->HP = 100;
+    szpon->HP_max = 100;
+    szpon->MP = 10;
+    szpon->MP_max = 10;
+    szpon->STRENGTH = 20;
+    szpon->DEXTERITY = 15;
+    szpon->INTELLIGENCE = 2;
+    prefabs.push_back(szpon);
 
     Monster* troll = new Monster("monsters/troll", 90, 60);
     troll->HP = 400;

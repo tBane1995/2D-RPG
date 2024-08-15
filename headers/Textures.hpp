@@ -143,6 +143,7 @@ void loadTextures() {
 	loadTexture("items/bone.png", 32, 32);
 	loadTexture("items/bone.png", 40, 40);
 	loadTexture("items/tooth.png", 32, 32);
+	loadTexture("items/spike.png", 32, 32);
 	loadTexture("items/wolf skin.png", 32, 32);
 
 	// PATHS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +185,9 @@ void loadTextures() {
 	monsters.push_back("wilczur");
 	monsters.push_back("goblin");
 	monsters.push_back("dziobak");
+	monsters.push_back("niedzwiedz");
 	monsters.push_back("kolcorozec");
+	monsters.push_back("szpon");
 	monsters.push_back("troll");
 	monsters.push_back("bies");
 

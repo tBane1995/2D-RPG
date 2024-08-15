@@ -291,6 +291,9 @@ void loadItems() {
 	item = new Item("items/tooth", itemType::other, L"kieł zwierza");
 	items.push_back(item);
 
+	item = new Item("items/spike", itemType::other, L"kolec zwierza");
+	items.push_back(item);
+
 	item = new Item("items/wolf skin", itemType::other, L"skóra wilka");
 	items.push_back(item);
 

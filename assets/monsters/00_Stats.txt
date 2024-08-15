@@ -1,0 +1,23 @@
+Obliczanie HP: number * 40
+Obliczanie STR: number * 4
+Obliczanie DEX: number * 2
+Obliczanie INT: number * 1
+
+1. Dziobak
+2. Goblin
+3. Wilczur
+4. Niedźwiedź
+5. Szpon
+6. Kolcorożec
+7. Troll
+8. Bies
+
+Nazwa		| Sugerowany LVL
+Dziobak		| 1-2
+Goblin		| 3-5
+Wilczur 	| 5-7
+Niedźwiedź	| 7-10
+Szpon		| 10 - 12
+Kolcorożec	| 12-15
+Troll		| 15-18
+Bies		| 18-20
