@@ -1,1 +1,1 @@
--added new monster "niedziedz"
+-added new monster "golem"

@@ -9,8 +9,9 @@ Obliczanie INT: number * 1
 4. Niedźwiedź
 5. Szpon
 6. Kolcorożec
-7. Troll
-8. Bies
+7. Golem
+8. Troll
+9. Bies
 
 Nazwa		| Sugerowany LVL
 Dziobak		| 1-2
@@ -19,5 +20,6 @@ Wilczur 	| 5-7
 Niedźwiedź	| 7-10
 Szpon		| 10 - 12
 Kolcorożec	| 12-15
-Troll		| 15-18
-Bies		| 18-20
+Golem		| 15-18
+Troll		| 18-20
+Bies		| 20-23

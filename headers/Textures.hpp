@@ -186,8 +186,9 @@ void loadTextures() {
 	monsters.push_back("goblin");
 	monsters.push_back("dziobak");
 	monsters.push_back("niedzwiedz");
-	monsters.push_back("kolcorozec");
 	monsters.push_back("szpon");
+	monsters.push_back("kolcorozec");
+	monsters.push_back("golem");
 	monsters.push_back("troll");
 	monsters.push_back("bies");
 

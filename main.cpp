@@ -252,9 +252,9 @@ void editWhitePixelsToTransparent(string monster_path) {
 int main()
 {
     // TOOLS - be careful with that
-    //createSetsFromIdle("assets/monsters/niedzwiedz/");             // TO-DO
+    //createSetsFromIdle("assets/monsters/golem/");             // TO-DO
     //createSetsFromRuns("assets/monsters/bies/");               // TO-DO
-    //editWhitePixelsToTransparent("assets/monsters/niedzwiedz/");   // TO-DO
+    //editWhitePixelsToTransparent("assets/monsters/golem/");   // TO-DO
     
     // LOADS
 	loadFonts();
