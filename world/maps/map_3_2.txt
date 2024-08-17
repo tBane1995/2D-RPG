@@ -38,3 +38,6 @@ Nature "natures/tree1" 816 704
 // ITEMS
 Item "items/health root" 928 560
 
+// MONSTERS
+Monster "monsters/dziobak" 943 731
+

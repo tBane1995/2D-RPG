@@ -21,12 +21,14 @@ bool playerAttack();
 bool talkWithCharacter();
 bool collectItems();
 void deleteCollectedItems();
+void attack(Unit* attacker, Unit* defender);
 
 void gameEvents();
 void inventoryEvents();
 void tradeEvents();
 void dialogueEvents();
 void journalEvents();
+void statsEvents();
 
 void game() {
 
@@ -97,6 +99,16 @@ void game() {
 
     // TEST TRADE   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    
+    Inventory* bag = new Inventory();
+    bag->addItem("items/axe");
+    inventoryLeft = new InventoryPanel(bag, -300, 0);
+    inventoryRight = new InventoryPanel(player->bag, 300, 0);
+
+    cursor = 0;
+    gameState = gameStates::trade;
+    activePanel = activeInventoryPanel::Left;
+
     /*
     cursor = 0;
     journal = new JournalPanel();
@@ -130,6 +142,9 @@ void game() {
                 }
                 else if (gameState == gameStates::journal) {
                     journalEvents();
+                }
+                else if (gameState == gameStates::stats) {
+                    statsEvents();
                 }
 
             }
@@ -219,6 +234,9 @@ void game() {
         if (gameState == gameStates::journal)
             journal->update();
 
+        if (gameState == gameStates::stats)
+            stats->update();
+
         refreshLifeBar();
 
         // DRAW
@@ -261,6 +279,10 @@ void game() {
             journal->draw();
         }
 
+        if (gameState == gameStates::stats) {
+            stats->draw();
+        }
+
         drawLifeBar();
         window->display();
     } //while
@@ -287,7 +309,7 @@ void refreshLifeBar() {
     lifeBarTexture.loadFromFile("assets/GUI/lifeBar.png");
     lifeBarSprite = sf::Sprite();
     lifeBarSprite.setTexture(lifeBarTexture);
-    lifeBarSprite.setTextureRect(sf::IntRect(0, 0, 192.0f * player->HP / player->HP_max, 22.0f));
+    lifeBarSprite.setTextureRect(sf::IntRect(0, 0, 192.0f * player->HP / player->HP_FULL, 22.0f));
     lifeBarSprite.setPosition(x + 4, y + 4);
 
 
@@ -307,13 +329,18 @@ bool playerAttack() {
     x = player->position.x;
     y = player->position.y;
     rx = player->collider->width/2.0f + player->actionRange;
-    ry = (player->collider->height + player->actionRange) / 2.0f;
+    ry = (player->collider->length + player->actionRange) / 2.0f;
 
     for (auto& m : monsters)
     {
         if(m->isAlive == true)
-            if (intersectionTwoEllipses(x, y, rx, ry, m->position.x, m->position.y, m->collider->width/2.0f, m->collider->height / 2.0f)) {
-                m->takeDamage(player->getDamage());
+            if (intersectionTwoEllipses(x, y, rx, ry, m->position.x, m->position.y, m->collider->width/2.0f, m->collider->length / 2.0f)) {
+                
+                //attack(player, m); // TO-DO
+                if (rand() % player->DEXTERITY - rand() % m->DEXTERITY > 0) {
+                    m->takeDamage(player->getDamage());
+                }
+
                 result = true;
             }
     }
@@ -329,7 +356,7 @@ bool talkWithCharacter() {
     x1 = player->position.x;
     y1 = player->position.y;
     rx1 = (player->collider->width/2.0f + player->actionRange);
-    ry1 = (player->collider->height + player->actionRange) / 2.0f;
+    ry1 = (player->collider->length + player->actionRange) / 2.0f;
 
     for (auto& character : characters) {
 
@@ -337,8 +364,8 @@ bool talkWithCharacter() {
 
             x2 = character->position.x;
             y2 = character->position.y;
-            rx2 = (character->collider->width/2.0f + character->actionRange);
-            ry2 = (character->collider->height + character->actionRange) / 2.0f;
+            rx2 = (character->collider->width/2.0f + character->ACTION_RANGE);
+            ry2 = (character->collider->length + character->ACTION_RANGE) / 2.0f;
 
             if (intersectionTwoEllipses(x1, y1, rx1, ry1, x2, y2, rx2, ry2)) {
 
@@ -363,14 +390,14 @@ bool collectItems() {
     x1 = player->position.x;
     y1 = player->position.y;
     rx1 = (player->collider->width/2.0f + player->actionRange);
-    ry1 = (player->collider->height + player->actionRange) / 2.0f;
+    ry1 = (player->collider->length + player->actionRange) / 2.0f;
 
 
     for (auto& item : itemsOnMap) {
         x2 = item->position.x;
         y2 = item->position.y;
         rx2 = item->collider->width / 2.0f;
-        ry2 = item->collider->height / 2.0f;
+        ry2 = item->collider->length / 2.0f;
 
         if (intersectionTwoEllipses(x1, y1, rx1, ry1, x2, y2, rx2, ry2)) {
 
@@ -385,7 +412,7 @@ bool collectItems() {
         x2 = bag->position.x;
         y2 = bag->position.y;
         rx2 = bag->collider->width / 2.0f;
-        ry2 = bag->collider->height / 2.0f;
+        ry2 = bag->collider->length / 2.0f;
 
         if (intersectionTwoEllipses(x1, y1, rx1, ry1, x2, y2, rx2, ry2)) {
 
@@ -406,7 +433,7 @@ bool collectItems() {
             x2 = furniture->position.x;
             y2 = furniture->position.y;
             rx2 = furniture->collider->width;
-            ry2 = furniture->collider->height;
+            ry2 = furniture->collider->length;
 
             if (intersectionRectangleWithElipse(x2, y2, rx2, ry2, x1, y1, rx1, ry1)) {
                 inventoryLeft = new InventoryPanel(furniture->inventory, -300);
@@ -471,6 +498,14 @@ void deleteCollectedItems() {
 
 }
 
+void attack(Unit* attacker, Unit* defender) {
+
+    if (rand() % attacker->DEXTERITY - rand() % defender->DEXTERITY > 0) {
+        defender->takeDamage(attacker->getDamage());
+    }
+
+}
+
 void gameEvents() {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -497,6 +532,11 @@ void gameEvents() {
         cursor = 0;
         journal = new JournalPanel();
         gameState = gameStates::journal;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+        gameState = gameStates::stats;
+        stats = new StatsPanel();
     }
 
 }
@@ -594,6 +634,11 @@ void inventoryEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
         gameState = gameStates::journal;
         journal = new JournalPanel();
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+        gameState = gameStates::stats;
+        stats = new StatsPanel();
     }
 
 }
@@ -906,12 +951,42 @@ void journalEvents() {
         cursor = 0;
     }
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+
+        gameState = gameStates::stats;
+        stats = new StatsPanel();
+        
+    }
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         cursor -= 1;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
         cursor += 1;
+    }
+}
+
+void statsEvents() {
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        gameState = gameStates::game;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+        gameState = gameStates::game;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+        cursor = 0;
+        inventory = new InventoryPanel(player->bag);
+        gameState = gameStates::inventory;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+        cursor = 0;
+        journal = new JournalPanel();
+        gameState = gameStates::journal;
     }
 }
 

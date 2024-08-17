@@ -47,7 +47,7 @@ std::vector < Path* > paths;
 
 bool isPathOnPosition( float x, float y) {
 	for (auto& path : paths) {
-		if (pointInEllipse(x, y, path->position.x, path->position.y, path->collider->width/2.0f, path->collider->height / 2.0f))
+		if (pointInEllipse(x, y, path->position.x, path->position.y, path->collider->width/2.0f, path->collider->length / 2.0f))
 			return true;
 	}
 

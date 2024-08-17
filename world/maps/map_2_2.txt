@@ -38,3 +38,6 @@ Nature "natures/tree2" 624 672
 // ITEMS
 Item "items/mana plant" 704 576
 
+// MONSTERS
+Monster "monsters/dziobak" 559 510
+

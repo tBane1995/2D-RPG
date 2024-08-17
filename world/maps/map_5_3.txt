@@ -32,6 +32,3 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-// MONSTERS
-Monster "monsters/wilczur" 1256 913
-

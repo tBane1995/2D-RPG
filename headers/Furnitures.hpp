@@ -83,12 +83,12 @@ public:
 				x1 = player->position.x;
 				y1 = player->position.y;
 				rx1 = (player->collider->width / 2.0f + player->actionRange);
-				ry1 = (player->collider->height + player->actionRange) / 2.0f;
+				ry1 = (player->collider->length + player->actionRange) / 2.0f;
 
 				x2 = position.x;
 				y2 = position.y;
 				rx2 = collider->width;
-				ry2 = collider->height;
+				ry2 = collider->length;
 
 				if (intersectionRectangleWithElipse(x2, y2, rx2, ry2, x1, y1, rx1, ry1)) {
 					showHand = true;
@@ -106,7 +106,7 @@ public:
 		// TO-DO
 		if (player == nullptr) {
 			if (inventory != nullptr) {
-				if (pointInRectangle(worldMousePosition.x, worldMousePosition.y, position.x, position.y, collider->width, collider->height)) {
+				if (pointInRectangle(worldMousePosition.x, worldMousePosition.y, position.x, position.y, collider->width, collider->length)) {
 					showHand = true;
 				}
 			}

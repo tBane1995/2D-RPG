@@ -7,14 +7,16 @@ public:
 	bool isAlive;
 	sf::Vector2f base;
 	sf::Time deathTime;
+	int EXPERIENCE;
 
-	Monster(string name, float width, float height) : Unit(name, width, height) {
+	Monster(string name, float width, float height, int EXP) : Unit(name, name, width, height) {
 		type = gameObjectType::Monster;
 		direction = 2;
 		isAlive = true;
-		base = position;
-		
+		base = position;	
+		this->EXPERIENCE = EXP;
 		loadTextures();
+		
 
 	}
 
@@ -23,6 +25,7 @@ public:
 		direction = 2;
 		isAlive = true;
 		base = position;
+		this->EXPERIENCE = dynamic_cast<Monster*>(object)->EXPERIENCE;
 
 		loadTextures();
 	}
@@ -94,7 +97,7 @@ public:
 
 	void idle(float dt) {
 		if (rand() % 300 == 0) {
-			state = states::walk;
+			state = unitStates::run;
 			target.x = base.x + rand() % 100 - 50;
 			target.y = base.y + rand() % 100 - 50;
 		}
@@ -109,6 +112,7 @@ public:
 			
 			// death
 			dropLoot();
+			player->gainEXP(EXPERIENCE);
 			isAlive = false;
 			collisioning = false;
 			deathTime = currentTime;
@@ -119,8 +123,8 @@ public:
 			if ( (currentTime-deathTime).asSeconds() > 10) {
 				isAlive = true;
 				collisioning = true;
-				HP = HP_max;
-				state = states::idle;
+				HP = HP_FULL;
+				state = unitStates::idle;
 
 				while (collisions(this, 0, 0)) {
 
@@ -136,20 +140,20 @@ public:
 			GameObject::update(dt);
 
 			if (playerInActionRange()) {
-				state = states::attack;
+				state = unitStates::attack;
 			}
 			else if (playerInViewRange()) {
 				target = player->position;
-				state = states::walk;
+				state = unitStates::run;
 			}
 
-			if (state == states::idle) {
+			if (state == unitStates::idle) {
 				idle(dt);
 			}
-			else if (state == states::walk) {
+			else if (state == unitStates::run) {
 				run(dt);
 			}
-			else if (state == states::attack) {
+			else if (state == unitStates::attack) {
 				attack(dt);
 			}
 

@@ -52,7 +52,7 @@ public:
 	int direction;
 	int frame;	// current frame number
 	float stepSize;
-	states state;
+	unitStates state;
 	float actionRange;
 	float viewRange;
 	sf::CircleShape actionRangeArea;
@@ -63,11 +63,15 @@ public:
 
 	Inventory* bag;
 
-	float HP, HP_max;
-	float MP, MP_max;
+	int HP, HP_FULL;
+	int MP, MP_FULL;
 	int STRENGTH;
 	int DEXTERITY;
 	int INTELLIGENCE;
+	int LEVEL;
+	int EXPERIENCE;	
+	int EXPERIENCE_TO_NEXT_LEVEL;
+	int SKILL_POINTS;
 
 	Player() : GameObject("hero", 0, 0, 24, 12, true, false) {
 		type = gameObjectType::Player;
@@ -75,7 +79,7 @@ public:
 		frame = 0;
 		stepSize = 6.0f;
 		countdown = 0.0f;
-		state = states::idle;
+		state = unitStates::idle;
 		actionRange = 25.0f;
 		cooldown = 0.0f;
 		attackTime = 0.7f;
@@ -86,14 +90,19 @@ public:
 		isVisible = true;
 
 		HP = 10;
-		HP_max = 50;
+		HP_FULL = 40;
 		MP = 5;
-		MP_max = 5;
+		MP_FULL = 5;
 		STRENGTH = 5;
-		DEXTERITY = 5;
-		INTELLIGENCE = 5;
+		DEXTERITY = 2;
+		INTELLIGENCE = 1;
+		
+		LEVEL = 0;
+		EXPERIENCE = 0;
+		EXPERIENCE_TO_NEXT_LEVEL = 50;
+		SKILL_POINTS = 0;
 
-		body = "sets/body/hero";
+		body = "sets/body/woman-redhaired";
 		
 		bag = new Inventory();
 		/*
@@ -161,11 +170,11 @@ public:
 	}
 
 	void move() {
-		state = states::walk;
+		state = unitStates::run;
 	}
 
 	void attack() {
-		state = states::attack;
+		state = unitStates::attack;
 		frame = 0.0f;
 		cooldown = attackTime;
 	}
@@ -387,7 +396,7 @@ public:
 		actionRangeArea.setOutlineColor(sf::Color(196, 64, 64, 128));
 		actionRangeArea.setOutlineThickness(4.0f);
 		actionRangeArea.setOrigin(actionRange + collider->width / 2.0f, actionRange + collider->width/2.0f);
-		actionRangeArea.setScale(1.0f, collider->height/collider->width);
+		actionRangeArea.setScale(1.0f, collider->length/collider->width);
 	}
 
 
@@ -402,7 +411,7 @@ public:
 			frame = frame % 4;
 	}
 
-	void takeDamage(float damage) {
+	void takeDamage(int damage) {
 
 		int defend = 0;
 
@@ -428,23 +437,46 @@ public:
 		}
 	}
 	
-	float getDamage() {
-		float damage = STRENGTH * 3;
+	int getDamage() {
+		float damage = STRENGTH * 2.5f;
+
 		if (rightHand != nullptr)
 			damage += rightHand->attributes[attribute::ATTACK];
-		return damage;
+
+		return int(damage);
 	}
 
-	void heal(float HP) {
+	void heal(int HP) {
 		this->HP += HP;
 
-		if (this->HP > HP_max)
-			this->HP = HP_max;
+		if (this->HP > HP_FULL)
+			this->HP = HP_FULL;
 	}
 
 	void collectItem(Item* item, int count = 1) {
 
 		bag->addItem(item,count);
+	}
+
+	void gainEXP(int EXP) {
+		EXPERIENCE += EXP;
+		while (levelUp());
+	}
+
+	bool levelUp() {
+		
+		int LEVEL_SCALAR = 2;
+
+		if (EXPERIENCE >= EXPERIENCE_TO_NEXT_LEVEL) {
+			LEVEL++;
+			EXPERIENCE_TO_NEXT_LEVEL *= LEVEL_SCALAR;
+			SKILL_POINTS += 5;
+			HP_FULL = 40 * LEVEL;
+			cout << "LVL UP!";
+			return true;
+		}
+
+		return false;
 	}
 
 	void update(float dt) {
@@ -453,11 +485,11 @@ public:
 
 		float distance = 20.0f * stepSize * dt;
 
-		if (state == states::attack) {
+		if (state == unitStates::attack) {
 		
 			if (cooldown <= 0.0f)
 			{
-				state = states::idle;
+				state = unitStates::idle;
 				frame = 0;
 			}
 			frame = cooldown / attackTime * 4.0f - 1.0f;
@@ -481,10 +513,10 @@ public:
 			if (leftHand != nullptr)
 				leftHandSprite.setTexture(*leftHandAttackTextures[direction * 4 + frame]->texture);
 		}		
-		else if (state == states::walk) {
+		else if (state == unitStates::run) {
 
 			calculateCurrentFrame(dt);
-			state = states::idle;
+			state = unitStates::idle;
 
 			if (direction == 0) position.y -= distance;
 			if (direction == 1) position.x += distance;
@@ -509,7 +541,7 @@ public:
 				leftHandSprite.setTexture(*leftHandRunTextures[direction * 4 + frame]->texture);
 
 		}
-		else if(state == states::idle) {
+		else if(state == unitStates::idle) {
 
 			calculateCurrentFrame(dt);
 			bodySprite.setTexture(*bodyIdleTextures[direction * 4 +frame]->texture);

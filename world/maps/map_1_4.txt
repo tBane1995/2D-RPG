@@ -32,3 +32,6 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
+// MONSTERS
+Monster "monsters/jaszczur" 435 1208
+

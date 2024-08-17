@@ -1,26 +1,27 @@
 ﻿#ifndef GameObjects_hpp
 #define GameObjects_hpp
 
-enum class gameObjectType { GameObject, Nature, Monster, Character, Player, ItemOnMap, InventoryOnMap, Path, Furniture, Terrain, Floor, Wall, Building };
+enum class gameObjectType { GameObject, Nature, Unit, Monster, Character, Player, ItemOnMap, InventoryOnMap, Path, Furniture, Terrain, Floor, Wall, Building };
 
 class Collider {
 public:
 	float width;
-	float height;
+	float length;
+	//float height;
 	bool isRectangular;
 	sf::Shape* shape;
 
-	Collider(float width, float height, bool isRectangular) {
+	Collider(float width, float length, bool isRectangular) {
 		this->width = width;
-		this->height = height;
+		this->length = length;
 		this->isRectangular = isRectangular;
 
 		if (isRectangular == true) {
-			shape = new sf::RectangleShape(sf::Vector2f(width, height));
+			shape = new sf::RectangleShape(sf::Vector2f(width, length));
 			shape->setFillColor(sf::Color(128, 64, 128, 128));
 			shape->setOutlineColor(sf::Color(196, 64, 196, 128));
 			shape->setOutlineThickness(4.0f);
-			shape->setOrigin(width/2.0f, height/2.0f);
+			shape->setOrigin(width/2.0f, length /2.0f);
 			shape->setScale(1, 1);
 		}
 		else {
@@ -29,17 +30,17 @@ public:
 			shape->setOutlineColor(sf::Color(196, 64, 196, 128));
 			shape->setOutlineThickness(4.0f);
 			shape->setOrigin(width/2.0f, width/2.0f);
-			shape->setScale(1, height/width);
+			shape->setScale(1, length/width);
 		}
 	}
 
 	Collider(Collider* col) {
 		this->width = col->width;
-		this->height = col->height;
+		this->length = col->length;
 		this->isRectangular = col->isRectangular;
 
 		if (isRectangular == true) {
-			shape = new sf::RectangleShape(sf::Vector2f(width, height));
+			shape = new sf::RectangleShape(sf::Vector2f(width, length));
 			shape->setFillColor(col->shape->getFillColor());
 			shape->setOutlineColor(col->shape->getOutlineColor());
 			shape->setOutlineThickness(col->shape->getOutlineThickness());
@@ -73,7 +74,7 @@ public:
 	bool isVisible;	// TO-DO
 	bool toDelete;
 
-	GameObject(string name, float x, float y, float width, float height, bool collisioning, bool isRectangular) {
+	GameObject(string name, float x, float y, float width, float length, bool collisioning, bool isRectangular) {
 		// CREATE PREFAB
 		this->name = name;
 		type = gameObjectType::GameObject;
@@ -84,7 +85,7 @@ public:
 		
 		mouseIsOver = false;
 
-		collider = new Collider(width, height, isRectangular);
+		collider = new Collider(width, length, isRectangular);
 		createTextname();
 		
 		toDelete = false;
@@ -161,7 +162,7 @@ public:
 		
 		if (collider->isRectangular == false) {
 
-			if (pointInEllipse(worldPosition.x, worldPosition.y, position.x, position.y, collider->width/2.0f, collider->height / 2.0f))
+			if (pointInEllipse(worldPosition.x, worldPosition.y, position.x, position.y, collider->width/2.0f, collider->length / 2.0f))
 				mouseIsOver = true;
 			else
 				mouseIsOver = false;
@@ -169,7 +170,7 @@ public:
 
 		if (collider->isRectangular == true) {
 
-			if (pointInRectangle(worldPosition.x, worldPosition.y, position.x, position.y, collider->width, collider->height))
+			if (pointInRectangle(worldPosition.x, worldPosition.y, position.x, position.y, collider->width, collider->length))
 				mouseIsOver = true;
 			else
 				mouseIsOver = false;
@@ -188,8 +189,10 @@ public:
 	virtual void draw(sf::RenderWindow* window) {
 		window->draw(*collider->shape);
 		
-		if(mouseIsOver)
-			window->draw(textname);
+		//if(mouseIsOver)
+			//window->draw(textname);
+
+		window->draw(textname);
 	}
 
 };
@@ -211,13 +214,13 @@ bool collisions(GameObject* object, float dx, float dy)
 
 				if (go->collider->isRectangular == false) {
 					// elipse with elipse
-					if ( intersectionTwoEllipses(object->position.x + dx, object->position.y + dy, object->collider->width/2.0f, object->collider->height / 2.f, go->position.x, go->position.y, go->collider->width/2.0f, go->collider->height / 2.f))
+					if ( intersectionTwoEllipses(object->position.x + dx, object->position.y + dy, object->collider->width/2.0f, object->collider->length / 2.f, go->position.x, go->position.y, go->collider->width/2.0f, go->collider->length / 2.f))
 						return true;
 				}
 
 				if (go->collider->isRectangular == true) {
 					// elipse with rectangle
-					if ( intersectionRectangleWithElipse(go->position.x, go->position.y, go->collider->width, go->collider->height, object->position.x+dx, object->position.y+dy, object->collider->width/2.0f, object->collider->height / 2.0f))
+					if ( intersectionRectangleWithElipse(go->position.x, go->position.y, go->collider->width, go->collider->length, object->position.x+dx, object->position.y+dy, object->collider->width/2.0f, object->collider->length / 2.0f))
 						return true;
 
 				}
@@ -234,13 +237,13 @@ bool collisions(GameObject* object, float dx, float dy)
 
 				if (go->collider->isRectangular == false) {
 					// rectangle with elipse
-					if (intersectionRectangleWithElipse(object->position.x+dx, object->position.y+dy, object->collider->width, object->collider->height, go->position.x, go->position.y, go->collider->width/2.0f, go->collider->height/2.0f))
+					if (intersectionRectangleWithElipse(object->position.x+dx, object->position.y+dy, object->collider->width, object->collider->length, go->position.x, go->position.y, go->collider->width/2.0f, go->collider->length/2.0f))
 						return true;
 				}
 
 				if (go->collider->isRectangular == true) {
 					// rectangle with rectangle
-					if (intersectionTwoRectangles(object->position.x+dx, object->position.y+dy, object->collider->width, object->collider->height, go->position.x, go->position.y, go->collider->width, go->collider->height))
+					if (intersectionTwoRectangles(object->position.x+dx, object->position.y+dy, object->collider->width, object->collider->length, go->position.x, go->position.y, go->collider->width, go->collider->length))
 						return true;
 
 				}

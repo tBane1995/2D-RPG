@@ -35,7 +35,7 @@
 #include "headers/GameStates.hpp"
 
 #include "headers/Items.hpp"
-#include "headers/States.hpp"
+#include "headers/UnitStates.hpp"
 #include "headers/Player.hpp"
 #include "headers/Units.hpp"
 #include "headers/Monsters.hpp"
@@ -56,6 +56,7 @@
 #include "headers/InventoryPanel.hpp"
 #include "headers/TradePanel.hpp"
 #include "headers/JournalPanel.hpp"
+#include "headers/StatsPanel.hpp"
 
 #include "Game.hpp"
 #include "MapEditor.hpp"
@@ -252,9 +253,9 @@ void editWhitePixelsToTransparent(string monster_path) {
 int main()
 {
     // TOOLS - be careful with that
-    //createSetsFromIdle("assets/monsters/golem/");             // TO-DO
+    //createSetsFromIdle("assets/monsters/jaszczur/");             // TO-DO
     //createSetsFromRuns("assets/monsters/bies/");               // TO-DO
-    //editWhitePixelsToTransparent("assets/monsters/golem/");   // TO-DO
+    //editWhitePixelsToTransparent("assets/sets/body/man-brownhaired/");   // TO-DO
     
     // LOADS
 	loadFonts();
@@ -268,7 +269,7 @@ int main()
 	window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
     // PROGRAMS
-	//game();
+	game();
 	mapEditor();
 	    
 	

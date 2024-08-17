@@ -35,6 +35,3 @@
 // NATURES
 Nature "natures/tree2" 704 880
 
-// MONSTERS
-Monster "monsters/wilczur" 521 854
-

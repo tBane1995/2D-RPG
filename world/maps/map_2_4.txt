@@ -32,3 +32,7 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
+// NATURES
+Nature "natures/tree2" 704 1216
+Nature "natures/tree1" 512 1040
+

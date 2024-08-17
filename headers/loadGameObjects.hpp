@@ -105,13 +105,13 @@ bool visiblings(GameObject* object) {
     if (object != nullptr) {
 
         if (object->collider->isRectangular == false) {
-            if (intersectionRectangleWithElipse(cam->position.x, cam->position.y, screenWidth * 2.0f, screenHeight * 2.0f, object->position.x, object->position.y, object->collider->width/2.0f, object->collider->height / 2.0f)) {
+            if (intersectionRectangleWithElipse(cam->position.x, cam->position.y, screenWidth * 2.0f, screenHeight * 2.0f, object->position.x, object->position.y, object->collider->width/2.0f, object->collider->length / 2.0f)) {
                 return true;
             }
         }
 
         if (object->collider->isRectangular == true) {
-            if (intersectionTwoRectangles(cam->position.x, cam->position.y, screenWidth * 2.0f, screenHeight * 2.0f, object->position.x, object->position.y, object->collider->width, object->collider->height))
+            if (intersectionTwoRectangles(cam->position.x, cam->position.y, screenWidth * 2.0f, screenHeight * 2.0f, object->position.x, object->position.y, object->collider->width, object->collider->length))
                 return true;
         }
     }

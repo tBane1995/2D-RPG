@@ -1,1 +1,2 @@
--added new monster "golem"
+-small corrections in code
+-added three bodysets woman-redhaired, man-brownhaired, boy-brownhaired

@@ -7,117 +7,167 @@ float dist;
 class Unit : public GameObject {
 public:
 	
-	Texture* attackTextures[16];
-	Texture* idleTextures[16];			
-	Texture* runTextures[16];
-	sf::Sprite sprite;
+	string name;
+	string bodySet;
+
+	int LEVEL;
+	int EXPERIENCE;
+	int SKILL_POINTS;
+
+	int HP, HP_FULL;
+	int MP, MP_FULL;
+	int STRENGTH;
+	int DEXTERITY;
+	int INTELLIGENCE;
+
+	int ACTION_RANGE;	// range of action 
+	int VIEW_RANGE;	// range of view
+	
+	unitStates state;		// idle, run or attack
+	int frame;			// current frame
+	int direction;		// direction 0 - Top, 1 - Right, 2 - Bottom, 3 - Left
+	float countdown;	// timer to calculate frame
+	float cooldown;		// timer past attack to freeze
+	float attackTime;	// attack time in seconds
+
+	Texture* idleTextures[16];		// idle textures	
+	Texture* runTextures[16];		// run textures
+	Texture* attackTextures[16];	// attack textures
+	sf::Sprite sprite;				// sprite to render texture
 
 	sf::CircleShape viewRangeArea;		// is a range of see of units // in this range player can be a select as target
 	sf::CircleShape actionRangeArea;
 	sf::RectangleShape lifeBarBackground;
 	sf::RectangleShape lifeBar;
 
-	int frame;		// current frame
-	float countdown;
-	int direction;	// direction 0 - Top, 1 - Right, 2 - Bottom, 3 - Left
-	float actionRange;	// range of action 
-	float viewRange;	// range of view
-	float cooldown;
-	float attackTime;
-
-	int HP, HP_max;
-	int MP, MP_max;
-	int STRENGTH;
-	int DEXTERITY;
-	int INTELLIGENCE;
-
-	states state;
-
 	sf::Vector2f target;
 
 
-	Unit(string name, float width, float height) : GameObject(name, 0, 0, width, height, true, false) {
+	Unit(string name, string bodySet, float width, float height) : GameObject(name, 0, 0, width, height, true, false) {
 
-		frame = 0;
-		countdown = 0.0f;
-		direction = 2;
+		type = gameObjectType::Unit;
 
-		sprite = sf::Sprite();
-		
+		this->name = name;
+		this->bodySet = bodySet;
 
-		viewRange = 200.0f;
-		actionRange = 35.0f;
+		LEVEL = 0;
+		EXPERIENCE = 0;
+		SKILL_POINTS = 0;
 
-		setViewRangeArea();
-		setActionRangeArea();
-
-		// STATS
-		HP = 50;
-		HP_max = 50;
+		HP = 40;
+		HP_FULL = 40;
 		MP = 10;
-		MP_max = 10;
+		MP_FULL = 10;
+
 		STRENGTH = 5;
 		DEXTERITY = 5;
 		INTELLIGENCE = 5;
 
-		// STATE
-		state = states::idle;
+		VIEW_RANGE = 200.0f;
+		ACTION_RANGE = 35.0f;
 
-		cooldown = 0.0f;
-		attackTime = 1.0f;
+		state = unitStates::idle;
+		frame = 0;
+		direction = 2;
+
+		countdown = 0.0f;
+		cooldown = 0.0f;	
+		attackTime = 1.0f;	// in seconds
+
+		loadBody();
+		
+		createViewRangeArea();
+		createActionRangeArea();
 	
 	}
 
 	Unit(GameObject* object, float x, float y) : GameObject(object, x, y) {
 		
-		type = gameObjectType::Character;
+		type = gameObjectType::Unit;
 
+		this->name = dynamic_cast<Unit*>(object)->name;
+		this->bodySet = dynamic_cast<Unit*>(object)->bodySet;
+
+		LEVEL = dynamic_cast<Unit*>(object)->LEVEL;
+		EXPERIENCE = dynamic_cast<Unit*>(object)->EXPERIENCE;
+		SKILL_POINTS = dynamic_cast<Unit*>(object)->SKILL_POINTS;
+
+		HP = dynamic_cast<Unit*>(object)->HP;
+		HP_FULL = dynamic_cast<Unit*>(object)->HP_FULL;
+		MP = dynamic_cast<Unit*>(object)->MP;
+		MP_FULL = dynamic_cast<Unit*>(object)->MP_FULL;
+
+		STRENGTH = dynamic_cast<Unit*>(object)->STRENGTH;
+		DEXTERITY = dynamic_cast<Unit*>(object)->DEXTERITY;
+		INTELLIGENCE = dynamic_cast<Unit*>(object)->INTELLIGENCE;
+
+		VIEW_RANGE = dynamic_cast<Unit*>(object)->VIEW_RANGE;
+		ACTION_RANGE = dynamic_cast<Unit*>(object)->ACTION_RANGE;
+
+		state = unitStates::idle;
 		frame = 0;
-		countdown = 0.0f;
 		direction = 2;
-				
-		viewRange = 200.0f;
-		actionRange = 25.0f;
 
-		setViewRangeArea();
-		setActionRangeArea();
-
-		// STATS
-		HP = dynamic_cast < Unit* >(object)->HP;
-		HP_max = dynamic_cast < Unit* >(object)->HP_max;
-		MP = dynamic_cast <Unit*>(object)->MP;
-		MP_max = dynamic_cast <Unit*>(object)->MP_max;
-		STRENGTH = dynamic_cast <Unit*>(object)->STRENGTH;
-		DEXTERITY = dynamic_cast <Unit*>(object)->DEXTERITY;
-		INTELLIGENCE = dynamic_cast <Unit*>(object)->INTELLIGENCE;
-		
-		// STATE
-		state = states::idle;
-
+		countdown = 0.0f;
 		cooldown = 0.0f;
-		attackTime = 1.0f;
+		attackTime = dynamic_cast<Unit*>(object)->attackTime;
+
+		loadBody();
+
+		createViewRangeArea();
+		createActionRangeArea();
 	}
 
 	~Unit() { }
 
-	
+	void loadBody() {
+		for (int i = 0; i < 16; i++) {
+			idleTextures[i] = nullptr;
+			runTextures[i] = nullptr;
+			attackTextures[i] = nullptr;
 
-	void setViewRangeArea() {
-		viewRangeArea = sf::CircleShape(viewRange + collider->width/2.0f);
+		}
+
+		for (int i = 0; i < 4; i++) {
+
+			idleTextures[i] = getTexture(bodySet + "/idleTop" + to_string(i));
+			idleTextures[4 + i] = getTexture(bodySet + "/idleRight" + to_string(i));
+			idleTextures[8 + i] = getTexture(bodySet + "/idleBottom" + to_string(i));
+			idleTextures[12 + i] = getTexture(bodySet + "/idleLeft" + to_string(i));
+
+			runTextures[i] = getTexture(bodySet + "/runTop" + to_string(i));
+			runTextures[4 + i] = getTexture(bodySet + "/runRight" + to_string(i));
+			runTextures[8 + i] = getTexture(bodySet + "/runBottom" + to_string(i));
+			runTextures[12 + i] = getTexture(bodySet + "/runLeft" + to_string(i));
+
+			attackTextures[i] = getTexture(bodySet + "/attackTop" + to_string(i));
+			attackTextures[4 + i] = getTexture(bodySet + "/attackRight" + to_string(i));
+			attackTextures[8 + i] = getTexture(bodySet + "/attackBottom" + to_string(i));
+			attackTextures[12 + i] = getTexture(bodySet + "/attackLeft" + to_string(i));
+
+		}
+
+		sprite = sf::Sprite();
+		sprite.setOrigin(idleTextures[0]->texture->getSize().x/2, idleTextures[0]->texture->getSize().y/2 );
+
+	}
+
+	void createViewRangeArea() {
+		viewRangeArea = sf::CircleShape(VIEW_RANGE + collider->width/2.0f);
 		viewRangeArea.setFillColor(sf::Color(64, 64, 128, 128));
 		viewRangeArea.setOutlineColor(sf::Color(64, 64, 196, 128));
 		viewRangeArea.setOutlineThickness(4.0f);
-		viewRangeArea.setOrigin(viewRange + collider->width/2.0f, viewRange + collider->height/2.0f);
-		viewRangeArea.setScale(1.0f, collider->height/collider->width);
+		viewRangeArea.setOrigin(VIEW_RANGE + collider->width/2.0f, VIEW_RANGE + collider->length/2.0f);
+		viewRangeArea.setScale(1.0f, collider->length /collider->width);
 	}
 
-	void setActionRangeArea() {
-		actionRangeArea = sf::CircleShape(actionRange + collider->width/2.0f);
+	void createActionRangeArea() {
+		actionRangeArea = sf::CircleShape(ACTION_RANGE + collider->width/2.0f);
 		actionRangeArea.setFillColor(sf::Color(128, 64, 64, 128));
 		actionRangeArea.setOutlineColor(sf::Color(196, 64, 64, 128));
 		actionRangeArea.setOutlineThickness(4.0f);
-		actionRangeArea.setOrigin(actionRange + collider->width / 2.0f, actionRange + collider->width/2.0f);
-		actionRangeArea.setScale(1.0f, collider->height/collider->width);
+		actionRangeArea.setOrigin(ACTION_RANGE + collider->width / 2.0f, ACTION_RANGE + collider->width/2.0f);
+		actionRangeArea.setScale(1.0f, collider->length /collider->width);
 	}
 
 	void setLifeBar() {
@@ -126,17 +176,21 @@ public:
 		lifeBarBackground.setFillColor(sf::Color::Black);
 		lifeBarBackground.setPosition(position.x, position.y - 100);
 
-		lifeBar = sf::RectangleShape(sf::Vector2f(48.0f * HP / HP_max, 4.0f));
+		lifeBar = sf::RectangleShape(sf::Vector2f(48.0f * HP / HP_FULL, 4.0f));
 		lifeBar.setOrigin(24, 2);
 		lifeBar.setFillColor(sf::Color(128, 64, 64));
 		lifeBar.setPosition(position.x, position.y - 100); 
 	}
 
-	void takeDamage(float damage) {
+	void takeDamage(int damage) {
 		HP -= damage;
 
 		if (HP < 0)
-			HP = 0.0f;
+			HP = 0;
+	}
+
+	int getDamage() {
+		return int( float(STRENGTH) * 2.5f );
 	}
 
 	void calculateCurrentFrame(float dt) {
@@ -160,7 +214,7 @@ public:
 		if (player == nullptr)
 			return false;
 
-		return intersectionTwoEllipses(position.x, position.y, collider->width/2.0f + actionRange, (collider->height + actionRange) / 2.0f, player->position.x, player->position.y, player->collider->width/2.0f, player->collider->height / 2.0f);
+		return intersectionTwoEllipses(position.x, position.y, collider->width/2.0f + ACTION_RANGE, (collider->length + ACTION_RANGE) / 2.0f, player->position.x, player->position.y, player->collider->width/2.0f, player->collider->length / 2.0f);
 
 	}
 
@@ -168,18 +222,18 @@ public:
 		if (player == nullptr)
 			return false;
 
-		return intersectionTwoEllipses(position.x, position.y, collider->width/2.0f + viewRange, (collider->height + viewRange) / 2.0f, player->position.x, player->position.y, player->collider->width/2.0f, player->collider->height / 2.0f);
+		return intersectionTwoEllipses(position.x, position.y, collider->width/2.0f + VIEW_RANGE, (collider->length + VIEW_RANGE) / 2.0f, player->position.x, player->position.y, player->collider->width/2.0f, player->collider->length / 2.0f);
 	}
 
 	void goToTarget(float dt) {
 		 
 		dist = 15.0f * 4.0f * dt;	// distance to move
-		diff_x = target.x - position.x;
-		diff_y = target.y - position.y;
+		diff_x = target.x - position.x;	// difference x
+		diff_y = target.y - position.y;	// difference y
 
 		if (diff_x == 0 && diff_y == 0)
 		{
-			state = states::idle;
+			state = unitStates::idle;
 			frame = 0;
 
 		}
@@ -202,32 +256,40 @@ public:
 			if (direction == 0) {
 				if (!collisions(this, 0, -dist))
 					position.y -= dist;
+				else
+					state = unitStates::idle;
 			}
 
 			// TO RIGHT
 			if (direction == 1) {
 				if (!collisions(this, dist, 0))
 					position.x += dist;
+				else
+					state = unitStates::idle;
 			}
 
 			// TO DOWN
 			if (direction == 2) {
 				if (!collisions(this, 0, dist))
 					position.y += dist;
+				else
+					state = unitStates::idle;
 			}
 
 			// TO LEFT
 			if (direction == 3) {
 				if (!collisions(this, -dist, 0))
 					position.x -= dist;
+				else
+					state = unitStates::idle;
 			}
 		}
 		
 	}
 
 	void idle(float dt) {
-		if (rand() % 30 == 0) {
-			state = states::walk;
+		if (rand() % 60 == 0) {
+			state = unitStates::run;
 			target.x = position.x + rand() % 100 - 50;
 			target.y = position.y + rand() % 100 - 50;
 		}
@@ -247,8 +309,9 @@ public:
 	void attack(float dt) {
 
 		if (cooldown <= 0.0f) {
-			//player->takeDamage(10);
-			player->takeDamage(STRENGTH * 3 + DEXTERITY);
+			if( rand()%DEXTERITY - rand()%player->DEXTERITY > 0)
+				player->takeDamage(float(STRENGTH) * 2.5f);
+
 			cooldown = attackTime;
 			frame = 0;
 		}else
@@ -266,29 +329,7 @@ public:
 	virtual void update(float dt) {
 
 		GameObject::update(dt);
-		
-		if (playerInActionRange()) {
-			state = states::attack;
-		}
-		else if (playerInViewRange()) {
-			target = player->position;
-			state = states::walk;
-		}
-
-
-		if (state == states::idle) {
-			idle(dt);
-		}
-		else if (state == states::walk) {
-			run(dt);
-		}
-		else if (state == states::attack) {
-			attack(dt);
-		}
-			
-
-		if (cooldown > 0.0f)
-			cooldown -= dt;
+		calculateCurrentFrame(dt);
 		
 		sprite.setPosition(position);
 		viewRangeArea.setPosition(position);
