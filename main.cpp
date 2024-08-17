@@ -222,8 +222,10 @@ void editWhitePixelsToTransparent(string monster_path) {
 
     cout << "editing white pixels to transparent: " << monster_path << "\n";
 
-    sf::Color whiteColor = sf::Color(255, 255, 255);
-    sf::Color transparentColor = sf::Color(0, 0, 0, 0);
+    //sf::Color whiteColor = sf::Color(255, 255, 255);
+    sf::Color whiteColor = sf::Color(136, 68, 0);
+    //sf::Color transparentColor = sf::Color(0, 0, 0, 0);
+    sf::Color transparentColor = sf::Color(255, 127, 39);
 
     std::vector < std::string > png_files;
 
@@ -255,7 +257,7 @@ int main()
     // TOOLS - be careful with that
     //createSetsFromIdle("assets/monsters/jaszczur/");             // TO-DO
     //createSetsFromRuns("assets/monsters/bies/");               // TO-DO
-    //editWhitePixelsToTransparent("assets/sets/body/man-brownhaired/");   // TO-DO
+    editWhitePixelsToTransparent("assets/sets/body/man-redhaired/");   // TO-DO
     
     // LOADS
 	loadFonts();

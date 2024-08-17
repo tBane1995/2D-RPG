@@ -94,7 +94,7 @@ void loadPrefabs() {
 
     Character* character = nullptr;
 
-    character = new Character("characters/jack", "sets/body/woman-redhaired");
+    character = new Character("characters/jack", "sets/body/woman-blackhaired");
     character->dialogue = getDialogue(1);
     character->armor = getItem("items/wool shirt");
     character->pants = getItem("items/wool pants");

@@ -268,10 +268,10 @@ void loadTextures() {
 	// BODY SETS
 	std::vector < string > bodySets;
 	bodySets.clear();
-	bodySets.push_back("hero");
 	bodySets.push_back("boy-brownhaired");	// without beard
 	bodySets.push_back("man-brownhaired");	// have a beard
 	bodySets.push_back("woman-redhaired");	// with long hair
+	bodySets.push_back("woman-blackhaired");	// with long hair
 	
 	
 	for (auto& set : bodySets) {

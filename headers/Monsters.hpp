@@ -108,7 +108,7 @@ public:
 
 	virtual void update(float dt) {
 
-		if (HP <= 0.f && isAlive == true) {
+		if (HP == 0 && isAlive == true) {
 			
 			// death
 			dropLoot();

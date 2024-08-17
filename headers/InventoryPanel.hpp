@@ -203,7 +203,7 @@ void updateInventoryPanel() {
 		itemName.setFillColor(textColor);
 		itemName.setFont(basicFont);
 		itemName.setPosition(cam->position.x-300 + 192, cam->position.y+275-64);
-		itemName.setString(getItemName(item));
+		itemName.setString(getShortName(item->name));
 
 		itemDescription = sf::Text();
 		itemDescription.setCharacterSize(16);

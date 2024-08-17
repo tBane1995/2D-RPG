@@ -33,15 +33,6 @@ Item* getItem(string location) {
 	return nullptr;
 }
 
-string getItemName(Item* item) {
-
-	string name = "";
-	for (int i = item->name.size()-1; i >= 0 && item->name[i] != '/'; i--)
-		name = item->name[i] + name;
-
-	return name;
-}
-
 wstring getItemDescription(Item* item) {
 	
 	wstring description = item->description + L"\n\n";

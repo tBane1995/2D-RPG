@@ -148,7 +148,7 @@ public:
 	}
 
 	void createTextname() {
-		textname = sf::Text(name, basicFont, 16);
+		textname = sf::Text(getShortName(name), basicFont, 16);
 		textname.setOrigin(textname.getGlobalBounds().width / 2.f, textname.getGlobalBounds().height / 2.f);
 		textname.setFillColor(textNameColor);
 		textname.setOutlineColor(sf::Color::Black);
