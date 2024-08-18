@@ -40,15 +40,25 @@ void loadTextures() {
 
 	// GUI ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	loadTexture("GUI/slotTexture1.png", 40, 40);
-	loadTexture("GUI/slotTexture2.png", 40, 40);
-	loadTexture("GUI/slotSelectorTexture1.png", 40, 40);
-	loadTexture("GUI/dialogBoxTexture.png", 300, 75);
-	loadTexture("GUI/panelTexture.png", 300, 200);
+	loadTexture("GUI/slot1.png", 40, 40);
+	loadTexture("GUI/slot2.png", 40, 40);
+	loadTexture("GUI/selector.png", 40, 40);
+
+	loadTexture("GUI/infoPanel.png", 300, 75);
+	loadTexture("GUI/bigPanel.png", 300, 200);
+
 	loadTexture("GUI/wideArrowUp1.png", 80, 20);
 	loadTexture("GUI/wideArrowUp2.png", 80, 20);
 	loadTexture("GUI/wideArrowDown1.png", 80, 20);
 	loadTexture("GUI/wideArrowDown2.png", 80, 20);
+
+	loadTexture("GUI/button.png", 20, 20);
+	loadTexture("GUI/buttonArrowUp.png", 20, 20);
+	loadTexture("GUI/buttonArrowDown.png", 20, 20);
+	loadTexture("GUI/buttonArrowLeft.png", 20, 20);
+	loadTexture("GUI/buttonArrowRight.png", 20, 20);
+	loadTexture("GUI/space.png", 80, 20);
+
 	loadTexture("GUI/hand.png", 8, 8);
 	loadTexture("GUI/grey_hand.png", 8, 8);
 	loadTexture("GUI/talk.png", 8, 8);
@@ -268,10 +278,17 @@ void loadTextures() {
 	// BODY SETS
 	std::vector < string > bodySets;
 	bodySets.clear();
-	bodySets.push_back("boy-brownhaired");	// without beard
-	bodySets.push_back("man-brownhaired");	// have a beard
-	bodySets.push_back("woman-redhaired");	// with long hair
-	bodySets.push_back("woman-blackhaired");	// with long hair
+	//bodySets.push_back("boy-redhaired");		// face without beard
+	//bodySets.push_back("boy-blackhaired");	// face without beard
+	bodySets.push_back("boy-brownhaired");		// face without beard
+
+	bodySets.push_back("man-redhaired");		// face have a beard
+	bodySets.push_back("man-blackhaired");		// face have a beard
+	bodySets.push_back("man-brownhaired");		// face have a beard
+
+	bodySets.push_back("woman-redhaired");		// face with long hair
+	bodySets.push_back("woman-blackhaired");	// face with long hair
+	bodySets.push_back("woman-brownhaired");	// face with long hair
 	
 	
 	for (auto& set : bodySets) {

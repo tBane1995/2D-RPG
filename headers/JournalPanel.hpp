@@ -10,7 +10,7 @@ public:
 
 	JournalPanel() {
 		panel = sf::Sprite();
-		panel.setTexture(*getTexture("GUI/panelTexture")->texture);
+		panel.setTexture(*getTexture("GUI/bigPanel")->texture);
 		panel.setOrigin(300, 200);
 
 		description = sf::Text();

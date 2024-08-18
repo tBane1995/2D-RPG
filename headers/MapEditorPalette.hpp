@@ -63,7 +63,7 @@ public:
     bool mouseOver;   // mouse over
 
 	MapEditorPaletteButton() {
-		slotTexture = getTexture("GUI/slotTexture2");
+		slotTexture = getTexture("GUI/slot2");
 		slotSprite = sf::Sprite();
 		slotSprite.setTexture(*slotTexture->texture);
 		slotSprite.setOrigin(paletteButtonSize.x/2.0f, paletteButtonSize.y/2.0f);

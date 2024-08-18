@@ -43,6 +43,7 @@ public:
 			inventory->addItem("items/wooden club");
 			inventory->addItem("items/wool shirt");   // TO-DO to delete
 			inventory->addItem("items/wool pants");   // TO-DO to delete			
+			inventory->addItem("items/wool hat");   // TO-DO to delete			
 		}
 
 		if (name == "furnitures/table1") {

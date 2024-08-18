@@ -35,7 +35,7 @@ void updateTradePanel() {
 	drawItemStats = false;
 
 	background = sf::Sprite();
-	background.setTexture(*getTexture("GUI/dialogBoxTexture")->texture);
+	background.setTexture(*getTexture("GUI/infoPanel")->texture);
 	background.setPosition(cam->position.x, cam->position.y + 275);
 	background.setOrigin(300, 75);
 

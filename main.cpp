@@ -53,6 +53,7 @@
 
 #include "headers/MapEditorPalette.hpp"
 
+#include "headers/ControlsPanel.hpp"
 #include "headers/InventoryPanel.hpp"
 #include "headers/TradePanel.hpp"
 #include "headers/JournalPanel.hpp"
@@ -252,13 +253,43 @@ void editWhitePixelsToTransparent(string monster_path) {
 
 }
 
+void test()
+{
+    printf("     ");
+    for (int a = 1; a < 20; ++a)
+        printf("%4d ", a);
+
+    printf("\ratk\\def\n");
+
+    for (int dex_atk = 1; dex_atk < 30; ++dex_atk)
+    {
+        printf("%4d", dex_atk);
+        for (int dex_def = 1; dex_def < 30; ++dex_def)
+        {
+            int hit = 0, tests = 1000;
+
+            //srand(0);
+            for (int i = 0; i < tests; ++i)
+            {
+                if (rand() % (dex_atk+3) - rand() % (dex_def+3) > 0)
+                    ++hit;
+
+            }
+
+            printf(" %3.0f%%", 100.f * hit / tests);
+        }
+        printf("\n");
+    }
+}
+
 int main()
 {
     // TOOLS - be careful with that
     //createSetsFromIdle("assets/monsters/jaszczur/");             // TO-DO
     //createSetsFromRuns("assets/monsters/bies/");               // TO-DO
-    editWhitePixelsToTransparent("assets/sets/body/man-redhaired/");   // TO-DO
-    
+    //editWhitePixelsToTransparent("assets/sets/body/man-redhaired/");   // TO-DO
+    //test();
+
     // LOADS
 	loadFonts();
 	loadTextures();		// TO-DO "FROM FILE"
@@ -272,7 +303,7 @@ int main()
 	
     // PROGRAMS
 	game();
-	mapEditor();
+	//mapEditor();
 	    
 	
 }

@@ -68,7 +68,7 @@ void drawDialogBox(sf::RenderWindow* window, int currentPage = 0) {
 	page = currentPage;	// global variable "page"
 
 	sf::Texture dialogBoxTexture;
-	if (!dialogBoxTexture.loadFromFile("assets/GUI/DialogBoxTexture.png")) {
+	if (!dialogBoxTexture.loadFromFile("assets/GUI/infoPanel.png")) {
 		return;
 	}
 
@@ -101,7 +101,7 @@ bool scriptResult(std::wstring text) {
 
 void drawChooseBox(sf::RenderWindow* window) {
 	sf::Texture dialogBoxTexture;
-	if (!dialogBoxTexture.loadFromFile("assets/GUI/DialogBoxTexture.png")) {
+	if (!dialogBoxTexture.loadFromFile("assets/GUI/infoPanel.png")) {
 		return;
 	}
 

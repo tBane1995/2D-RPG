@@ -94,9 +94,9 @@ void loadPrefabs() {
 
     Character* character = nullptr;
 
-    character = new Character("characters/jack", "sets/body/woman-blackhaired");
+    character = new Character("characters/jack", "sets/body/man-blackhaired");
     character->dialogue = getDialogue(1);
-    character->armor = getItem("items/wool shirt");
+    character->armor = getItem("items/skin jacket");
     character->pants = getItem("items/wool pants");
     character->helmet = getItem("items/wool helmet");
     character->rightHand = getItem("items/sword");
@@ -115,7 +115,7 @@ void loadPrefabs() {
     character->helmet = getItem("items/wool helmet");
     prefabs.push_back(character);
 
-    character = new Character("characters/pit", "sets/body/man-brownhaired");
+    character = new Character("characters/pit", "sets/body/boy-brownhaired");
     character->dialogue = getDialogue(5);
     character->armor = getItem("items/wool shirt");
     character->pants = getItem("items/wool pants");

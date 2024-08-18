@@ -47,46 +47,57 @@ void game() {
 
     gameState = gameStates::start;
 
-    sf::Text* welcome = new sf::Text("welcome", basicFont, 32);
-    welcome->setFillColor(titleColor);
-    welcome->setOrigin(welcome->getLocalBounds().width / 2.f, welcome->getLocalBounds().height / 2.f);
-    welcome->setPosition(screenWidth / 2.0f, screenHeight / 2.0f - 50);
+    sf::Text title = sf::Text("welcome", basicFont, 32);
+    title.setFillColor(titleColor);
+    title.setOrigin(title.getLocalBounds().width / 2.f, title.getLocalBounds().height / 2.f);
 
-    sf::Text* press = new sf::Text("press Spacebar to start", basicFont, 16);
-    press->setFillColor(titleColor);
-    press->setOrigin(press->getLocalBounds().width / 2.f, press->getLocalBounds().height / 2.f);
-    press->setPosition(screenWidth / 2.0f, screenHeight / 2.0f + 50);
+    sf::Text press = sf::Text("press Spacebar to continue", basicFont, 16);
+    press.setFillColor(titleColor);
+    press.setOrigin(press.getLocalBounds().width / 2.f, press.getLocalBounds().height / 2.f);
 
     sf::Event event;
+    while (window->waitEvent(event)) {
+        if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            break;
+        }
+
+        window->setView(cam->view);
+        title.setPosition(cam->position.x, cam->position.y - 50);
+        press.setPosition(cam->position.x, cam->position.y + 50);
+
+        window->clear(sf::Color::Black);
+        window->draw(title);
+        window->draw(press);
+        window->display();
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    controls = new ControlsPanel();
+    
     while (window->waitEvent(event)) {
         if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             gameState = gameStates::game;
             break;
         }
 
-        window->setView(cam->view);
-        welcome->setPosition(cam->position.x, cam->position.y - 50);
-        press->setPosition(cam->position.x, cam->position.y + 50);
+        controls->update();
 
         window->clear(sf::Color::Black);
-        window->draw(*welcome);
-        window->draw(*press);
+        controls->draw();
         window->display();
     }
 
+    delete controls;
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    setDialogue(0);
-
-    /*
+    
     sf::Music music;
-    if (!music.openFromFile("music/Elkmire Keep (LOOP).ogg")) {
+    if (!music.openFromFile("assets/music/Elkmire Keep (LOOP).ogg")) {
         return;
     }
-
+    
     music.setLoop(true);    // TO-DO
     music.play();           // TO-DO
-    */
+    
 
     clearAllMainListsOfGameObjects();
     world = new World();
@@ -97,9 +108,10 @@ void game() {
     cam->setPosition(player->position);
     cam->update();
 
-    // TEST TRADE   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    setDialogue(0);
 
-    
+    // TEST TRADE   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
     Inventory* bag = new Inventory();
     bag->addItem("items/axe");
     inventoryLeft = new InventoryPanel(bag, -300, 0);
@@ -108,13 +120,10 @@ void game() {
     cursor = 0;
     gameState = gameStates::trade;
     activePanel = activeInventoryPanel::Left;
-
-    /*
-    cursor = 0;
-    journal = new JournalPanel();
-    gameState = gameStates::journal;
     */
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    
 
     while (window->isOpen()) {
 
@@ -539,6 +548,7 @@ void gameEvents() {
         stats = new StatsPanel();
     }
 
+
 }
 
 void inventoryEvents() {
@@ -546,15 +556,17 @@ void inventoryEvents() {
     // TO-DO WASD with inventory->scroll
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        delete inventory;
         gameState = gameStates::game;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+        delete inventory;
         gameState = gameStates::game;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
-
+        delete inventory;
         cursor = 0;
         journal = new JournalPanel();
         gameState = gameStates::journal;
@@ -632,11 +644,13 @@ void inventoryEvents() {
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+        delete inventory;
         gameState = gameStates::journal;
         journal = new JournalPanel();
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+        delete inventory;
         gameState = gameStates::stats;
         stats = new StatsPanel();
     }
@@ -648,10 +662,14 @@ void tradeEvents() {
     // TO-DO - whole function to repair
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        delete inventoryLeft;
+        delete inventoryRight;
         gameState = gameStates::game;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+        delete inventoryLeft;
+        delete inventoryRight;
         gameState = gameStates::game;
     }
 
@@ -898,8 +916,12 @@ void dialogueEvents() {
                 page = 0;
                 dialogScroll = 0;
             }
-            else
+            else {
+                // TO-DO
+                // add "delete Dialogue"
                 gameState = gameStates::game;
+            }
+                
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
@@ -935,24 +957,24 @@ void dialogueEvents() {
 void journalEvents() {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-
+        delete journal;
         gameState = gameStates::game;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
-
+        delete journal;
         gameState = gameStates::game;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-
+        delete journal;
         gameState = gameStates::inventory;
         inventory = new InventoryPanel(player->bag);
         cursor = 0;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
-
+        delete journal;
         gameState = gameStates::stats;
         stats = new StatsPanel();
         
@@ -970,23 +992,29 @@ void journalEvents() {
 void statsEvents() {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        delete stats;
         gameState = gameStates::game;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+        delete stats;
         gameState = gameStates::game;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+        delete stats;
+        gameState = gameStates::inventory;
         cursor = 0;
         inventory = new InventoryPanel(player->bag);
-        gameState = gameStates::inventory;
+        
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+        delete stats;
+        gameState = gameStates::journal;
         cursor = 0;
         journal = new JournalPanel();
-        gameState = gameStates::journal;
+        
     }
 }
 
