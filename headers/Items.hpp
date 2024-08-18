@@ -132,56 +132,56 @@ void loadItems() {
 	// WEAPONS
 
 	item = new Item("items/axe", itemType::weapon, L"do rąbania głów");
-	item->attributes[attribute::ATTACK] = 14;
+	item->attributes[attribute::ATTACK] = 50;
 	items.push_back(item);
 
 	item = new Item("items/iron club", itemType::weapon, L"żelazna pałka");
-	item->attributes[attribute::ATTACK] = 12;
+	item->attributes[attribute::ATTACK] = 45;
 	items.push_back(item);
 	
 	item = new Item("items/wide blade", itemType::weapon, L"szerokie ostrze");
-	item->attributes[attribute::ATTACK] = 10;
+	item->attributes[attribute::ATTACK] = 40;
 	items.push_back(item);
 
 	item = new Item("items/long sword", itemType::weapon, L"długi miecz");
-	item->attributes[attribute::ATTACK] = 8;
+	item->attributes[attribute::ATTACK] = 35;
 	items.push_back(item);
 	
 	item = new Item("items/curved sword", itemType::weapon, L"zakrzywiony miecz");
-	item->attributes[attribute::ATTACK] = 7;
+	item->attributes[attribute::ATTACK] = 30;
 	items.push_back(item);
 
 	item = new Item("items/club", itemType::weapon, L"pałka");
-	item->attributes[attribute::ATTACK] = 6;
+	item->attributes[attribute::ATTACK] = 20;
 	items.push_back(item);
 
 	item = new Item("items/stone hammer", itemType::weapon, L"prymitywna broń");
-	item->attributes[attribute::ATTACK] = 5;
+	item->attributes[attribute::ATTACK] = 15;
 	items.push_back(item);
 
 	item = new Item("items/gladius", itemType::weapon, L"ceniony przez wojowników");
-	item->attributes[attribute::ATTACK] = 5;
+	item->attributes[attribute::ATTACK] = 15;
 	items.push_back(item);
 
 	item = new Item("items/sword", itemType::weapon, L"miecz");
-	item->attributes[attribute::ATTACK] = 5;
+	item->attributes[attribute::ATTACK] = 10;
 	items.push_back(item);
 
 	item = new Item("items/dagger", itemType::weapon, L"zdradziecka broń");
-	item->attributes[attribute::ATTACK] = 4;
+	item->attributes[attribute::ATTACK] = 8;
 	items.push_back(item);
 
 	item = new Item("items/hatchet", itemType::weapon, L"zazwyczaj służy do rąbania drewna");
-	item->attributes[attribute::ATTACK] = 3;
+	item->attributes[attribute::ATTACK] = 5;
 	items.push_back(item);
 
 	item = new Item("items/knife", itemType::weapon, L"zwykly nóż");
-	item->attributes[attribute::ATTACK] = 2;
+	item->attributes[attribute::ATTACK] = 3;
 	items.push_back(item);
 
 
 	item = new Item("items/wooden club", itemType::weapon, L"drewniana pałka");
-	item->attributes[attribute::ATTACK] = 1;
+	item->attributes[attribute::ATTACK] = 2;
 	items.push_back(item);
 
 	// SHIELDS

@@ -346,7 +346,7 @@ bool playerAttack() {
             if (intersectionTwoEllipses(x, y, rx, ry, m->position.x, m->position.y, m->collider->width/2.0f, m->collider->length / 2.0f)) {
                 
                 //attack(player, m); // TO-DO
-                if (rand() % player->DEXTERITY - rand() % m->DEXTERITY > 0) {
+                if (rand() % (player->DEXTERITY+3) - rand() % (m->DEXTERITY+3) > 0) {
                     m->takeDamage(player->getDamage());
                 }
 

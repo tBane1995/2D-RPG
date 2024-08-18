@@ -309,7 +309,7 @@ public:
 	void attack(float dt) {
 
 		if (cooldown <= 0.0f) {
-			if( rand()%DEXTERITY - rand()%player->DEXTERITY > 0)
+			if( rand()%(DEXTERITY+3) - rand()%(player->DEXTERITY+3) > 0)
 				player->takeDamage(float(STRENGTH) * 2.5f);
 
 			cooldown = attackTime;
