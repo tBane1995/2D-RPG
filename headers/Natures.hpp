@@ -6,7 +6,7 @@ public:
 	Texture* texture;
 	sf::Sprite sprite;
 
-	Nature(string name, float width, float height) : GameObject(name, 0, 0, width, height, true, false) {
+	Nature(string name, float width, float length, float height) : GameObject(name, 0, 0, width, length, height, true, false) {
 		type = gameObjectType::Nature;
 		this->texture = getTexture(name);
 		sprite = sf::Sprite();

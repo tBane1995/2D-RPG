@@ -39,5 +39,5 @@ Path "paths/stonepath1" 2688 304
 Path "paths/stonepath1" 2752 304
 
 // MONSTERS
-Monster "monsters/goblin" 2566 385
+Monster "monsters/goblin" 2601 378
 

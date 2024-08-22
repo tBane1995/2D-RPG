@@ -43,7 +43,7 @@ public:
 	sf::Vector2f target;
 
 
-	Unit(string name, string bodySet, float width, float height) : GameObject(name, 0, 0, width, height, true, false) {
+	Unit(string name, string bodySet, float width, float length, float height) : GameObject(name, 0, 0, width, length, height, true, false) {
 
 		type = gameObjectType::Unit;
 
@@ -174,23 +174,28 @@ public:
 		lifeBarBackground = sf::RectangleShape(sf::Vector2f(50.0f, 6.0f));
 		lifeBarBackground.setOrigin(25, 3);
 		lifeBarBackground.setFillColor(sf::Color::Black);
-		lifeBarBackground.setPosition(position.x, position.y - 100);
+		lifeBarBackground.setPosition(position.x, position.y - collider->height - 10);
 
 		lifeBar = sf::RectangleShape(sf::Vector2f(48.0f * HP / HP_FULL, 4.0f));
 		lifeBar.setOrigin(24, 2);
 		lifeBar.setFillColor(sf::Color(128, 64, 64));
-		lifeBar.setPosition(position.x, position.y - 100); 
+		lifeBar.setPosition(position.x, position.y - collider->height - 10);
 	}
 
-	void takeDamage(int damage) {
+	int takeDamage(int damage) {
+
 		HP -= damage;
 
 		if (HP < 0)
 			HP = 0;
+		
+		return damage;
 	}
 
 	int getDamage() {
-		return int( float(STRENGTH) * 2.5f );
+		int damage = STRENGTH * 2;
+		damage = damage * (rand() % 50 + 75) / 100;	// 75% - 125%
+		return damage;
 	}
 
 	void calculateCurrentFrame(float dt) {
@@ -309,8 +314,18 @@ public:
 	void attack(float dt) {
 
 		if (cooldown <= 0.0f) {
-			if( rand()%(DEXTERITY+3) - rand()%(player->DEXTERITY+3) > 0)
-				player->takeDamage(float(STRENGTH) * 2.5f);
+
+			sf::Vector2f hitposition = sf::Vector2f(player->position.x, player->position.y - player->collider->height);
+			
+			if (rand() % (DEXTERITY + 10) - rand() % (player->DEXTERITY + 5) > 0) {
+				
+				int damage = player->takeDamage(getDamage());
+				hits->addHitText(hitposition, to_string(damage), sf::Color::Red);
+			}
+			else {
+				hits->addHitText(hitposition, "miss", sf::Color::Red);
+			}
+				
 
 			cooldown = attackTime;
 			frame = 0;

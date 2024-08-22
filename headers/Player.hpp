@@ -73,7 +73,7 @@ public:
 	int EXPERIENCE_TO_NEXT_LEVEL;
 	int SKILL_POINTS;
 
-	Player() : GameObject("hero", 0, 0, 24, 12, true, false) {
+	Player() : GameObject("hero", 0, 0, 24, 12, 64, true, false) {
 		type = gameObjectType::Player;
 		direction = 2;
 		frame = 0;
@@ -94,8 +94,8 @@ public:
 		MP = 5;
 		MP_FULL = 5;
 		STRENGTH = 5;
-		DEXTERITY = 2;
-		INTELLIGENCE = 1;
+		DEXTERITY = 5;
+		INTELLIGENCE = 5;
 		
 		LEVEL = 0;
 		EXPERIENCE = 0;
@@ -411,7 +411,7 @@ public:
 			frame = frame % 4;
 	}
 
-	void takeDamage(int damage) {
+	int takeDamage(int damage) {
 
 		int defend = 0;
 
@@ -435,13 +435,17 @@ public:
 			if (HP < 0)
 				HP = 0;
 		}
+
+		return dam;
 	}
 	
 	int getDamage() {
-		float damage = STRENGTH * 2.5f;
+		int damage = STRENGTH * 2;
 
 		if (rightHand != nullptr)
 			damage += rightHand->attributes[attribute::ATTACK];
+
+		damage = damage * (rand() % 50 + 75) / 100;		// 75% - 125% 
 
 		return int(damage);
 	}
@@ -469,10 +473,12 @@ public:
 
 		if (EXPERIENCE >= EXPERIENCE_TO_NEXT_LEVEL) {
 			LEVEL++;
+			HP += 40;
+			HP_FULL += 40;
 			EXPERIENCE_TO_NEXT_LEVEL *= LEVEL_SCALAR;
 			SKILL_POINTS += 5;
-			HP_FULL = 40 * LEVEL;
-			cout << "LVL UP!";
+		
+			hits->addHitText(sf::Vector2f(position.x, position.y-collider->height), "lvl up!");
 			return true;
 		}
 
@@ -634,5 +640,14 @@ Player* player = nullptr;
 void createPlayer() {
 	player = new Player();
 	gameObjects.push_back(player);
+
+	//player->gainEXP(50 + 100 + 200 + 400 + 800 + 1600);
+
+	//player->STRENGTH += 8;
+	//player->DEXTERITY += 4;
+
+	//player->SKILL_POINTS -= 12;
+	player->gainEXP(40);
+	player->HP = 10;
 }
 #endif

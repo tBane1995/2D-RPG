@@ -36,5 +36,5 @@
 Nature "natures/tree2" 1200 912
 
 // MONSTERS
-Monster "monsters/goblin" 1271 955
+Monster "monsters/goblin" 1313 948
 

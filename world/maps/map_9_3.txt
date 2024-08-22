@@ -36,5 +36,5 @@
 Nature "natures/tree1" 2352 768
 
 // MONSTERS
-Monster "monsters/niedzwiedz" 2443 940
+Monster "monsters/niedzwiedz" 2442 931
 

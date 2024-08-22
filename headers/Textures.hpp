@@ -64,7 +64,8 @@ void loadTextures() {
 	loadTexture("GUI/talk.png", 8, 8);
 
 	// TILES //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	loadTexture("tiles/0_tileset.png", 0, 0);
+	loadTexture("floors/0_floorset.png", 0, 0);
 	loadTexture("tiles/tile_0_grass.png", 32, 32);
 	loadTexture("tiles/tile_1_sands.png", 32, 32);
 	loadTexture("tiles/tile_2_water.png", 32, 32);

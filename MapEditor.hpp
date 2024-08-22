@@ -4,16 +4,14 @@
 enum class mapEditorStates { start, editor };
 mapEditorStates mapEditorState;
 
-GameObject* prefabToPaint;
-bool GUIwasHover;
-bool GUIwasClicked;
-
 void addPrefabToLists();
 void createPalette();
 void updatePalette();
 void renderPalette();
 void editTile();
 void editFloor();
+void mapEditorEventLeftClick();
+void mapEditorEventRightClick();
 
 void mapEditor() {
 
@@ -43,7 +41,6 @@ void mapEditor() {
     sf::Event event;
     while (window->waitEvent(event)) {
         if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            mapEditorState = mapEditorStates::editor;
             break;
         }
 
@@ -57,16 +54,10 @@ void mapEditor() {
         window->display();
     }
 
-    // time for editor
-    sf::Clock clock;
-    sf::Time prevTime = clock.getElapsedTime();
-    sf::Time currentTime = prevTime;
-    float dt;   // delta time
-    dt = currentTime.asSeconds() - prevTime.asSeconds();
+    mapEditorState = mapEditorStates::editor;
 
     prefabToPaint = nullptr;
-    createPalette();
-
+    createMapEditorPalette();
 
     world = new World();
     world->load();
@@ -75,7 +66,7 @@ void mapEditor() {
     while (window->isOpen()) {
 
         prevTime = currentTime;
-        currentTime = clock.getElapsedTime();
+        currentTime = timeClock.getElapsedTime();
 
         mousePosition = sf::Mouse::getPosition(*window);	// Pobierz aktualną pozycję myszy względem bieżącego okna
         worldMousePosition = window->mapPixelToCoords(mousePosition);
@@ -93,79 +84,19 @@ void mapEditor() {
 
             if (mapEditorState == mapEditorStates::editor) {
 
-                if(event.type == sf::Event::MouseButtonPressed)
+                if (event.type == sf::Event::MouseButtonPressed) {
 
                     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-
-                        cout << worldMousePosition.x << " " << worldMousePosition.y << "\n";
-
-                        if (buttonUp->mouseOvering(worldMousePosition)) {
-                            GUIwasClicked = true;
-                            if(paletteScroll > 0)
-                                paletteScroll -= 1;
-                        }
-                        
-                        else if (buttonDown->mouseOvering(worldMousePosition)) {
-                            GUIwasClicked = true;
-
-                            float maxValue = availableGameObjects.size() - 16;
-                            if (maxValue < 0)
-                                maxValue = 0;
-
-                            if(paletteScroll*2 < maxValue)
-                                paletteScroll += 1;
-
-                        }
-
-                        // select the palette button
-                        for (auto& p : palette) {
-                            if (p.mouseOvering(worldMousePosition)) {
-
-                                GUIwasClicked = true;
-                                prefabToPaint = p.object;
-
-                            }
-                        }
-                        
-                        if (!GUIwasClicked && prefabToPaint != nullptr) {
-                           
-                            if (prefabToPaint->type != gameObjectType::Terrain) {
-                                addPrefabToLists();
-                            }
-                        }
-                            
+                        mapEditorEventLeftClick();
                     }
 
                     if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-
                         // DELETE GAMEOBJECTS OR FLOORS
-                        if (prefabToPaint == nullptr) {
-                            
-                            bool was_delete = false;
-
-                            for (auto& go : gameObjects) {
-                                if (go->mouseIsOver == true) {
-                                    //cout << "delete: " << go->name << "\n";
-                                    go->toDelete = true;
-                                    was_delete = true;
-                                    break;
-                                }
-                            }
-
-                            if (was_delete) {
-                                world->mapVisiblings();
-                                deleteGameObjectsFromMainLists();
-                                for (auto& map : world->maps)
-                                    map->deleteGameObjects();
-                            }
-                            else {
-                                editFloor();
-                            }
-                            
-                        }
-                        else
-                            prefabToPaint = nullptr;
+                        mapEditorEventRightClick();
                     }
+                }
+
+                    
 
                 if (event.type == sf::Event::KeyPressed) {
                     
@@ -230,22 +161,20 @@ void mapEditor() {
 
         world->mapVisiblings();     // render map or not render map
 
-        for (auto& go : gameObjects) {
-            if (visiblings(go))     // only visible GameObjects are updating
-                go->update(dt);
-        }
-        
-        std::sort(gameObjects.begin(), gameObjects.end(), [](const auto& a, const auto& b) { return a->position.y < b->position.y; });
+        updateGameObjects();
+        sortGameObjects();
 
         cam->update();
 
+        
         // PALETTE
         for (auto& p : palette) {
             if (p.mouseOvering(worldMousePosition))
                 GUIwasHover = true;
         }
-
-        // DRAW A PAINTER
+        
+        
+        // A PAINTER
         if (prefabToPaint != nullptr) {
 
             if (prefabToPaint->type != gameObjectType::Terrain && prefabToPaint->type != gameObjectType::Floor ) {
@@ -281,16 +210,17 @@ void mapEditor() {
         window->clear(sf::Color(64, 128, 64));
         window->setView(cam->view);
         world->draw();
+        
+        for (auto& m : world->maps)
+            for (auto& building : m->_buildings)
+            {
+                window->draw(building->rect);
+                window->draw(*building->floors);
+            }
 
-        for (auto& p : paths) {
-            if(visiblings(p))
-                p->draw(window);
-        }
+        renderGameObjects();
 
-        for (auto& go : gameObjects)
-            if(go->type != gameObjectType::Path)
-                if(visiblings(go))
-                    go->draw(window);
+        
 
         if(!GUIwasHover && prefabToPaint != nullptr)
            prefabToPaint->draw(window);
@@ -303,7 +233,7 @@ void mapEditor() {
 
 }
 
-void addPrefabToLists() {
+void addPrefabToMapAndLists() {
 
     int x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
     int y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
@@ -369,7 +299,7 @@ void editTile() {
     if (map == nullptr)
         return;
 
-    Terrain* terrainPrefab = dynamic_cast<Terrain*>(prefabToPaint);
+    TerrainPrefab* terrainPrefab = dynamic_cast<TerrainPrefab*>(prefabToPaint);
 
     if (map != nullptr) {
 
@@ -403,7 +333,7 @@ void editFloor() {
         return;
     }
 
-    Floor* floorPrefab = dynamic_cast<Floor*>(prefabToPaint);
+    FloorPrefab* floorPrefab = dynamic_cast<FloorPrefab*>(prefabToPaint);
 
     if (map != nullptr) {
         
@@ -419,5 +349,88 @@ void editFloor() {
         if (floorPrefab->name == "floors/floor_3")
             map->editFloor(worldMousePosition, 3);
     }
+}
+
+void mapEditorEventLeftClick() {
+    cout << worldMousePosition.x << " " << worldMousePosition.y << "\n";
+
+    if (buttonUp->mouseOvering(worldMousePosition)) {
+        GUIwasClicked = true;
+        if (paletteScroll > 0)
+            paletteScroll -= 1;
+    }
+
+    else if (buttonDown->mouseOvering(worldMousePosition)) {
+        GUIwasClicked = true;
+
+        float maxValue = availableGameObjects.size() - 16;
+        if (maxValue < 0)
+            maxValue = 0;
+
+        if (paletteScroll * 2 < maxValue)
+            paletteScroll += 1;
+
+    }
+
+    // select the palette button
+    for (auto& p : palette) {
+        if (p.mouseOvering(worldMousePosition)) {
+
+            GUIwasClicked = true;
+            prefabToPaint = p.object;
+
+        }
+    }
+
+    if (!GUIwasClicked && prefabToPaint != nullptr) {
+
+        if (prefabToPaint->type != gameObjectType::Terrain) {
+            addPrefabToMapAndLists();
+        }
+    }
+}
+
+void mapEditorEventRightClick() {
+    
+    if (prefabToPaint == nullptr) {
+
+        bool was_delete = false;
+
+        // TO-DO //////////////////////////////////////////////////
+        for (auto& m : world->maps)
+            for (auto& building : m->_buildings) {
+                if (building->mouseIsOver(worldMousePosition)) {
+                    building->deleteBuilding();
+                    deleteGameObjectsFromMainLists();
+                    was_delete = true;
+                    break;
+                }
+
+            }
+
+        ////////////////////////////////////////////////////////
+
+        for (auto& go : gameObjects) {
+            if (go->mouseIsOver == true) {
+                //cout << "delete: " << go->name << "\n";
+                go->toDelete = true;
+                was_delete = true;
+                break;
+            }
+        }
+
+        if (was_delete) {
+            world->mapVisiblings();
+            deleteGameObjectsFromMainLists();
+            for (auto& map : world->maps)
+                map->deleteGameObjects();
+        }
+        else {
+            editFloor();
+        }
+
+    }
+    else
+        prefabToPaint = nullptr;
 }
 #endif

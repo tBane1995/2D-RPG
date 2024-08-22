@@ -76,7 +76,6 @@ void game() {
     
     while (window->waitEvent(event)) {
         if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            gameState = gameStates::game;
             break;
         }
 
@@ -88,8 +87,10 @@ void game() {
     }
 
     delete controls;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    /*
     sf::Music music;
     if (!music.openFromFile("assets/music/Elkmire Keep (LOOP).ogg")) {
         return;
@@ -97,7 +98,9 @@ void game() {
     
     music.setLoop(true);    // TO-DO
     music.play();           // TO-DO
+    */
     
+    gameState = gameStates::game;
 
     clearAllMainListsOfGameObjects();
     world = new World();
@@ -246,6 +249,7 @@ void game() {
         if (gameState == gameStates::stats)
             stats->update();
 
+        hits->update();
         refreshLifeBar();
 
         // DRAW
@@ -263,6 +267,8 @@ void game() {
                 if(visiblings(go))
                     go->draw(window);
         }
+
+        hits->draw();
 
         if (gameState == gameStates::inventory)
             drawInventoryPanel();
@@ -346,9 +352,21 @@ bool playerAttack() {
             if (intersectionTwoEllipses(x, y, rx, ry, m->position.x, m->position.y, m->collider->width/2.0f, m->collider->length / 2.0f)) {
                 
                 //attack(player, m); // TO-DO
-                if (rand() % (player->DEXTERITY+3) - rand() % (m->DEXTERITY+3) > 0) {
-                    m->takeDamage(player->getDamage());
+                sf::Vector2f hitPosition = sf::Vector2f(m->position.x, m->position.y - m->collider->height);
+                if (rand() % (player->DEXTERITY + 10) - rand() % (m->DEXTERITY + 5) > 0) {
+
+                    // TO-DO - must be dependent on the monster's height
+                    int damage = m->takeDamage(player->getDamage());
+                    
+                    hits->addHitText(hitPosition, to_string(damage));
                 }
+                else {
+                    // TO-DO - hits->addHitText(m->position, 0);
+                    hits->addHitText(hitPosition, "miss");
+                }
+                    
+
+                
 
                 result = true;
             }

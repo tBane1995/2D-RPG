@@ -11,7 +11,7 @@ public:
 	sf::Sprite takeItSprite;
 	bool showHand;
 
-	Furniture(string name, float width, float height) : GameObject(name, 0, 0, width, height, true, true) {
+	Furniture(string name, float width, float length, float height) : GameObject(name, 0, 0, width, length, height, true, true) {
 		type = gameObjectType::Furniture;
 		
 		texture = getTexture(name);

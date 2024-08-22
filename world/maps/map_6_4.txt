@@ -33,5 +33,5 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // MONSTERS
-Monster "monsters/wilczur" 1628 1144
+Monster "monsters/wilczur" 1668 1150
 

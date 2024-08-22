@@ -50,7 +50,7 @@ public:
 	bool showHand;
 
 
-	Character(string name, string bodySet="sets/body/hero") : Unit(name, bodySet, 36, 18) {
+	Character(string name, string bodySet="sets/body/hero") : Unit(name, bodySet, 36, 18, 64) {
 		
 		type = gameObjectType::Character;
 		

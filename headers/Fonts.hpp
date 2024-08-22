@@ -7,8 +7,6 @@ sf::Font dialogBoxFont;
 
 sf::Color textColor = sf::Color(234, 224, 175);
 sf::Color textActiveColor = sf::Color(255, 201, 14);
-
-sf::Color textNameColor = sf::Color::White;
 sf::Color titleColor = sf::Color::White;
 
 void loadFonts() {

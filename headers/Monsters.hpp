@@ -9,7 +9,7 @@ public:
 	sf::Time deathTime;
 	int EXPERIENCE;
 
-	Monster(string name, float width, float height, int EXP) : Unit(name, name, width, height) {
+	Monster(string name, float width, float length, float height,  int EXP) : Unit(name, name, width, length, height) {
 		type = gameObjectType::Monster;
 		direction = 2;
 		isAlive = true;
@@ -120,7 +120,7 @@ public:
 		else if (isAlive == false) {
 			
 			// resurrection
-			if ( (currentTime-deathTime).asSeconds() > 10) {
+			if ( (currentTime-deathTime).asSeconds() > 20) {
 				isAlive = true;
 				collisioning = true;
 				HP = HP_FULL;
@@ -165,6 +165,7 @@ public:
 			actionRangeArea.setPosition(position);
 
 			setLifeBar();
+			textname.setPosition(position.x, position.y - collider->height - 35);
 		}
 
 	}

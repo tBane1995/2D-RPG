@@ -22,16 +22,19 @@ public:
 		LEVEL = sf::Text();
 		LEVEL.setFont(basicFont);
 		LEVEL.setCharacterSize(18);
+		LEVEL.setFillColor(textColor);
 		LEVEL.setString("poziom: " + to_string(player->LEVEL));
 
 		EXPERIENCE = sf::Text();
 		EXPERIENCE.setFont(basicFont);
 		EXPERIENCE.setCharacterSize(18);
+		EXPERIENCE.setFillColor(textColor);
 		EXPERIENCE.setString(L"doświadczenie: " + to_wstring(player->EXPERIENCE) + L" / " + to_wstring(player->EXPERIENCE_TO_NEXT_LEVEL));
 
 		SKILLPOINTS = sf::Text();
 		SKILLPOINTS.setFont(basicFont);
 		SKILLPOINTS.setCharacterSize(18);
+		SKILLPOINTS.setFillColor(textColor);
 		SKILLPOINTS.setString(L"punkty nauki: " + to_wstring(player->SKILL_POINTS));
 
 		//////////////////////////////////////////////////////////////////////////////////////////
@@ -39,26 +42,31 @@ public:
 		HP = sf::Text();
 		HP.setFont(basicFont);
 		HP.setCharacterSize(18);
+		HP.setFillColor(textColor);
 		HP.setString(L"punkty trafień: " + to_wstring(player->HP) + L" / " + to_wstring(player->HP_FULL));
 
 		MP = sf::Text();
 		MP.setFont(basicFont);
 		MP.setCharacterSize(18);
+		MP.setFillColor(textColor);
 		MP.setString(L"punkty many: " + to_wstring(player->MP) + L" / " + to_wstring(player->MP_FULL));
 
 		STRENGTH = sf::Text();
 		STRENGTH.setFont(basicFont);
 		STRENGTH.setCharacterSize(18);
+		STRENGTH.setFillColor(textColor);
 		STRENGTH.setString(L"siła: " + to_wstring(player->STRENGTH));
 
 		DEXTERITY = sf::Text();
 		DEXTERITY.setFont(basicFont);
 		DEXTERITY.setCharacterSize(18);
+		DEXTERITY.setFillColor(textColor);
 		DEXTERITY.setString(L"zręczność: " + to_wstring(player->DEXTERITY));
 
 		INTELLIGENCE = sf::Text();
 		INTELLIGENCE.setFont(basicFont);
 		INTELLIGENCE.setCharacterSize(18);
+		INTELLIGENCE.setFillColor(textColor);
 		INTELLIGENCE.setString(L"inteligencja: " + to_wstring(player->INTELLIGENCE));
 
 	}

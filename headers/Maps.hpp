@@ -1,19 +1,12 @@
 ﻿#ifndef Maps_hpp
 #define Maps_hpp
-sf::RectangleShape viewRect;
 
-class Map : public sf::Drawable, public sf::Transformable
-{
+// TO-DO - all to the rewrite
+
+class Map {
 public:
-    sf::Vector2i coords;
-    int tiles[16][16];
-    int floors[16][16];
-    sf::VertexArray vertexes_of_tiles;
-    sf::VertexArray vertexes_of_floors;
-    sf::Texture tileset;    // texture of all terrain
-    sf::Texture floorset;   // texture of all floors
-
-    
+    Terrain* terrain;
+    Floors* floors;
     
     std::vector < Nature* > _natures;
     std::vector < ItemOnMap* > _itemsOnMap;
@@ -29,87 +22,11 @@ public:
 
     Map(int x, int y) {
        
-        coords.x = x;
-        coords.y = y;
-        
-        int coord_x, coord_y;
-        int tu, tv; // texture coords
-
-        // TERRAIN
-        tileset = sf::Texture();
-        tileset.loadFromFile("assets/tiles/0_tileset.png");
-
-        vertexes_of_tiles.setPrimitiveType(sf::Triangles);
-        vertexes_of_tiles.resize(16 * 16 * 6); // widthMap * heightMap * TwoTrianglesVertices
-        
-        for (int y = 0; y < 16; y++)
-            for (int x = 0; x < 16; x++) {
-
-                sf::Vertex* triangles = &vertexes_of_tiles[(y * 16 + x) * 6];
-
-                coord_x = (coords.x * 16 + x);  
-                coord_y = (coords.y * 16 + y);
-
-                triangles[0].position = sf::Vector2f(coord_x * tileSide, coord_y * tileSide);
-                triangles[1].position = sf::Vector2f((coord_x + 1) * tileSide, coord_y * tileSide);
-                triangles[2].position = sf::Vector2f(coord_x * tileSide, (coord_y + 1) * tileSide);
-                triangles[3].position = sf::Vector2f(coord_x * tileSide, (coord_y + 1) * tileSide);
-                triangles[4].position = sf::Vector2f((coord_x + 1) * tileSide, coord_y * tileSide);
-                triangles[5].position = sf::Vector2f((coord_x + 1) * tileSide, (coord_y + 1) * tileSide);
-
-                tu = int(coord_x * tileSide) % 64;
-                tv = int(coord_y * tileSide) % 64;
-
-                tiles[x][y] = 0;
-                
-                triangles[0].texCoords = sf::Vector2f(tu, tv);
-                triangles[1].texCoords = sf::Vector2f(tu + tileSide, tv);
-                triangles[2].texCoords = sf::Vector2f(tu, tv + tileSide);
-                triangles[3].texCoords = sf::Vector2f(tu, tv + tileSide);
-                triangles[4].texCoords = sf::Vector2f(tu + tileSide, tv);
-                triangles[5].texCoords = sf::Vector2f(tu + tileSide, tv + tileSide);
-                
-            }
-
-        // FLOOR
-        floorset = sf::Texture();
-        floorset.loadFromFile("assets/floors/0_floorset.png");
-
-        vertexes_of_floors.setPrimitiveType(sf::Triangles);
-        vertexes_of_floors.resize(16 * 16 * 6); // widthMap * heightMap * TwoTrianglesVertices
-
-        for (int y = 0; y < 16; y++)
-            for (int x = 0; x < 16; x++) {
-
-                sf::Vertex* triangles = &vertexes_of_floors[(y * 16 + x) * 6];
-
-                coord_x = (coords.x * 16 + x);
-                coord_y = (coords.y * 16 + y);
-
-                triangles[0].position = sf::Vector2f(coord_x * tileSide, coord_y * tileSide);
-                triangles[1].position = sf::Vector2f((coord_x + 1) * tileSide, coord_y * tileSide);
-                triangles[2].position = sf::Vector2f(coord_x * tileSide, (coord_y + 1) * tileSide);
-                triangles[3].position = sf::Vector2f(coord_x * tileSide, (coord_y + 1) * tileSide);
-                triangles[4].position = sf::Vector2f((coord_x + 1) * tileSide, coord_y * tileSide);
-                triangles[5].position = sf::Vector2f((coord_x + 1) * tileSide, (coord_y + 1) * tileSide);
-
-                tu = int(coord_x * tileSide) % 64;
-                tv = int(coord_y * tileSide) % 64;
-
-                floors[x][y] = 0;
-
-                triangles[0].texCoords = sf::Vector2f(tu, tv);
-                triangles[1].texCoords = sf::Vector2f(tu + tileSide, tv);
-                triangles[2].texCoords = sf::Vector2f(tu, tv + tileSide);
-                triangles[3].texCoords = sf::Vector2f(tu, tv + tileSide);
-                triangles[4].texCoords = sf::Vector2f(tu + tileSide, tv);
-                triangles[5].texCoords = sf::Vector2f(tu + tileSide, tv + tileSide);
-
-            }
-
+        terrain = new Terrain(x, y, 16, 16);
+        floors = new Floors(x, y, 16, 16);
 
         clearAllLists();
-        load();
+        //load();
 
         isVisible = false;
     }
@@ -124,9 +41,10 @@ public:
         _furnitures.clear();
         _walls.clear();
         _monsters.clear();
+        _buildings.clear();
         _characters.clear();
         _inventoriesOnMap.clear();
-        _buildings.clear();
+        
     }
 
     void save() {
@@ -142,7 +60,7 @@ public:
             }
         }
 
-        string filename = "world/maps/map_" + to_string(int(coords.x)) + "_" + to_string(int(coords.y)) + ".txt";
+        string filename = "world/maps/map_" + to_string(int(terrain->coords.x)) + "_" + to_string(int(terrain->coords.y)) + ".txt";
         std::ofstream file(filename);
 
         if (!file.is_open()) {
@@ -154,8 +72,8 @@ public:
         for (int y = 0; y < 16; y++) {
             for (int x = 0; x < 16; x++) {
 
-                file << tiles[x][y];
-                if (x != 15)
+                file << terrain->tiles[y*terrain->width + x];
+                if (x != terrain->width-1 )
                     file << " ";
             }
 
@@ -168,8 +86,8 @@ public:
         for (int y = 0; y < 16; y++) {
             for (int x = 0; x < 16; x++) {
 
-                file << floors[x][y];
-                if (x != 15)
+                file << floors->floors[y*floors->width + x];
+                if (x != floors->width-1)
                     file << " ";
             }
 
@@ -257,7 +175,7 @@ public:
 
     void load() {
 
-        string filename = "world/maps/map_" + to_string(int(coords.x)) + "_" + to_string(int(coords.y)) + ".txt";
+        string filename = "world/maps/map_" + to_string(int(terrain->coords.x)) + "_" + to_string(int(terrain->coords.y)) + ".txt";
         ifstream file(filename);
 
         if (!file.is_open()) {
@@ -426,125 +344,25 @@ public:
 
     void editTile(sf::Vector2f worldMousePosition, int value) {
 
-        int global_x = worldMousePosition.x / 16;
-        int global_y = worldMousePosition.y / 16;
-
-        int onMap_x = global_x - coords.x * 16;
-        int onMap_y = global_y - coords.y * 16;
-
-        if (onMap_x < 0 || onMap_x > 15 || onMap_y < 0 || onMap_y > 15)
-            return;
-
-        if (value > 3 || value < 0)
-            return;
-
-        tiles[onMap_x][onMap_y] = value;
-
-        sf::Vertex* triangles = &vertexes_of_tiles[(onMap_y * 16 + onMap_x) * 6];
-
-        int tu = (int(global_x * tileSide) % 64) + (value * 64);
-        int tv = (int(global_y * tileSide) % 64);
-
-        //cout << "tu: " << tu << ", tv: " << tv << "\n";
-
-        triangles[0].texCoords = sf::Vector2f(tu, tv);
-        triangles[1].texCoords = sf::Vector2f(tu + tileSide, tv);
-        triangles[2].texCoords = sf::Vector2f(tu, tv + tileSide);
-        triangles[3].texCoords = sf::Vector2f(tu, tv + tileSide);
-        triangles[4].texCoords = sf::Vector2f(tu + tileSide, tv);
-        triangles[5].texCoords = sf::Vector2f(tu + tileSide, tv + tileSide);
+        terrain->edit(worldMousePosition, value);
     }
 
     void editTile(int x, int y, int value) {
-
-        if (x < 0 || x > 15 || y < 0 || y > 15)
-            return;
-
-        if (value > 3 || value < 0)
-            return;
-
-        tiles[x][y] = value;
+        terrain->edit(x, y, value);
         
-        int global_x = coords.x*16 + x;
-        int global_y = coords.y*16 + y;
-
-        sf::Vertex* triangles = &vertexes_of_tiles[(y * 16 + x) * 6];
-
-        int tu = (int(global_x * tileSide) % 64) + (value * 64);
-        int tv = (int(global_y * tileSide) % 64);
-
-        //cout << "tu: " << tu << ", tv: " << tv << "\n";
-
-        triangles[0].texCoords = sf::Vector2f(tu, tv);
-        triangles[1].texCoords = sf::Vector2f(tu + tileSide, tv);
-        triangles[2].texCoords = sf::Vector2f(tu, tv + tileSide);
-        triangles[3].texCoords = sf::Vector2f(tu, tv + tileSide);
-        triangles[4].texCoords = sf::Vector2f(tu + tileSide, tv);
-        triangles[5].texCoords = sf::Vector2f(tu + tileSide, tv + tileSide);
     }
 
     void editFloor(sf::Vector2f worldMousePosition, int value) {
 
-        int global_x = worldMousePosition.x / 16;
-        int global_y = worldMousePosition.y / 16;
-
-        int onMap_x = global_x - coords.x * 16;
-        int onMap_y = global_y - coords.y * 16;
-
-        if (onMap_x < 0 || onMap_x > 15 || onMap_y < 0 || onMap_y > 15)
-            return;
-
-        if (value > 3 || value < 0)
-            return;
-
-        floors[onMap_x][onMap_y] = value;
-
-        sf::Vertex* triangles = &vertexes_of_floors[(onMap_y * 16 + onMap_x) * 6];
-
-        int tu = (int(global_x * tileSide) % 64) + (value * 64);
-        int tv = (int(global_y * tileSide) % 64);
-
-        //cout << "tu: " << tu << ", tv: " << tv << "\n";
-
-        triangles[0].texCoords = sf::Vector2f(tu, tv);
-        triangles[1].texCoords = sf::Vector2f(tu + tileSide, tv);
-        triangles[2].texCoords = sf::Vector2f(tu, tv + tileSide);
-        triangles[3].texCoords = sf::Vector2f(tu, tv + tileSide);
-        triangles[4].texCoords = sf::Vector2f(tu + tileSide, tv);
-        triangles[5].texCoords = sf::Vector2f(tu + tileSide, tv + tileSide);
+        floors->edit(worldMousePosition, value);
     }
 
     void editFloor(int x, int y, int value) {
 
-        if (x < 0 || x > 15 || y < 0 || y > 15)
-            return;
-
-        if (value > 3 || value < 0)
-            return;
-
-        floors[x][y] = value;
-
-        int global_x = coords.x * 16 + x;
-        int global_y = coords.y * 16 + y;
-
-        sf::Vertex* triangles = &vertexes_of_floors[(y * 16 + x) * 6];
-
-        int tu = (int(global_x * tileSide) % 64) + (value * 64);
-        int tv = (int(global_y * tileSide) % 64);
-
-        //cout << "tu: " << tu << ", tv: " << tv << "\n";
-
-        triangles[0].texCoords = sf::Vector2f(tu, tv);
-        triangles[1].texCoords = sf::Vector2f(tu + tileSide, tv);
-        triangles[2].texCoords = sf::Vector2f(tu, tv + tileSide);
-        triangles[3].texCoords = sf::Vector2f(tu, tv + tileSide);
-        triangles[4].texCoords = sf::Vector2f(tu + tileSide, tv);
-        triangles[5].texCoords = sf::Vector2f(tu + tileSide, tv + tileSide);
+        floors->edit(x, y, value);
     }
 
     void addGameObjectsToMainLists() {
-
-        
 
         for (auto& nature : _natures) {
             gameObjects.push_back(nature);
@@ -663,20 +481,10 @@ public:
 
     }
 
-private:
-
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+    void draw()
     {
-        // draw tiles - terrain
-        states.transform *= getTransform();
-        states.texture = &tileset;
-        target.draw(vertexes_of_tiles, states);
-
-        // draw floors
-        states.transform *= getTransform();
-        states.texture = &floorset;
-        target.draw(vertexes_of_floors, states);
-
+        window->draw(*terrain);
+        window->draw(*floors);
     }
 
 };
@@ -705,6 +513,10 @@ public:
             for (int x = start_x; x <= end_x; x++)
                 maps.push_back(new Map(x, y));
 
+        for (auto& map : maps) {
+            map->load();
+        }
+
 
         // MAP IS VISIBLE OR NOT
         mapVisiblings();
@@ -718,26 +530,21 @@ public:
     }
 
     Map* getMap(sf::Vector2f worldMousePosition) {
-
-        if (worldMousePosition.x < 0 || worldMousePosition.y < 0)
-            return nullptr;
-
-        sf::Vector2i mapCoords;
-        mapCoords.x = int(worldMousePosition.x / (16 * tileSide));
-        mapCoords.y = int(worldMousePosition.y / (16 * tileSide));
-        //cout << mapCoords.x << ", " << mapCoords.y << "\n";
-
-        Map* map = nullptr;
+        
+        float left, right, top, bottom;
 
         for (auto& m : maps) {
-            if (m->coords == mapCoords) {
-                map = m;
-            }
 
+            left = m->terrain->coords.x * 16 * tileSide;
+            right = left + m->terrain->width * tileSide;
+            top = m->terrain->coords.y * 16 * tileSide;
+            bottom = top + m->terrain->height * tileSide;
 
+            if (worldMousePosition.x >= left && worldMousePosition.x <= right && worldMousePosition.y >= top && worldMousePosition.y <= bottom)
+                return m;
         }
-
-        return map;
+          
+        return nullptr;
     }
 
     void mapVisiblings() {
@@ -746,8 +553,8 @@ public:
 
         for (auto& map : maps) {
 
-            map_position.x = (int(map->coords.x) * 16 * tileSide) + 8 * tileSide;
-            map_position.y = (int(map->coords.y) * 16 * tileSide) + 8 * tileSide;
+            map_position.x = (int(map->terrain->coords.x) * 16 * tileSide) + 8 * tileSide;
+            map_position.y = (int(map->terrain->coords.y) * 16 * tileSide) + 8 * tileSide;
 
             float width = screenWidth * 2.0f;
             float height = screenHeight * 2.0f;
@@ -773,8 +580,8 @@ public:
         int i = 0;
 
         for (auto& map : maps) {
-            if(map->isVisible)
-                window->draw(*map);
+            if (map->isVisible)
+                map->draw();
         }
 
         //sf::Time end = c.getElapsedTime();
@@ -786,6 +593,6 @@ public:
 
 };
 
-World* world;
+World* world = nullptr;
 
 #endif

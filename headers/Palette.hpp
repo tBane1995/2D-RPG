@@ -1,4 +1,4 @@
-﻿#ifndef MapEditorPalette_hpp
+#ifndef MapEditorPalette_hpp
 #define MapEditorPalette_hpp
 
 sf::Vector2f paletteButtonSize = sf::Vector2f(80.0f, 80.0f);
@@ -12,15 +12,15 @@ int paletteScroll;
 int paletteCols;    // TO-DO
 int paletteRows;    // TO-DO
 
-class MapEditorButton {
+class Button {
 public:
 
     Texture* texture;
     sf::Vector2f position;
     sf::Sprite sprite;
     bool mouseOver;
-    
-    MapEditorButton(Texture* texture, sf::Vector2f position) {
+
+    Button(Texture* texture, sf::Vector2f position) {
         this->texture = texture;
         this->position = position;
         sprite = sf::Sprite();
@@ -46,7 +46,7 @@ public:
     }
 
     void update() {
-        sprite.setPosition(cam->position.x+position.x, cam->position.y+position.y);
+        sprite.setPosition(cam->position.x + position.x, cam->position.y + position.y);
     }
 
     void draw() {
@@ -54,24 +54,24 @@ public:
     }
 };
 
-class MapEditorPaletteButton {
+class PaletteButton {
 public:
-	Texture* slotTexture;
-	sf::Sprite slotSprite;
-	sf::Sprite objectSprite;
-	GameObject* object;
+    Texture* slotTexture;
+    sf::Sprite slotSprite;
+    sf::Sprite objectSprite;
+    GameObject* object;
     bool mouseOver;   // mouse over
 
-	MapEditorPaletteButton() {
-		slotTexture = getTexture("GUI/slot2");
-		slotSprite = sf::Sprite();
-		slotSprite.setTexture(*slotTexture->texture);
-		slotSprite.setOrigin(paletteButtonSize.x/2.0f, paletteButtonSize.y/2.0f);
+    PaletteButton() {
+        slotTexture = getTexture("GUI/slot2");
+        slotSprite = sf::Sprite();
+        slotSprite.setTexture(*slotTexture->texture);
+        slotSprite.setOrigin(paletteButtonSize.x / 2.0f, paletteButtonSize.y / 2.0f);
 
         object = nullptr;
 
-		objectSprite = sf::Sprite();
-	}
+        objectSprite = sf::Sprite();
+    }
 
     bool mouseOvering(sf::Vector2f mousePosition) {
         float w = slotSprite.getTexture()->getSize().x;
@@ -79,34 +79,35 @@ public:
         float x = slotSprite.getPosition().x;
         float y = slotSprite.getPosition().y;
 
-            if (mousePosition.x > x - w / 2.0f && mousePosition.x < x + w / 2.0f &&
-                mousePosition.y > y - h / 2.0f && mousePosition.y < y + h / 2.0f) {
-                mouseOver = true;
-            }else
-                mouseOver = false;
-        
-            return mouseOver;
-        
+        if (mousePosition.x > x - w / 2.0f && mousePosition.x < x + w / 2.0f &&
+            mousePosition.y > y - h / 2.0f && mousePosition.y < y + h / 2.0f) {
+            mouseOver = true;
+        }
+        else
+            mouseOver = false;
+
+        return mouseOver;
+
     }
 
-	void setObject(GameObject* object) {
-		this->object = object;
-	}
+    void setObject(GameObject* object) {
+        this->object = object;
+    }
 
-	void draw() {
-		window->draw(slotSprite);
+    void draw() {
+        window->draw(slotSprite);
         window->draw(objectSprite);
-	}
+    }
 
 };
 
-MapEditorButton* buttonUp;
-MapEditorButton* buttonDown;
-std::vector < MapEditorPaletteButton > palette;
+Button* buttonUp;
+Button* buttonDown;
+std::vector < PaletteButton > palette;
 
 void createPalette() {
 
-	paletteButtonSize = sf::Vector2f(80, 80);
+    paletteButtonSize = sf::Vector2f(80, 80);
     paletteCols = 2;
     paletteRows = 8;
 
@@ -116,46 +117,41 @@ void createPalette() {
     sf::Vector2f positionUp;
     positionUp.x = screenWidth / 2.f - buttonSize.x / 2.0f;
     positionUp.y = -screenHeight / 2.0f + buttonSize.y / 2.0f;
-    buttonUp = new MapEditorButton(texUp, positionUp);
+    buttonUp = new Button(texUp, positionUp);
 
     Texture* texDown = getTexture("GUI/wideArrowDown2");
     sf::Vector2f positionDown;
     positionDown.x = screenWidth / 2.f - buttonSize.x / 2.0f;
-    positionDown.y = screenHeight/2.0f - buttonSize.y / 2.0f;
-    buttonDown = new MapEditorButton(texDown, positionDown);
+    positionDown.y = screenHeight / 2.0f - buttonSize.y / 2.0f;
+    buttonDown = new Button(texDown, positionDown);
 
-	// slots & prefabs
-	for (int i = 0; i < paletteCols*paletteRows; i++)
-		palette.push_back(MapEditorPaletteButton());
+    // slots & prefabs
+    for (int i = 0; i < paletteCols * paletteRows; i++)
+        palette.push_back(PaletteButton());
 
     paletteScroll = 0;
 
     // Terrain GameObjects
     terrainGameObjects.clear();
-    terrainGameObjects.push_back(new Terrain("tiles/tile_0_grass", terrainType::grass));
-    terrainGameObjects.push_back(new Terrain("tiles/tile_1_sands", terrainType::sands));
-    terrainGameObjects.push_back(new Terrain("tiles/tile_2_water", terrainType::water));
-    terrainGameObjects.push_back(new Terrain("tiles/tile_3_gravel", terrainType::gravel));
-    
-    floorGameObjects.push_back(new Floor("floors/floor_0", floorType::floor_0));
-    floorGameObjects.push_back(new Floor("floors/floor_1", floorType::floor_1));
-    floorGameObjects.push_back(new Floor("floors/floor_2", floorType::floor_2));
-    floorGameObjects.push_back(new Floor("floors/floor_3", floorType::floor_3));
+    terrainGameObjects.push_back(new TerrainPrefab("tiles/tile_0_grass", terrainType::grass));
+    terrainGameObjects.push_back(new TerrainPrefab("tiles/tile_1_sands", terrainType::sands));
+    terrainGameObjects.push_back(new TerrainPrefab("tiles/tile_2_water", terrainType::water));
+    terrainGameObjects.push_back(new TerrainPrefab("tiles/tile_3_gravel", terrainType::gravel));
 
-    //buildingGameObjects.push_back(new Building("building/building_000"));
-    
+    floorGameObjects.clear();
+    floorGameObjects.push_back(new FloorPrefab("floors/floor_0", floorType::floor_0));
+    floorGameObjects.push_back(new FloorPrefab("floors/floor_1", floorType::floor_1));
+    floorGameObjects.push_back(new FloorPrefab("floors/floor_2", floorType::floor_2));
+    floorGameObjects.push_back(new FloorPrefab("floors/floor_3", floorType::floor_3));
+
 }
 
-void updatePalette() {
-
-    float scaleX, scaleY;
-    float tw, th; // texture width, texture height
-
-    palettePosition.x = cam->position.x + screenWidth / 2.0f - 1.5f * paletteButtonSize.x;
-    palettePosition.y = cam->position.y - screenHeight / 2.0f + 1.0f * paletteButtonSize.y;
+void createMapEditorPalette() {
+    
+    createPalette();
 
     availableGameObjects.clear();
-    
+
     // adding terrains
     for (auto& terrain : terrainGameObjects)
         availableGameObjects.push_back(terrain);
@@ -163,7 +159,7 @@ void updatePalette() {
     // adding floors
     for (auto& floor : floorGameObjects)
         availableGameObjects.push_back(floor);
-    
+
     // adding prefabs (GameObjects)
     int i = 0;
     while (i < prefabs.size()) {
@@ -178,20 +174,59 @@ void updatePalette() {
             availableGameObjects.push_back(prefabs[i]);
         i++;
     }
-    
+
     // adding items (herbs, ... )
     i = 0;
     while (i < items.size()) {
         availableGameObjects.push_back(getPrefab(items[i]->name));
         i++;
     }
+}
 
-    for (int i = 0; i < paletteCols*paletteRows; i++) {
+void createBuildingEditorPalette() {
+    
+    createPalette();
+
+    availableGameObjects.clear();
+
+    // adding floors
+    for (auto& floor : floorGameObjects)
+        availableGameObjects.push_back(floor);
+
+    // adding prefabs (GameObjects)
+    int i = 0;
+    while (i < prefabs.size()) {
+        if (
+            prefabs[i]->type == gameObjectType::GameObject ||
+            prefabs[i]->type == gameObjectType::Furniture ||
+            prefabs[i]->type == gameObjectType::Wall
+            )
+            availableGameObjects.push_back(prefabs[i]);
+        i++;
+    }
+
+    // adding items (herbs, ... )
+    i = 0;
+    while (i < items.size()) {
+        availableGameObjects.push_back(getPrefab(items[i]->name));
+        i++;
+    }
+}
+
+void updatePalette() {
+
+    float scaleX, scaleY;
+    float tw, th; // texture width, texture height
+
+    palettePosition.x = cam->position.x + screenWidth / 2.0f - 1.5f * paletteButtonSize.x;
+    palettePosition.y = cam->position.y - screenHeight / 2.0f + 1.0f * paletteButtonSize.y;
+
+    for (int i = 0; i < paletteCols * paletteRows; i++) {
 
         palette[i].slotSprite.setPosition(palettePosition.x + (i % 2) * paletteButtonSize.x, palettePosition.y + (i / 2) * paletteButtonSize.y);
         palette[i].objectSprite = sf::Sprite();
 
-        if (i+paletteScroll*2 < availableGameObjects.size()) {
+        if (i + paletteScroll * 2 < availableGameObjects.size()) {
 
             palette[i].object = availableGameObjects[i + paletteScroll * 2];
             palette[i].objectSprite.setTexture(*getTexture(palette[i].object->name)->texture);
@@ -211,7 +246,7 @@ void updatePalette() {
 
         }
     }
-    
+
     buttonUp->update();
     buttonDown->update();
 }
@@ -225,5 +260,6 @@ void drawPalette() {
     buttonUp->draw();
     buttonDown->draw();
 }
+
 
 #endif

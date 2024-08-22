@@ -7,13 +7,15 @@ class Collider {
 public:
 	float width;
 	float length;
+	float height;
 	//float height;
 	bool isRectangular;
 	sf::Shape* shape;
 
-	Collider(float width, float length, bool isRectangular) {
+	Collider(float width, float length, float height, bool isRectangular) {
 		this->width = width;
 		this->length = length;
+		this->height = height;
 		this->isRectangular = isRectangular;
 
 		if (isRectangular == true) {
@@ -37,6 +39,7 @@ public:
 	Collider(Collider* col) {
 		this->width = col->width;
 		this->length = col->length;
+		this->height = col->height;
 		this->isRectangular = col->isRectangular;
 
 		if (isRectangular == true) {
@@ -74,7 +77,7 @@ public:
 	bool isVisible;	// TO-DO
 	bool toDelete;
 
-	GameObject(string name, float x, float y, float width, float length, bool collisioning, bool isRectangular) {
+	GameObject(string name, float x, float y, float width, float length, float height, bool collisioning, bool isRectangular) {
 		// CREATE PREFAB
 		this->name = name;
 		type = gameObjectType::GameObject;
@@ -85,7 +88,7 @@ public:
 		
 		mouseIsOver = false;
 
-		collider = new Collider(width, length, isRectangular);
+		collider = new Collider(width, length, height, isRectangular);
 		createTextname();
 		
 		toDelete = false;
@@ -119,7 +122,7 @@ public:
 		collisioning = true;
 
 		mouseIsOver = false;
-		collider = new Collider(16,16, true);
+		collider = new Collider(16,16,16, true);
 		collider->shape = new sf::RectangleShape(sf::Vector2f(16,16));
 		createTextname();
 
@@ -150,9 +153,9 @@ public:
 	void createTextname() {
 		textname = sf::Text(getShortName(name), basicFont, 16);
 		textname.setOrigin(textname.getGlobalBounds().width / 2.f, textname.getGlobalBounds().height / 2.f);
-		textname.setFillColor(textNameColor);
+		textname.setFillColor(textColor);
 		textname.setOutlineColor(sf::Color::Black);
-		textname.setOutlineThickness(1.0f);
+		textname.setOutlineThickness(2.0f);
 		
 	}
 
@@ -183,7 +186,7 @@ public:
 		mouseOvering();
 
 		collider->shape->setPosition(position);
-		textname.setPosition(position.x, position.y - 100);
+		textname.setPosition(position.x, position.y - collider->height - 10);
 	}
 
 	virtual void draw(sf::RenderWindow* window) {

@@ -8,7 +8,7 @@ public:
 	Texture* texture;
 	sf::Sprite sprite;
 	
-	Path(string name, float width, float height ) : GameObject(name, 0, 0, width, height, false, false) {
+	Path(string name, float width, float length, float height ) : GameObject(name, 0, 0, width, length, height, false, false) {
 		type = gameObjectType::Path;
 		this->texture = getTexture(name);
 		sprite = sf::Sprite();

@@ -39,5 +39,5 @@ Nature "natures/tree1" 1520 752
 Item "items/health herb" 1280 672
 
 // MONSTERS
-Monster "monsters/dziobak" 1281 763
+Monster "monsters/dziobak" 1284 752
 

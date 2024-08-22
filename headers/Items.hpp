@@ -75,7 +75,7 @@ public:
 	int count;
 	bool collected;
 
-	ItemOnMap(Item* item, float x, float y, int count = 1 ) : GameObject(item->name, x, y, 16, 8, false, false) {
+	ItemOnMap(Item* item, float x, float y, int count = 1 ) : GameObject(item->name, x, y, 16, 8, 32, false, false) {
 		type = gameObjectType::ItemOnMap;
 		this->item = item;
 		this->count = count;
@@ -396,7 +396,7 @@ public:
 	bool collected;
 	Inventory* inventory;
 
-	InventoryOnMap(Inventory* inventory, float x, float y) : GameObject("inventory", x, y, 16, 8, false, false) {
+	InventoryOnMap(Inventory* inventory, float x, float y) : GameObject("inventory", x, y, 16, 8, 16, false, false) {
 		type = gameObjectType::InventoryOnMap;
 		texture = getTexture("items/bag");
 		sprite = sf::Sprite();

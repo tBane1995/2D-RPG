@@ -127,7 +127,7 @@ public:
 					int height = counts[i].getLocalBounds().height;
 					counts[i].setOrigin(width / 2, height / 2);
 					counts[i].setPosition(x - width / 2 + 24, y - height / 2 + 24);
-					counts[i].setFillColor(textNameColor);
+					counts[i].setFillColor(textColor);
 
 				}
 			}

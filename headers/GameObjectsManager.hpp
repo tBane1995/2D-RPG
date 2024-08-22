@@ -1,13 +1,5 @@
-﻿#ifndef loadGameObjects_hpp
-#define loadGameObjects_hpp
-
-void moveTheGameObjects() { // TO-DO - DELETE
-    for (auto& object : gameObjects) {
-
-        object->position.x -= 0;
-        object->position.y -= 0;
-    }
-}
+#ifndef GameObjectsManager_hpp
+#define GameObjectsManager_hpp
 
 void clearAllMainListsOfGameObjects() {
 
@@ -19,10 +11,12 @@ void clearAllMainListsOfGameObjects() {
     furnitures.clear();
     walls.clear();
     monsters.clear();
-    buildings.clear();
     characters.clear();
     inventoriesOnMap.clear();
-    
+
+    buildings.clear();
+
+
 }
 
 void deleteGameObjectsFromMainLists() {
@@ -37,7 +31,7 @@ void deleteGameObjectsFromMainLists() {
     std::vector < Building* > new_buildings;
     std::vector < Character* > new_characters;
     std::vector < InventoryOnMap* > new_inventoriesOnMap;
-    
+
 
     new_gameObjects.clear();
     new_natures.clear();
@@ -49,7 +43,7 @@ void deleteGameObjectsFromMainLists() {
     new_buildings.clear();
     new_characters.clear();
     new_inventoriesOnMap.clear();
-    
+
 
     for (auto& go : gameObjects) {
 
@@ -95,17 +89,19 @@ void deleteGameObjectsFromMainLists() {
     furnitures = new_furnitures;
     walls = new_walls;
     monsters = new_monsters;
+
     buildings = new_buildings;
+
     characters = new_characters;
     inventoriesOnMap = new_inventoriesOnMap;
-    
+
 }
 
 bool visiblings(GameObject* object) {
     if (object != nullptr) {
 
         if (object->collider->isRectangular == false) {
-            if (intersectionRectangleWithElipse(cam->position.x, cam->position.y, screenWidth * 2.0f, screenHeight * 2.0f, object->position.x, object->position.y, object->collider->width/2.0f, object->collider->length / 2.0f)) {
+            if (intersectionRectangleWithElipse(cam->position.x, cam->position.y, screenWidth * 2.0f, screenHeight * 2.0f, object->position.x, object->position.y, object->collider->width / 2.0f, object->collider->length / 2.0f)) {
                 return true;
             }
         }
@@ -118,6 +114,33 @@ bool visiblings(GameObject* object) {
 
     //cout << "visiblings with nullptr\n";
     return false;
+}
+
+void sortGameObjects() {
+
+	std::sort(gameObjects.begin(), gameObjects.end(), [](const auto& a, const auto& b) { return a->position.y < b->position.y; });
+}
+
+void updateGameObjects() {
+
+	for (auto& go : gameObjects) {
+		if (visiblings(go))     // only visible GameObjects are updating
+			go->update(dt);
+	}
+}
+
+void renderGameObjects() {
+
+	for (auto& p : paths) {
+		if (visiblings(p))
+			p->draw(window);
+	}
+
+	for (auto& go : gameObjects)
+		if (go->type != gameObjectType::Path)
+			if (visiblings(go))
+				go->draw(window);
+
 }
 
 #endif

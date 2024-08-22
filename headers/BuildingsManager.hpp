@@ -1,5 +1,5 @@
-﻿#ifndef Buildings_hpp
-#define Buildings_hpp
+﻿#ifndef BuildingsManager_hpp
+#define BuildingsManager_hpp
 
 class Building : public GameObject {
 public:
@@ -7,8 +7,18 @@ public:
 	std::vector < ItemOnMap* > _items;
 	std::vector < Furniture* > _furnitures;
 	std::vector < Wall* > _walls;
+    sf::RectangleShape rect;
+    Floors* floors;
 
 	Building(string name, float x, float y) : GameObject(name, x, y) {
+
+        rect = sf::RectangleShape(sf::Vector2f(size.x * 16, size.y * 16));
+        rect.setFillColor(sf::Color(128, 48, 48, 128));
+        rect.setOrigin(size.x / 2 * 16, size.y / 2 * 16);
+        rect.setPosition(position);
+        rect.setOutlineThickness(2);
+        rect.setOutlineColor(sf::Color(192, 48, 48, 128));
+        cout << "mouse is over\n";
 
         string filename = "assets/" + name + ".txt";
         ifstream file(filename);
@@ -36,15 +46,18 @@ public:
         std::getline(file, line);
         std::getline(file, line);
 
-        // LOAD FLOORS - TUTAJ WYSTĘPUJE BŁĄD
+        // LOAD FLOORS - TO-DO
+        cout << position.x/16 << ", " << position.y << "\n";
+        cout << size.x << ", " << size.y << "\n";
+        floors = new Floors(position.x/16, position.y/16, size.x, size.y);
         int value;
         for (int y = 0; y < size.y; y++) {
             for (int x = 0; x < size.x; x++) {
                 file >> value;
-                //cout << value << " ";
-                //editFloor(x, y, value);;
+                cout << value << " ";
+                floors->edit(x, y, value);;
             }
-            //cout << "\n";
+            cout << "\n";
         }
 
         // LOAD GAMEOBJECTS
@@ -136,17 +149,34 @@ public:
         }
 	}
     
-    bool gameObjectInBuilding(GameObject* object) {
 
-        int left = position.x - float(size.x) / 2.0f * 16.f;
-        int right = position.x + float(size.x) / 2.0f * 16.f;
-        int top = position.x - float(size.y) / 2.0f * 16.f;
-        int bottom = position.x + float(size.y) / 2.0f * 16.f;
 
-        if (object->position.x > left && object->position.x < right && object->position.y > top && object->position.y < bottom)
+    bool mouseIsOver(sf::Vector2f worldMousePosition) {
+
+        int left = position.x - size.x/2 * 16;
+        int right = position.x + size.x/2 * 16;
+        int top = position.y - size.y/2 * 16;
+        int bottom = position.y + size.y/2 * 16;
+
+        if (worldMousePosition.x >= left && worldMousePosition.x <= right && worldMousePosition.y >= top && worldMousePosition.y <= bottom) {
             return true;
-        else
-            return false;
+        }
+
+        return false;
+
+    }
+
+    void deleteBuilding() {
+        toDelete = true;
+
+        for (auto& item : _items)
+            item->toDelete = true;
+
+        for (auto& furniture : _furnitures)
+            furniture->toDelete = true;
+
+        for (auto& wall : _walls)
+            wall->toDelete = true;
     }
 };
 

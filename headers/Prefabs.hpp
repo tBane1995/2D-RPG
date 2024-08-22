@@ -19,70 +19,70 @@ void loadPrefabs() {
  
     // TREES
     // name, radius, width, height
-    prefabs.push_back(new Nature("natures/tree1", 36, 18));
-    prefabs.push_back(new Nature("natures/tree2", 44, 22));
-    prefabs.push_back(new Nature("natures/bush1", 110, 55));
+    prefabs.push_back(new Nature("natures/tree1", 36, 18, 145));
+    prefabs.push_back(new Nature("natures/tree2", 44, 22, 185));
+    prefabs.push_back(new Nature("natures/bush1", 110, 55, 75));
 
     // ROCKS
     // name, radius, width, height
-    prefabs.push_back(new Nature("natures/rocks1", 90, 45));
-    prefabs.push_back(new Nature("natures/rocks2", 90, 45));
-    prefabs.push_back(new Nature("natures/rocks3", 90, 45));
+    prefabs.push_back(new Nature("natures/rocks1", 90, 45, 65));
+    prefabs.push_back(new Nature("natures/rocks2", 90, 45, 65));
+    prefabs.push_back(new Nature("natures/rocks3", 90, 45, 57));
 
-    // FURNITURES
-    prefabs.push_back(new Furniture("furnitures/table1", 60, 26));
-    prefabs.push_back(new Furniture("furnitures/bench1", 60, 26));
-    prefabs.push_back(new Furniture("furnitures/chest1", 60, 26));
-    prefabs.push_back(new Furniture("furnitures/wardrobe1", 64, 32));
-    prefabs.push_back(new Furniture("furnitures/bookshelf1", 64, 32));
-    prefabs.push_back(new Furniture("furnitures/furnace1", 60, 26));
-    prefabs.push_back(new Furniture("furnitures/bed1", 64, 32));
-    prefabs.push_back(new Furniture("furnitures/chair1", 16, 16));
-    prefabs.push_back(new Furniture("furnitures/barrel1", 16, 16));
-    prefabs.push_back(new Furniture("furnitures/lectern1", 24, 16));
+    // FURNITURES - TO-DO - heights
+    prefabs.push_back(new Furniture("furnitures/table1", 60, 26, 36));
+    prefabs.push_back(new Furniture("furnitures/bench1", 60, 26, 36));
+    prefabs.push_back(new Furniture("furnitures/chest1", 60, 26, 36));
+    prefabs.push_back(new Furniture("furnitures/wardrobe1", 64, 32, 60));
+    prefabs.push_back(new Furniture("furnitures/bookshelf1", 64, 32, 60));
+    prefabs.push_back(new Furniture("furnitures/furnace1", 60, 26, 60));
+    prefabs.push_back(new Furniture("furnitures/bed1", 64, 32, 60));
+    prefabs.push_back(new Furniture("furnitures/chair1", 16, 16, 24));
+    prefabs.push_back(new Furniture("furnitures/barrel1", 16, 16, 24));
+    prefabs.push_back(new Furniture("furnitures/lectern1", 24, 16, 40));
 
     // WALLS
-    prefabs.push_back(new Wall("walls/wooden_wall_bottom", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_0", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_1", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_2", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_3", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_4", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_5", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_6", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_7", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_8", 32, 32));
-    prefabs.push_back(new Wall("walls/wooden_wall_top_9", 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_bottom", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_0", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_1", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_2", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_3", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_4", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_5", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_6", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_7", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_8", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/wooden_wall_top_9", 32, 32, 32));
 
-    prefabs.push_back(new Wall("walls/stone_wall_bottom", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_0", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_1", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_2", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_3", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_4", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_5", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_6", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_7", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_8", 32, 32));
-    prefabs.push_back(new Wall("walls/stone_wall_top_9", 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_bottom", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_0", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_1", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_2", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_3", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_4", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_5", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_6", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_7", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_8", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/stone_wall_top_9", 32, 32, 32));
 
-    prefabs.push_back(new Wall("walls/mud_wall_bottom", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_0", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_1", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_2", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_3", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_4", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_5", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_6", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_7", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_8", 32, 32));
-    prefabs.push_back(new Wall("walls/mud_wall_top_9", 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_bottom", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_0", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_1", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_2", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_3", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_4", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_5", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_6", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_7", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_8", 32, 32, 32));
+    prefabs.push_back(new Wall("walls/mud_wall_top_9", 32, 32, 32));
     
 
     // PATHS
     // name, width, height
-    prefabs.push_back(new Path("paths/stonepath1", 64, 32));
-    prefabs.push_back(new Path("paths/stonepath2", 64, 32));
+    prefabs.push_back(new Path("paths/stonepath1", 64, 32, 32));
+    prefabs.push_back(new Path("paths/stonepath2", 64, 32, 32));
 
     // ITEMS
     for (auto& i : items) {
@@ -123,20 +123,20 @@ void loadPrefabs() {
     prefabs.push_back(character);
 
 
-    // MONSTERS
+    // MONSTERS TO-DO - heights
     // name, width, height
 
-    Monster* dziobak = new Monster("monsters/dziobak", 72, 36, 10);
+    Monster* dziobak = new Monster("monsters/dziobak", 72, 36, 50, 10);
     dziobak->HP = 40;
     dziobak->HP_FULL = 40;
     dziobak->MP = 10;
     dziobak->MP_FULL = 10;
-    dziobak->STRENGTH = 4;
+    dziobak->STRENGTH = 2;
     dziobak->DEXTERITY = 2;
     dziobak->INTELLIGENCE = 1;
     prefabs.push_back(dziobak);
 
-    Monster* goblin = new Monster("monsters/goblin", 32, 16, 20);
+    Monster* goblin = new Monster("monsters/goblin", 32, 16, 50, 20);
     goblin->HP = 80;
     goblin->HP_FULL = 80;
     goblin->MP = 10;
@@ -146,7 +146,7 @@ void loadPrefabs() {
     goblin->INTELLIGENCE = 2;
     prefabs.push_back(goblin);
 
-    Monster* wilczur = new Monster("monsters/wilczur", 70, 35, 50);
+    Monster* wilczur = new Monster("monsters/wilczur", 70, 35, 60, 50);
     wilczur->HP = 120;
     wilczur->HP_FULL = 120;
     wilczur->MP = 10;
@@ -156,7 +156,7 @@ void loadPrefabs() {
     wilczur->INTELLIGENCE = 3;
     prefabs.push_back(wilczur);
 
-    Monster* jaszczur = new Monster("monsters/jaszczur", 70, 35, 80);
+    Monster* jaszczur = new Monster("monsters/jaszczur", 70, 35, 50, 80);
     jaszczur->HP = 160;
     jaszczur->HP_FULL = 160;
     jaszczur->MP = 10;
@@ -166,7 +166,7 @@ void loadPrefabs() {
     jaszczur->INTELLIGENCE = 4;
     prefabs.push_back(jaszczur);
 
-    Monster* niedzwiedz = new Monster("monsters/niedzwiedz", 70, 35, 80);
+    Monster* niedzwiedz = new Monster("monsters/niedzwiedz", 70, 35, 75, 80);
     niedzwiedz->HP = 160;
     niedzwiedz->HP_FULL = 160;
     niedzwiedz->MP = 10;
@@ -176,7 +176,7 @@ void loadPrefabs() {
     niedzwiedz->INTELLIGENCE = 4;
     prefabs.push_back(niedzwiedz);
 
-    Monster* szpon = new Monster("monsters/szpon", 66, 32, 100);
+    Monster* szpon = new Monster("monsters/szpon", 66, 32, 75, 100);
     szpon->HP = 200;
     szpon->HP_FULL = 200;
     szpon->MP = 10;
@@ -186,7 +186,7 @@ void loadPrefabs() {
     szpon->INTELLIGENCE = 5;
     prefabs.push_back(szpon);
 
-    Monster* kolcorozec = new Monster("monsters/kolcorozec", 70, 35, 140);
+    Monster* kolcorozec = new Monster("monsters/kolcorozec", 70, 35, 70, 140);
     kolcorozec->HP = 240;
     kolcorozec->HP_FULL = 240;
     kolcorozec->MP = 10;
@@ -196,7 +196,7 @@ void loadPrefabs() {
     kolcorozec->INTELLIGENCE = 6;
     prefabs.push_back(kolcorozec);
 
-    Monster* golem = new Monster("monsters/golem", 90, 60, 180);
+    Monster* golem = new Monster("monsters/golem", 90, 60, 80, 180);
     golem->HP = 280;
     golem->HP_FULL = 280;
     golem->MP = 10;
@@ -206,7 +206,7 @@ void loadPrefabs() {
     golem->INTELLIGENCE = 7;
     prefabs.push_back(golem);
 
-    Monster* troll = new Monster("monsters/troll", 90, 60, 240);
+    Monster* troll = new Monster("monsters/troll", 90, 60, 85, 240);
     troll->HP = 320;
     troll->HP_FULL = 320;
     troll->MP = 10;
@@ -216,7 +216,7 @@ void loadPrefabs() {
     troll->INTELLIGENCE = 8;
     prefabs.push_back(troll);
 
-    Monster* bies = new Monster("monsters/bies", 90, 60, 300);
+    Monster* bies = new Monster("monsters/bies", 90, 60, 85, 300);
     bies->HP = 360;
     bies->HP_FULL = 360;
     bies->MP = 10;

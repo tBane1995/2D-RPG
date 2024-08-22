@@ -30,28 +30,31 @@
 #include "headers/Pathfinding.hpp"
 
 #include "headers/GameObjects.hpp"
-#include "headers/Tiles.hpp"	// gameObject::Terrain and gameObject::Floor
+#include "headers/TerrainAndFloors.hpp"     // Terrain and Floors
 
-#include "headers/GameStates.hpp"
+#include "headers/GameStates.hpp"           
 
-#include "headers/Items.hpp"
-#include "headers/UnitStates.hpp"
-#include "headers/Player.hpp"
-#include "headers/Units.hpp"
-#include "headers/Monsters.hpp"
-#include "headers/Natures.hpp"
-#include "headers/Furnitures.hpp"
-#include "headers/Paths.hpp"
-#include "headers/Walls.hpp"
-#include "headers/Dialogues.hpp"
-#include "headers/Character.hpp"
-#include "headers/Prefabs.hpp"
-#include "headers/Buildings.hpp"
-#include "headers/loadGameObjects.hpp"
+#include "headers/HitTexts.hpp"             // Hit texts
+#include "headers/Items.hpp"                // manage of items, itemsOnMap, Inventory and InventoryOnMap
+#include "headers/UnitStates.hpp"           // states for Units
+#include "headers/Player.hpp"               // manage of Player
+#include "headers/Units.hpp"                // manage of Units
+#include "headers/Monsters.hpp"             // manage of Monster
+#include "headers/Natures.hpp"              // manage of Natures
+#include "headers/Furnitures.hpp"           // manage of Furnitures
+#include "headers/Paths.hpp"                // manage of Paths
+#include "headers/Walls.hpp"                // manage of Walls
+#include "headers/Dialogues.hpp"            
+#include "headers/Character.hpp"            // manage of Characters
+#include "headers/Prefabs.hpp"              // all prefabs: itemsOnMap, InventoryOnMap, Characters, Monsters, Natures, Furnitures, Walls etc .. 
+#include "headers/BuildingsManager.hpp"            // manage of Buildings
+#include "headers/GameObjectsManager.hpp"   // manage of GameObjects - update/sort/render/
 #include "headers/Maps.hpp"
 #include "headers/Quests.hpp"
 
-#include "headers/MapEditorPalette.hpp"
+#include "headers/GUI.hpp"
+#include "headers/PrefabToPaint.hpp"
+#include "headers/Palette.hpp"
 
 #include "headers/ControlsPanel.hpp"
 #include "headers/InventoryPanel.hpp"
@@ -61,6 +64,7 @@
 
 #include "Game.hpp"
 #include "MapEditor.hpp"
+#include "BuildingEditor.hpp"
 
 
 
@@ -223,10 +227,10 @@ void editWhitePixelsToTransparent(string monster_path) {
 
     cout << "editing white pixels to transparent: " << monster_path << "\n";
 
-    //sf::Color whiteColor = sf::Color(255, 255, 255);
-    sf::Color whiteColor = sf::Color(136, 68, 0);
-    //sf::Color transparentColor = sf::Color(0, 0, 0, 0);
-    sf::Color transparentColor = sf::Color(255, 127, 39);
+    sf::Color whiteColor = sf::Color(255, 255, 255);
+    //sf::Color whiteColor = sf::Color(136, 68, 0);
+    sf::Color transparentColor = sf::Color(0, 0, 0, 0);
+    //sf::Color transparentColor = sf::Color(255, 127, 39);
 
     std::vector < std::string > png_files;
 
@@ -271,7 +275,7 @@ void test()
             //srand(0);
             for (int i = 0; i < tests; ++i)
             {
-                if (rand() % (dex_atk+3) - rand() % (dex_def+3) > 0)
+                if (rand() % (dex_atk+10) - rand() % (dex_def+5) > 0)
                     ++hit;
 
             }
@@ -282,13 +286,24 @@ void test()
     }
 }
 
+void createTab(int width, int height) {
+    
+
+    //int tab[width][height];
+    std::vector<std::vector<int>> tab(width, std::vector<int>(height));
+     
+    for (int i = 0; i < width; i++)
+        for (int j = 0; j < height; j++)
+            std::cout << tab[i][j] << " ";
+}
+
 int main()
 {
     // TOOLS - be careful with that
     //createSetsFromIdle("assets/monsters/jaszczur/");             // TO-DO
-    //createSetsFromRuns("assets/monsters/bies/");               // TO-DO
-    //editWhitePixelsToTransparent("assets/sets/body/man-redhaired/");   // TO-DO
-    //test();
+    //createSetsFromRuns("assets/monsters/jaszczur/");               // TO-DO
+    //editWhitePixelsToTransparent("assets/monsters/jaszczur/");   // TO-DO
+    test();
 
     // LOADS
 	loadFonts();
@@ -302,8 +317,8 @@ int main()
 	window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
     // PROGRAMS
-	game();
-	//mapEditor();
-	    
-	
+	//game();
+	mapEditor();
+    buildingEditor();
+    
 }
