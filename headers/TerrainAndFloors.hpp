@@ -58,7 +58,6 @@ public:
 
 		tiles.resize(width * height);
 
-		int tu, tv;
 		int coord_x, coord_y;
 
 		// TERRAIN - GRASS
@@ -67,8 +66,8 @@ public:
 
 				sf::Vertex* triangles = &vertexes[(y * width + x) * 6];
 
-				coord_x = (coords.x * width + x);
-				coord_y = (coords.y * height + y);
+				coord_x = (coords.x + x);
+				coord_y = (coords.y + y);
 
 				triangles[0].position = sf::Vector2f(coord_x * tileSide, coord_y * tileSide);
 				triangles[1].position = sf::Vector2f((coord_x + 1) * tileSide, coord_y * tileSide);
@@ -93,8 +92,8 @@ public:
 
 		tiles[y * width + x] = value;
 
-		int global_x = coords.x * width + x;
-		int global_y = coords.y * height + y;
+		int global_x = coords.x + x;
+		int global_y = coords.y + y;
 
 		sf::Vertex* triangles = &vertexes[(y * width + x) * 6];
 
@@ -113,24 +112,21 @@ public:
 
 	void edit(sf::Vector2f worldMousePosition, int value) {
 
-		int global_x = worldMousePosition.x / 16;
-		int global_y = worldMousePosition.y / 16;
+		int coord_x = (worldMousePosition.x - coords.x * 16) / 16;
+		int coord_y = (worldMousePosition.y - coords.y * 16) / 16;
 
-		int onMap_x = global_x - coords.x * width;
-		int onMap_y = global_y - coords.y * height;
-
-		if (onMap_x < 0 || onMap_x >= width || onMap_y < 0 || onMap_y >= height)
+		if (coord_x < 0 || coord_x >= width || coord_y < 0 || coord_y >= height)
 			return;
 
 		if (value > 3 || value < 0)
 			return;
 
-		tiles[onMap_y * width + onMap_x] = value;
+		tiles[coord_y * width + coord_x] = value;
 
-		sf::Vertex* triangles = &vertexes[(onMap_y * width + onMap_x) * 6];
+		sf::Vertex* triangles = &vertexes[(coord_y * width + coord_x) * 6];
 
-		int tu = (int(global_x * tileSide) % 64) + (value * 64);
-		int tv = (int(global_y * tileSide) % 64);
+		int tu = (int(coord_x * tileSide) % 64) + (value * 64);
+		int tv = (int(coord_y * tileSide) % 64);
 
 		//cout << "tu: " << tu << ", tv: " << tv << "\n";
 
@@ -202,8 +198,8 @@ public:
 
 				sf::Vertex* triangles = &vertexes[(y * width + x) * 6];
 
-				coord_x = (coords.x * width + x);
-				coord_y = (coords.y * height + y);
+				coord_x = (coords.x + x);
+				coord_y = (coords.y + y);
 
 				triangles[0].position = sf::Vector2f(coord_x * tileSide, coord_y * tileSide);
 				triangles[1].position = sf::Vector2f((coord_x + 1) * tileSide, coord_y * tileSide);
@@ -228,8 +224,8 @@ public:
 
 		floors[y * width + x] = value;
 
-		int global_x = coords.x * width + x;
-		int global_y = coords.y * height + y;
+		int global_x = coords.x + x;
+		int global_y = coords.y + y;
 
 		sf::Vertex* triangles = &vertexes[(y * width + x) * 6];
 
@@ -248,24 +244,21 @@ public:
 
 	void edit(sf::Vector2f worldMousePosition, int value) {
 
-		int global_x = worldMousePosition.x / 16;
-		int global_y = worldMousePosition.y / 16;
+		int coord_x = (worldMousePosition.x - coords.x * 16) / 16;
+		int coord_y = (worldMousePosition.y - coords.y * 16) / 16;
 
-		int onMap_x = global_x - coords.x * width;
-		int onMap_y = global_y - coords.y * height;
-
-		if (onMap_x < 0 || onMap_x >= width || onMap_y < 0 || onMap_y >= height)
+		if (coord_x < 0 || coord_x >= width || coord_y < 0 || coord_y >= height)
 			return;
 
 		if (value > 3 || value < 0)
 			return;
 
-		floors[onMap_y * width + onMap_x] = value;
+		floors[coord_y * width + coord_x] = value;
 
-		sf::Vertex* triangles = &vertexes[(onMap_y * width + onMap_x) * 6];
+		sf::Vertex* triangles = &vertexes[(coord_y * width + coord_x) * 6];
 
-		int tu = (int(global_x * tileSide) % 64) + (value * 64);
-		int tv = (int(global_y * tileSide) % 64);
+		int tu = (int(coord_x * tileSide) % 64) + (value * 64);
+		int tv = (int(coord_y * tileSide) % 64);
 
 		//cout << "tu: " << tu << ", tv: " << tv << "\n";
 

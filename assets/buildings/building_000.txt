@@ -1,4 +1,4 @@
-name "test house"
+name "building_000"
 texture "assets/buildings/test house.png"
 size 16 16
 

@@ -1,3 +1,1 @@
--added instructions on "how to play"
--added "hittexts" - when you attack a monster or a monster attacks you then it displays texts about the damage
--adding building editor
+-fixed the rendering floors of buildings

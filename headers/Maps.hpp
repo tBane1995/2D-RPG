@@ -5,6 +5,7 @@
 
 class Map {
 public:
+    sf::Vector2i coords;
     Terrain* terrain;
     Floors* floors;
     
@@ -22,8 +23,9 @@ public:
 
     Map(int x, int y) {
        
-        terrain = new Terrain(x, y, 16, 16);
-        floors = new Floors(x, y, 16, 16);
+        coords = sf::Vector2i(x, y);
+        terrain = new Terrain(x*16, y*16, 16, 16);
+        floors = new Floors(x*16, y*16, 16, 16);
 
         clearAllLists();
         //load();
@@ -175,7 +177,7 @@ public:
 
     void load() {
 
-        string filename = "world/maps/map_" + to_string(int(terrain->coords.x)) + "_" + to_string(int(terrain->coords.y)) + ".txt";
+        string filename = "world/maps/map_" + to_string(coords.x) + "_" + to_string(coords.y) + ".txt";
         ifstream file(filename);
 
         if (!file.is_open()) {
@@ -535,13 +537,17 @@ public:
 
         for (auto& m : maps) {
 
-            left = m->terrain->coords.x * 16 * tileSide;
+            left = m->coords.x * 16 * tileSide;
             right = left + m->terrain->width * tileSide;
-            top = m->terrain->coords.y * 16 * tileSide;
+            top = m->coords.y * 16 * tileSide;
             bottom = top + m->terrain->height * tileSide;
 
             if (worldMousePosition.x >= left && worldMousePosition.x <= right && worldMousePosition.y >= top && worldMousePosition.y <= bottom)
+            {
+                cout << m->coords.x << ", " << m->coords.y << "\n";
                 return m;
+
+            }
         }
           
         return nullptr;
@@ -553,19 +559,18 @@ public:
 
         for (auto& map : maps) {
 
-            map_position.x = (int(map->terrain->coords.x) * 16 * tileSide) + 8 * tileSide;
-            map_position.y = (int(map->terrain->coords.y) * 16 * tileSide) + 8 * tileSide;
+            map_position.x = (map->terrain->coords.x * tileSide) + 8 * tileSide;
+            map_position.y = (map->terrain->coords.y * tileSide) + 8 * tileSide;
 
             float width = screenWidth * 2.0f;
             float height = screenHeight * 2.0f;
 
-            map->isVisible = intersectionTwoRectangles(cam->position.x, cam->position.y, width, height, map_position.x, map_position.y, 16 * tileSide, 16 * tileSide);
+            map->isVisible = intersectionTwoRectangles(cam->position.x, cam->position.y, width, height, map_position.x, map_position.y, map->terrain->width*tileSide, map->terrain->height*tileSide );
 
         }
 
 
     }
-
 
     void save() {
 

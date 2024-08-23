@@ -258,6 +258,10 @@ void game() {
 
         world->draw();
 
+        for (auto& m : world->maps)
+            for (auto& b : m->_buildings)
+                window->draw(*b->floors);
+
         for (auto& path : paths)
             if(visiblings(path))
                 path->draw(window);

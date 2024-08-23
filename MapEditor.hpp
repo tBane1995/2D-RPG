@@ -209,18 +209,14 @@ void mapEditor() {
 
         window->clear(sf::Color(64, 128, 64));
         window->setView(cam->view);
+
         world->draw();
-        
+
         for (auto& m : world->maps)
-            for (auto& building : m->_buildings)
-            {
-                window->draw(building->rect);
-                window->draw(*building->floors);
-            }
+            for (auto& b : m->_buildings)
+                window->draw(*b->floors);
 
         renderGameObjects();
-
-        
 
         if(!GUIwasHover && prefabToPaint != nullptr)
            prefabToPaint->draw(window);

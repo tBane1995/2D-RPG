@@ -55,8 +55,8 @@ void buildingEditor() {
 
     buildingEditorState = buildingEditorStates::editor;
 
-    terrain = new Terrain(0, 0, 24, 16);
-    floors = new Floors(0, 0, 24, 16);
+    terrain = new Terrain(0, 0, 24, 24);
+    floors = new Floors(0, 0, 24, 24);
 
     cam->setPosition(terrain->width/2*tileSide, terrain->height/2*tileSide);
 
@@ -260,7 +260,7 @@ void saveBuildingToFile() {
     file << "\n";
 
     // save floors
-    file << "//FLOORS\n";
+    file << "// FLOORS\n";
     for (int y = 0; y < floors->height; y++) {
         for (int x = 0; x < floors->width; x++) {
 

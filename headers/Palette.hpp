@@ -10,8 +10,7 @@ std::vector < GameObject* > buildingGameObjects;
 
 int paletteScroll;
 int paletteCols;    // TO-DO
-int paletteRows;    // TO-DO
-
+int paletteRows;
 class Button {
 public:
 
@@ -223,7 +222,7 @@ void updatePalette() {
 
     for (int i = 0; i < paletteCols * paletteRows; i++) {
 
-        palette[i].slotSprite.setPosition(palettePosition.x + (i % 2) * paletteButtonSize.x, palettePosition.y + (i / 2) * paletteButtonSize.y);
+        palette[i].slotSprite.setPosition( palettePosition.x + (i % paletteCols) * paletteButtonSize.x, palettePosition.y + (i / paletteCols) * paletteButtonSize.y);
         palette[i].objectSprite = sf::Sprite();
 
         if (i + paletteScroll * 2 < availableGameObjects.size()) {

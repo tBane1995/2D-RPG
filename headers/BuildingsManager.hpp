@@ -49,7 +49,7 @@ public:
         // LOAD FLOORS - TO-DO
         cout << position.x/16 << ", " << position.y << "\n";
         cout << size.x << ", " << size.y << "\n";
-        floors = new Floors(position.x/16, position.y/16, size.x, size.y);
+        floors = new Floors(position.x/16-size.x/2, position.y/16-size.y/2, size.x, size.y);
         int value;
         for (int y = 0; y < size.y; y++) {
             for (int x = 0; x < size.x; x++) {

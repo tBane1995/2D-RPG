@@ -2,7 +2,7 @@ name "testBuilding"
 texture "assets/buildings/testBuilding.png"
 size 24 16
 
-//FLOORS
+// FLOORS
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
