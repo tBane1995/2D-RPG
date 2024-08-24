@@ -49,8 +49,8 @@ void loadTextures() {
 
 	loadTexture("GUI/wideArrowUp1.png", 80, 20);
 	loadTexture("GUI/wideArrowUp2.png", 80, 20);
-	loadTexture("GUI/wideArrowDown1.png", 80, 20);
-	loadTexture("GUI/wideArrowDown2.png", 80, 20);
+	loadTexture("GUI/wideArrowDown1.png", 160, 20);
+	loadTexture("GUI/wideArrowDown2.png", 160, 20);
 
 	loadTexture("GUI/button.png", 20, 20);
 	loadTexture("GUI/buttonArrowUp.png", 20, 20);

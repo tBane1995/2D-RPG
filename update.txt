@@ -1,1 +1,1 @@
--fixed the rendering floors of buildings
+-palette was edited

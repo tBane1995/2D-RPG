@@ -9,8 +9,9 @@ std::vector < GameObject* > floorGameObjects;
 std::vector < GameObject* > buildingGameObjects;
 
 int paletteScroll;
-int paletteCols;    // TO-DO
+int paletteCols;
 int paletteRows;
+
 class Button {
 public:
 
@@ -107,10 +108,11 @@ std::vector < PaletteButton > palette;
 void createPalette() {
 
     paletteButtonSize = sf::Vector2f(80, 80);
-    paletteCols = 2;
+
+    paletteCols = 4;
     paletteRows = 8;
 
-    sf::Vector2f buttonSize = sf::Vector2f(160, 40);
+    sf::Vector2f buttonSize = sf::Vector2f(320, 40);
 
     Texture* texUp = getTexture("GUI/wideArrowUp2");
     sf::Vector2f positionUp;
@@ -217,20 +219,26 @@ void updatePalette() {
     float scaleX, scaleY;
     float tw, th; // texture width, texture height
 
-    palettePosition.x = cam->position.x + screenWidth / 2.0f - 1.5f * paletteButtonSize.x;
-    palettePosition.y = cam->position.y - screenHeight / 2.0f + 1.0f * paletteButtonSize.y;
+    int dist_x = paletteCols * paletteButtonSize.x - paletteButtonSize.x / 2;
+    palettePosition.x = cam->position.x + screenWidth / 2.0f - dist_x;
+    palettePosition.y = cam->position.y - screenHeight / 2.0f + paletteButtonSize.y;
 
     for (int i = 0; i < paletteCols * paletteRows; i++) {
 
-        palette[i].slotSprite.setPosition( palettePosition.x + (i % paletteCols) * paletteButtonSize.x, palettePosition.y + (i / paletteCols) * paletteButtonSize.y);
+        sf::Vector2f position;
+        position.x = palettePosition.x + (i % paletteCols) * paletteButtonSize.x;
+        position.y = palettePosition.y + (i / paletteCols) * paletteButtonSize.y;
+        
+        palette[i].slotSprite.setPosition(position);
         palette[i].objectSprite = sf::Sprite();
 
-        if (i + paletteScroll * 2 < availableGameObjects.size()) {
+        
+        if (i + paletteScroll * paletteCols < availableGameObjects.size()) {
 
-            palette[i].object = availableGameObjects[i + paletteScroll * 2];
+            palette[i].object = availableGameObjects[i + paletteScroll * paletteCols];
             palette[i].objectSprite.setTexture(*getTexture(palette[i].object->name)->texture);
 
-            palette[i].objectSprite.setPosition(palettePosition.x + (i % 2) * paletteButtonSize.x, palettePosition.y + (i / 2) * paletteButtonSize.y);
+            palette[i].objectSprite.setPosition(position);
 
             tw = palette[i].objectSprite.getTexture()->getSize().x;
             th = palette[i].objectSprite.getTexture()->getSize().y;
@@ -244,6 +252,7 @@ void updatePalette() {
                 palette[i].objectSprite.setColor(sf::Color(192.0f, 192.0f, 192.0f));
 
         }
+        
     }
 
     buttonUp->update();
@@ -252,7 +261,7 @@ void updatePalette() {
 
 void drawPalette() {
 
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < palette.size(); i++) {
         palette[i].draw();
     }
 

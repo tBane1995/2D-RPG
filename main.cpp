@@ -318,7 +318,7 @@ int main()
 	
     // PROGRAMS
 	//game();
-	mapEditor();
+	//mapEditor();
     buildingEditor();
     
 }

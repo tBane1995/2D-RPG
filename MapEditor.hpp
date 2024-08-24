@@ -359,11 +359,11 @@ void mapEditorEventLeftClick() {
     else if (buttonDown->mouseOvering(worldMousePosition)) {
         GUIwasClicked = true;
 
-        float maxValue = availableGameObjects.size() - 16;
+        float maxValue = availableGameObjects.size() - paletteCols*paletteRows;
         if (maxValue < 0)
             maxValue = 0;
 
-        if (paletteScroll * 2 < maxValue)
+        if (paletteScroll * paletteCols < maxValue)
             paletteScroll += 1;
 
     }
