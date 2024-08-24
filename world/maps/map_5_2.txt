@@ -32,12 +32,9 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-// NATURES
-Nature "natures/tree1" 1520 752
-
 // ITEMS
 Item "items/health herb" 1280 672
 
 // MONSTERS
-Monster "monsters/dziobak" 1284 752
+Monster "monsters/dziobak" 1285 1087
 

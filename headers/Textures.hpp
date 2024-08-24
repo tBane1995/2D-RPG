@@ -38,7 +38,11 @@ void loadTextures() {
 
 	textures.clear();
 
-	// GUI ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// NOISE //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	loadTexture("noise.png", 256, 256);
+
+ 	// GUI ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	loadTexture("GUI/slot1.png", 40, 40);
 	loadTexture("GUI/slot2.png", 40, 40);
@@ -52,12 +56,33 @@ void loadTextures() {
 	loadTexture("GUI/wideArrowDown1.png", 160, 20);
 	loadTexture("GUI/wideArrowDown2.png", 160, 20);
 
-	loadTexture("GUI/button.png", 20, 20);
-	loadTexture("GUI/buttonArrowUp.png", 20, 20);
-	loadTexture("GUI/buttonArrowDown.png", 20, 20);
-	loadTexture("GUI/buttonArrowLeft.png", 20, 20);
-	loadTexture("GUI/buttonArrowRight.png", 20, 20);
-	loadTexture("GUI/space.png", 80, 20);
+	
+	loadTexture("GUI/menuButton.png", 40, 20);
+	loadTexture("GUI/menuButton-terrain.png", 40, 20);
+	loadTexture("GUI/menuButton-floors.png", 40, 20);
+	loadTexture("GUI/menuButton-furnitures.png", 40, 20);
+	loadTexture("GUI/menuButton-walls.png", 40, 20);
+	loadTexture("GUI/menuButton-monsters.png", 40, 20);
+	loadTexture("GUI/menuButton-paths.png", 40, 20);
+	loadTexture("GUI/menuButton-items.png", 40, 20);
+	loadTexture("GUI/menuButton-natures.png", 40, 20);
+
+	loadTexture("GUI/smallbutton.png", 20, 20);
+	loadTexture("GUI/smallbutton-ArrowUp.png", 20, 20);
+	loadTexture("GUI/smallbutton-ArrowDown.png", 20, 20);
+	loadTexture("GUI/smallbutton-ArrowLeft.png", 20, 20);
+	loadTexture("GUI/smallbutton-ArrowRight.png", 20, 20);
+	loadTexture("GUI/smallbutton-cursor.png", 20, 20);
+	loadTexture("GUI/smallbutton-brush.png", 20, 20);
+	loadTexture("GUI/smallbutton-rect_brush.png", 20, 20);
+	loadTexture("GUI/smallbutton-increase.png", 20, 20);
+	loadTexture("GUI/smallbutton-decrease.png", 20, 20);
+	loadTexture("GUI/smallbutton-rectangle.png", 20, 20);
+	loadTexture("GUI/smallbutton-elipse.png", 20, 20);
+	loadTexture("GUI/smallbutton-fill.png", 20, 20);
+	loadTexture("GUI/smallbutton-eraser.png", 20, 20);
+
+	loadTexture("GUI/spacebutton.png", 80, 20);
 
 	loadTexture("GUI/hand.png", 8, 8);
 	loadTexture("GUI/grey_hand.png", 8, 8);
@@ -65,14 +90,13 @@ void loadTextures() {
 
 	// TILES //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	loadTexture("tiles/0_tileset.png", 0, 0);
-	loadTexture("floors/0_floorset.png", 0, 0);
 	loadTexture("tiles/tile_0_grass.png", 32, 32);
 	loadTexture("tiles/tile_1_sands.png", 32, 32);
 	loadTexture("tiles/tile_2_water.png", 32, 32);
 	loadTexture("tiles/tile_3_gravel.png", 32, 32);
 
-
 	// FLOORS
+	loadTexture("floors/0_floorset.png", 0, 0);
 	loadTexture("floors/floor_0.png", 32, 32);
 	loadTexture("floors/floor_1.png", 32, 32);
 	loadTexture("floors/floor_2.png", 32, 32);
@@ -82,6 +106,13 @@ void loadTextures() {
 
 	loadTexture("natures/tree1.png", 126, 185);
 	loadTexture("natures/tree2.png", 113, 220);
+	loadTexture("natures/tree3.png", 126, 185);
+	loadTexture("natures/tree4.png", 113, 220);
+	loadTexture("natures/tree5.png", 126, 185);
+	loadTexture("natures/tree6.png", 128, 203);
+	loadTexture("natures/tree7.png", 125, 180);
+	loadTexture("natures/tree8.png", 128, 203);
+	loadTexture("natures/tree9.png", 129, 213);
 	loadTexture("natures/bush1.png", 140, 150);
 	loadTexture("natures/rocks1.png", 130, 170);
 	loadTexture("natures/rocks2.png", 130, 190);
@@ -89,14 +120,7 @@ void loadTextures() {
 
 	// BUILDINGS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	loadTexture("buildings/temple.png", 125, 185);
-	loadTexture("buildings/column.png", 130, 200);
-	loadTexture("buildings/home.png", 128, 185);
-
-	loadTexture("buildings/stone house.png", 80, 152);	//80, 160 - 16/2
-	loadTexture("buildings/mud house.png", 80, 152);
 	loadTexture("buildings/demo house.png", 128, 256); // 128, 384 - 8*16
-
 
 	// ITEMS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -162,34 +186,10 @@ void loadTextures() {
 	loadTexture("paths/stonepath1.png", 32, 32);
 	loadTexture("paths/stonepath2.png", 32, 32);
 
-	// CHARACTERS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// DOORS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	std::vector < string > characters;
-	characters.push_back("characters/jack");
-	characters.push_back("characters/john");
-	characters.push_back("characters/peter");
-	characters.push_back("characters/pit");
-
-	for (auto& c : characters) {
-		for (int i = 0; i < 4; i++) {
-
-			loadTexture(c + "/idleTop" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/idleRight" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/idleBottom" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/idleLeft" + to_string(i) + ".png", 32, 58);
-
-			loadTexture(c + "/attackTop" + to_string(i) + ".png", 32, 87);
-			loadTexture(c + "/attackRight" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/attackBottom" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/attackLeft" + to_string(i) + ".png", 32, 58);
-
-			loadTexture(c + "/runTop" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/runRight" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/runBottom" + to_string(i) + ".png", 32, 58);
-			loadTexture(c + "/runLeft" + to_string(i) + ".png", 32, 58);
-
-		}
-	}
+	loadTexture("doors/door_close.png", 32, 32);
+	loadTexture("doors/door_open.png", 32, 32);
 
 	// MONSTERS
 	std::vector < string > monsters;
@@ -229,17 +229,19 @@ void loadTextures() {
 	}
 	
 	// FURNITURES
-	loadTexture("furnitures/table1.png", 32, 32);
-	loadTexture("furnitures/bench1.png", 32, 32);
-	loadTexture("furnitures/chest1.png", 32, 32);
-	loadTexture("furnitures/wardrobe1.png", 32, 50);
-	loadTexture("furnitures/bookshelf1.png", 32, 50);
-	loadTexture("furnitures/furnace1.png", 32, 50);
-	loadTexture("furnitures/bed1.png", 32, 50);
-	loadTexture("furnitures/chair1.png", 34, 38);
-	loadTexture("furnitures/barrel1.png", 34, 38);
-	loadTexture("furnitures/lectern1.png", 34, 38);
+	loadTexture("furnitures/table.png", 32, 32);
+	loadTexture("furnitures/bench.png", 32, 32);
+	loadTexture("furnitures/chest.png", 32, 32);
+	loadTexture("furnitures/wardrobe.png", 32, 50);
+	loadTexture("furnitures/bookshelf.png", 32, 50);
+	loadTexture("furnitures/furnace.png", 32, 50);
+	loadTexture("furnitures/bed.png", 32, 50);
+	loadTexture("furnitures/chair.png", 34, 38);
+	loadTexture("furnitures/barrel.png", 34, 38);
+	loadTexture("furnitures/lectern.png", 34, 38);
 
+
+	// WALLS
 	loadTexture("walls/wooden_wall_bottom.png", 16, 16);
 	loadTexture("walls/wooden_wall_top_0.png", 16, 16);
 	loadTexture("walls/wooden_wall_top_1.png", 16, 16);
@@ -279,8 +281,8 @@ void loadTextures() {
 	// BODY SETS
 	std::vector < string > bodySets;
 	bodySets.clear();
-	//bodySets.push_back("boy-redhaired");		// face without beard
-	//bodySets.push_back("boy-blackhaired");	// face without beard
+	bodySets.push_back("boy-redhaired");		// face without beard
+	bodySets.push_back("boy-blackhaired");		// face without beard
 	bodySets.push_back("boy-brownhaired");		// face without beard
 
 	bodySets.push_back("man-redhaired");		// face have a beard

@@ -63,8 +63,8 @@ public:
 		DEXTERITY = 5;
 		INTELLIGENCE = 5;
 
-		VIEW_RANGE = 200.0f;
-		ACTION_RANGE = 35.0f;
+		VIEW_RANGE = 256.0f;
+		ACTION_RANGE = 32.0f;
 
 		state = unitStates::idle;
 		frame = 0;
@@ -259,7 +259,7 @@ public:
 
 			// TO TOP
 			if (direction == 0) {
-				if (!collisions(this, 0, -dist))
+				if (!collisionPrediction(this, 0, -dist))
 					position.y -= dist;
 				else
 					state = unitStates::idle;
@@ -267,7 +267,7 @@ public:
 
 			// TO RIGHT
 			if (direction == 1) {
-				if (!collisions(this, dist, 0))
+				if (!collisionPrediction(this, dist, 0))
 					position.x += dist;
 				else
 					state = unitStates::idle;
@@ -275,7 +275,7 @@ public:
 
 			// TO DOWN
 			if (direction == 2) {
-				if (!collisions(this, 0, dist))
+				if (!collisionPrediction(this, 0, dist))
 					position.y += dist;
 				else
 					state = unitStates::idle;
@@ -283,7 +283,7 @@ public:
 
 			// TO LEFT
 			if (direction == 3) {
-				if (!collisions(this, -dist, 0))
+				if (!collisionPrediction(this, -dist, 0))
 					position.x -= dist;
 				else
 					state = unitStates::idle;
@@ -341,28 +341,45 @@ public:
 		sprite.setTexture(*attackTextures[direction * 4 + frame]->texture);
 	}
 
-	virtual void update(float dt) {
+	void idling(float dt) {
 
-		GameObject::update(dt);
 		calculateCurrentFrame(dt);
-		
+		sprite.setTexture(*idleTextures[direction * 4 + frame]->texture);
 		sprite.setPosition(position);
-		viewRangeArea.setPosition(position);
-		actionRangeArea.setPosition(position);
-		
-		setLifeBar();
-
 	}
 
-	virtual void draw(sf::RenderWindow* window) {
-		if (mouseIsOver) {
-			window->draw(viewRangeArea);
-			window->draw(actionRangeArea);
-			GameObject::draw(window);
-		}
+	virtual void update(float dt) {
+
+		calculateCurrentFrame(dt);
+		sprite.setPosition(position);
+		setLifeBar();
+
+		GameObject::update(dt);
+	}
+
+	virtual void updateStatistic(float dt) {
+
+		GameObject::updateStatistic(dt);
+
+		viewRangeArea.setPosition(position);
+		actionRangeArea.setPosition(position);
+	}
+
+	virtual void draw() {
+
 		window->draw(sprite);
 		window->draw(lifeBarBackground);
 		window->draw(lifeBar);
+
+		GameObject::draw();
+	}
+
+	virtual void drawStatistic() {
+		
+		window->draw(viewRangeArea);
+		window->draw(actionRangeArea);
+
+		GameObject::drawStatistic();
 	}
 
 };

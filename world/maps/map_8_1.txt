@@ -33,9 +33,9 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // PATHS
-Path "paths/stonepath1" 2048 320
-Path "paths/stonepath1" 2096 304
-Path "paths/stonepath1" 2144 320
-Path "paths/stonepath1" 2208 336
-Path "paths/stonepath1" 2256 352
+Path "paths/stonepath2" 2256 400
+Path "paths/stonepath2" 2224 432
+Path "paths/stonepath2" 2160 448
+Path "paths/stonepath2" 2128 480
+Path "paths/stonepath2" 2080 496
 

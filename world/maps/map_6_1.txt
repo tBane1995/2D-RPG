@@ -32,16 +32,3 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-// NATURES
-Nature "natures/tree2" 1568 256
-Nature "natures/tree1" 1712 320
-
-// ITEMS
-Item "items/health root" 1600 384
-
-// PATHS
-Path "paths/stonepath2" 1776 432
-Path "paths/stonepath2" 1696 448
-Path "paths/stonepath2" 1632 464
-Path "paths/stonepath2" 1584 480
-

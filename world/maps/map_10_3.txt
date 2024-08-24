@@ -32,6 +32,9 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
+// NATURES
+Nature "natures/tree9" 2592 880
+
 // MONSTERS
-Monster "monsters/niedzwiedz" 2820 781
+Monster "monsters/niedzwiedz" 2533 895
 

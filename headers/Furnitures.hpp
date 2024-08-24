@@ -35,23 +35,7 @@ public:
 		sprite.setTexture(*texture->texture);
 		sprite.setOrigin(texture->cx, texture->cy);
 
-		
 		inventory = nullptr;
-		// TO-DO (test)
-		if (name == "furnitures/chest1") {
-			inventory = new Inventory();
-			inventory->addItem("items/wooden club");
-			inventory->addItem("items/wool shirt");   // TO-DO to delete
-			inventory->addItem("items/wool pants");   // TO-DO to delete			
-			inventory->addItem("items/wool hat");   // TO-DO to delete			
-		}
-
-		if (name == "furnitures/table1") {
-			inventory = new Inventory();
-			inventory->addItem("items/roasted meat", 3);
-		}
-		//
-
 		
 		takeItTexture = getTexture("GUI/hand");
 		takeItSprite = sf::Sprite();
@@ -60,14 +44,7 @@ public:
 		showHand = false;
 	}
 
-	void update(float dt) {
-
-		GameObject::update(dt);
-
-		/*
-		if (inventory != nullptr && inventory->items.size() < 1)
-			inventory = nullptr;
-		*/
+	virtual void update(float dt) {
 
 		sprite.setPosition(position);
 		takeItSprite.setPosition(position.x, position.y - 50);
@@ -116,9 +93,9 @@ public:
 
 	}
 
-	void draw(sf::RenderWindow* window) {
+	virtual void draw() {
 		if (mouseIsOver)
-			GameObject::draw(window);
+			GameObject::draw();
 
 		window->draw(sprite);
 

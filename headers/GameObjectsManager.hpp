@@ -1,6 +1,22 @@
 #ifndef GameObjectsManager_hpp
 #define GameObjectsManager_hpp
 
+std::vector < GameObject* > selectedGameObjects;
+
+void selectGameObjects(int rect_x, int rect_y, int rect_w, int rect_h) {
+
+    selectedGameObjects.clear();
+
+    for (auto& go : gameObjects) {
+
+        if (intersectionRectangleWithElipse(rect_x, rect_y, rect_w, rect_h, go->position.x, go->position.y, go->collider->width / 2, go->collider->length / 2)) {
+            go->mouseIsOver = true;
+            selectedGameObjects.push_back(go);
+        }
+            
+    }
+}
+
 void clearAllMainListsOfGameObjects() {
 
     gameObjects.clear();
@@ -10,6 +26,7 @@ void clearAllMainListsOfGameObjects() {
     paths.clear();
     furnitures.clear();
     walls.clear();
+    doors.clear();
     monsters.clear();
     characters.clear();
     inventoriesOnMap.clear();
@@ -27,6 +44,7 @@ void deleteGameObjectsFromMainLists() {
     std::vector < Path* > new_paths;
     std::vector < Furniture* > new_furnitures;
     std::vector < Wall* > new_walls;
+    std::vector < Door* > new_doors;
     std::vector < Monster* > new_monsters;
     std::vector < Building* > new_buildings;
     std::vector < Character* > new_characters;
@@ -39,6 +57,7 @@ void deleteGameObjectsFromMainLists() {
     new_paths.clear();
     new_furnitures.clear();
     new_walls.clear();
+    new_doors.clear();
     new_monsters.clear();
     new_buildings.clear();
     new_characters.clear();
@@ -66,6 +85,9 @@ void deleteGameObjectsFromMainLists() {
             if (go->type == gameObjectType::Wall)
                 new_walls.push_back(dynamic_cast<Wall*>(go));
 
+            if (go->type == gameObjectType::Door)
+                new_doors.push_back(dynamic_cast<Door*>(go));
+
             if (go->type == gameObjectType::Monster)
                 new_monsters.push_back(dynamic_cast<Monster*>(go));
 
@@ -88,6 +110,8 @@ void deleteGameObjectsFromMainLists() {
     paths = new_paths;
     furnitures = new_furnitures;
     walls = new_walls;
+    doors = new_doors;
+
     monsters = new_monsters;
 
     buildings = new_buildings;
@@ -101,13 +125,13 @@ bool visiblings(GameObject* object) {
     if (object != nullptr) {
 
         if (object->collider->isRectangular == false) {
-            if (intersectionRectangleWithElipse(cam->position.x, cam->position.y, screenWidth * 2.0f, screenHeight * 2.0f, object->position.x, object->position.y, object->collider->width / 2.0f, object->collider->length / 2.0f)) {
+            if (intersectionRectangleWithElipse(cam->position.x, cam->position.y, screenWidth * 1.5f, screenHeight * 1.5f, object->position.x, object->position.y, object->collider->width / 2.0f, object->collider->length / 2.0f)) {
                 return true;
             }
         }
 
         if (object->collider->isRectangular == true) {
-            if (intersectionTwoRectangles(cam->position.x, cam->position.y, screenWidth * 2.0f, screenHeight * 2.0f, object->position.x, object->position.y, object->collider->width, object->collider->length))
+            if (intersectionTwoRectangles(cam->position.x, cam->position.y, screenWidth * 1.5f, screenHeight * 1.5f, object->position.x, object->position.y, object->collider->width, object->collider->length))
                 return true;
         }
     }
@@ -116,30 +140,33 @@ bool visiblings(GameObject* object) {
     return false;
 }
 
-void sortGameObjects() {
-
-	std::sort(gameObjects.begin(), gameObjects.end(), [](const auto& a, const auto& b) { return a->position.y < b->position.y; });
-}
-
 void updateGameObjects() {
 
 	for (auto& go : gameObjects) {
-		if (visiblings(go))     // only visible GameObjects are updating
-			go->update(dt);
+        if (visiblings(go)) {
+            go->update(dt);
+            go->mouseOvering();
+        }
 	}
 }
 
-void renderGameObjects() {
+void sortGameObjects() {
+
+    std::sort(gameObjects.begin(), gameObjects.end(), [](const auto& a, const auto& b) { return a->position.y < b->position.y; });
+}
+
+void drawGameObjects() {
 
 	for (auto& p : paths) {
 		if (visiblings(p))
-			p->draw(window);
+			p->draw();
 	}
 
 	for (auto& go : gameObjects)
 		if (go->type != gameObjectType::Path)
-			if (visiblings(go))
-				go->draw(window);
+			if (go->type == gameObjectType::Building || visiblings(go))
+				if(visiblings(go))
+                    go->draw();
 
 }
 

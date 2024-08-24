@@ -33,6 +33,5 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // NATURES
-Nature "natures/tree2" 2624 736
-Nature "natures/tree1" 2592 544
+Nature "natures/tree8" 2624 528
 

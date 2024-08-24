@@ -84,8 +84,8 @@ public:
 		cooldown = 0.0f;
 		attackTime = 0.7f;
 
-		position.x = 682;
-		position.y = 226;
+		position.x = 1000;
+		position.y = 324;
 
 		isVisible = true;
 
@@ -102,9 +102,9 @@ public:
 		EXPERIENCE_TO_NEXT_LEVEL = 50;
 		SKILL_POINTS = 0;
 
-		body = "sets/body/woman-redhaired";
+		body = "sets/body/boy-brownhaired";
 		
-		bag = new Inventory();
+		bag = new Inventory(-1);
 		/*
 		bag->addItem("items/torn shirt");
 		bag->addItem("items/axe");
@@ -485,9 +485,7 @@ public:
 		return false;
 	}
 
-	void update(float dt) {
-
-		GameObject::update(dt);
+	virtual void update(float dt) {
 
 		float distance = 20.0f * stepSize * dt;
 
@@ -583,10 +581,10 @@ public:
 		
 	}
 
-	void draw(sf::RenderWindow* window) {
+	virtual void draw() {
 		if (mouseIsOver) {
 			window->draw(actionRangeArea);
-			GameObject::draw(window);
+			GameObject::draw();
 		}
 		
 		if (direction == 0) {

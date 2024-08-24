@@ -8,12 +8,19 @@ public:
     sf::Vector2i coords;
     Terrain* terrain;
     Floors* floors;
-    
+    Water* waters;
+
+    Shader* shader;
+
+    sf::RectangleShape borders;
+    sf::Text coordsText;
+
     std::vector < Nature* > _natures;
     std::vector < ItemOnMap* > _itemsOnMap;
     std::vector < Path* > _paths;
     std::vector < Furniture* > _furnitures;
     std::vector < Wall* > _walls;
+    std::vector < Door* > _doors;
     std::vector < Monster* > _monsters;
     std::vector < Building* > _buildings;
     std::vector < Character* > _characters;
@@ -26,11 +33,29 @@ public:
         coords = sf::Vector2i(x, y);
         terrain = new Terrain(x*16, y*16, 16, 16);
         floors = new Floors(x*16, y*16, 16, 16);
-
+        waters = new Water(x * 16, y * 16, 16, 16);
         clearAllLists();
         //load();
 
         isVisible = false;
+
+        shader = getShader("shaders/water");
+
+        // TO-DO
+        int borderWidth = 2;
+        borders = sf::RectangleShape(sf::Vector2f(256-2*borderWidth, 256-2*borderWidth));
+        borders.setPosition(x * 256, y * 256);
+        borders.setFillColor(sf::Color::Transparent);
+        borders.setOutlineColor(sf::Color(128, 48, 48, 128));
+        borders.setOutlineThickness(borderWidth);
+        
+        // TO-DO
+        coordsText = sf::Text();
+        coordsText.setFont(basicFont);
+        coordsText.setCharacterSize(16);
+        coordsText.setString(to_string(coords.x) + " x " + to_string(coords.y));
+        coordsText.setFillColor(textColor);
+        coordsText.setPosition(coords.x*256, coords.y*256);
     }
 
     ~Map() { }
@@ -42,6 +67,7 @@ public:
         _paths.clear();
         _furnitures.clear();
         _walls.clear();
+        _doors.clear();
         _monsters.clear();
         _buildings.clear();
         _characters.clear();
@@ -62,7 +88,8 @@ public:
             }
         }
 
-        string filename = "world/maps/map_" + to_string(int(terrain->coords.x)) + "_" + to_string(int(terrain->coords.y)) + ".txt";
+        string filename = "world/maps/map_" + to_string(coords.x) + "_" + to_string(coords.y) + ".txt";
+        
         std::ofstream file(filename);
 
         if (!file.is_open()) {
@@ -138,10 +165,18 @@ public:
             file << "\n";
 
 
+        if (_doors.size() > 0)
+            file << "// DOORS\n";
+        for (auto& door : _doors)
+            file << "Door " << char(34) << door->name << char(34) << " " << int(door->position.x) << " " << int(door->position.y) << "\n";
+        if (_doors.size() > 0)
+            file << "\n";
+
+
         if (_monsters.size() > 0)
             file << "// MONSTERS\n";
         for (auto& monster : _monsters)
-            file << "Monster " << char(34) << monster->name << char(34) << " " << int(monster->position.x) << " " << int(monster->position.y) << "\n";
+            file << "Monster " << char(34) << monster->name << char(34) << " " << int(monster->base.x) << " " << int(monster->base.y) << "\n";
         if (_monsters.size() > 0)
             file << "\n";
 
@@ -196,7 +231,11 @@ public:
         for (int y = 0; y < 16; y++) {
             for (int x = 0; x < 16; x++) {
                 file >> value;
-                editTile(x, y, value);;
+                editTile(x, y, value);
+
+                // TO-DO
+                if (value == 2)
+                    waters->edit(x, y, true);
             }
         }
 
@@ -204,7 +243,7 @@ public:
         for (int y = 0; y < 16; y++) {
             for (int x = 0; x < 16; x++) {
                 file >> value;
-                editFloor(x, y, value);;
+                editFloor(x, y, value);
             }
         }
 
@@ -286,6 +325,20 @@ public:
 
                 Wall* wall = new Wall(getPrefab(objectName), x, y);
                 _walls.push_back(wall);
+                //cout << "Wall: " << objectName << "\n";
+            }
+
+            if (objectType == "Door") {
+                string name;
+                int x, y;
+
+                getline(lineStream, objectName, '"'); // Pomijamy pierwszy znak cudzysłowu
+                getline(lineStream, objectName, '"'); // Wczytaj nazwę do kolejnego cudzysłowu
+                lineStream >> x;
+                lineStream >> y;
+
+                Door* door = new Door(getPrefab(objectName), x, y);
+                _doors.push_back(door);
                 //cout << "Wall: " << objectName << "\n";
             }
 
@@ -391,12 +444,19 @@ public:
             walls.push_back(wall);
         }
 
+        for (auto& door : _doors) {
+            gameObjects.push_back(door);
+            doors.push_back(door);
+        }
+
         for (auto& monster : _monsters) {
             gameObjects.push_back(monster);
             monsters.push_back(monster);
         }
 
         for (auto& building : _buildings) {
+            gameObjects.push_back(building);
+            buildings.push_back(building);
             building->addGameObjectsToMainLists();
         }
 
@@ -418,6 +478,7 @@ public:
         std::vector < Path* > new_paths;
         std::vector < Furniture* > new_furnitures;
         std::vector < Wall* > new_walls;
+        std::vector < Door* > new_doors;
         std::vector < Monster* > new_monsters;
         std::vector < Building* > new_buildings;
         std::vector < Character* > new_characters;
@@ -428,6 +489,7 @@ public:
         new_paths.clear();
         new_furnitures.clear();
         new_walls.clear();
+        new_doors.clear();
         new_monsters.clear();
         new_buildings.clear();
         new_characters.clear();
@@ -454,6 +516,10 @@ public:
             if (wall->toDelete != true)
                 new_walls.push_back(wall);
 
+        for (auto& door : _doors)
+            if (door->toDelete != true)
+                new_doors.push_back(door);
+
         for (auto& monster : _monsters)
             if (monster->toDelete != true)
                 new_monsters.push_back(monster);
@@ -475,6 +541,7 @@ public:
         _paths = new_paths;
         _furnitures = new_furnitures;
         _walls = new_walls;
+        _doors = new_doors;
         _monsters = new_monsters;
         _buildings = new_buildings;
         _characters = new_characters;
@@ -483,10 +550,27 @@ public:
 
     }
 
+    void update(float dt) {
+    
+        shader->shader->setUniform("time", currentTime.asSeconds());
+        waters->update();
+
+        
+
+    }
+
+    void drawStatistic() {
+        
+        window->draw(borders);
+        window->draw(coordsText);
+
+    }
+
     void draw()
     {
         window->draw(*terrain);
         window->draw(*floors);
+        window->draw(*waters, &(*shader->shader));
     }
 
 };
@@ -498,6 +582,7 @@ public:
     World() {
 
         maps.clear();
+
     }
 
     void load() {
@@ -531,7 +616,7 @@ public:
 
     }
 
-    Map* getMap(sf::Vector2f worldMousePosition) {
+    Map* getMap(sf::Vector2f position) {
         
         float left, right, top, bottom;
 
@@ -542,9 +627,9 @@ public:
             top = m->coords.y * 16 * tileSide;
             bottom = top + m->terrain->height * tileSide;
 
-            if (worldMousePosition.x >= left && worldMousePosition.x <= right && worldMousePosition.y >= top && worldMousePosition.y <= bottom)
+            if (position.x > left && position.x < right && position.y > top && position.y < bottom)
             {
-                cout << m->coords.x << ", " << m->coords.y << "\n";
+                //cout << m->coords.x << ", " << m->coords.y << "\n";
                 return m;
 
             }
@@ -578,11 +663,16 @@ public:
             map->save();
     }
 
+    void update(float dt) {
+        for (auto& map : maps) {
+            map->update(dt);
+        }
+            
+    }
+
     void draw() {
         //sf::Clock c;
         //sf::Time start = c.getElapsedTime();
-
-        int i = 0;
 
         for (auto& map : maps) {
             if (map->isVisible)
@@ -595,6 +685,20 @@ public:
         //cout << (end - start).asSeconds() << " s \n";
     }
 
+    void drawStatistic() {
+        //sf::Clock c;
+        //sf::Time start = c.getElapsedTime();
+
+        for (auto& map : maps) {
+            if (map->isVisible)
+                map->drawStatistic();
+        }
+
+        //sf::Time end = c.getElapsedTime();
+        // 
+        //cout << (end - start).asMilliseconds() << " ms,\t";
+        //cout << (end - start).asSeconds() << " s \n";
+    }
 
 };
 

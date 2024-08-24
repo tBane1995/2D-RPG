@@ -32,6 +32,9 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
+// NATURES
+Nature "natures/tree8" 1120 1312
+
 // MONSTERS
-Monster "monsters/wilczur" 1287 1303
+Monster "monsters/wilczur" 974 1404
 

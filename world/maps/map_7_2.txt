@@ -32,10 +32,10 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-// NATURES
-Nature "natures/tree2" 1808 720
-Nature "natures/tree2" 1952 544
-
 // ITEMS
 Item "items/health herb" 1840 528
+
+// PATHS
+Path "paths/stonepath2" 2016 512
+Path "paths/stonepath2" 1968 512
 

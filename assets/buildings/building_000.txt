@@ -1,5 +1,6 @@
 name "building_000"
 texture "assets/buildings/test house.png"
+door "door_0"
 size 16 16
 
 // FLOORS
@@ -59,9 +60,9 @@ Wall "walls/wooden_wall_top_3" 176 16
 Wall "walls/wooden_wall_top_3" 208 16
 
 // FURNITURES
-Furniture "furnitures/bed1" 64 96
-Furniture "furnitures/furnace1" 128 80
-Furniture "furnitures/chest1" 192 80
-Furniture "furnitures/table1" 64 176
-Furniture "furnitures/chair1" 48 144
-Furniture "furnitures/chair1" 80 144
+Furniture "furnitures/bed" 64 96 -1
+Furniture "furnitures/furnace" 128 80 -1
+Furniture "furnitures/chest" 192 80 1
+Furniture "furnitures/table" 64 176 0
+Furniture "furnitures/chair" 48 144 -1
+Furniture "furnitures/chair" 80 144 -1

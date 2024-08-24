@@ -20,8 +20,11 @@ void drawLifeBar();
 bool playerAttack();
 bool talkWithCharacter();
 bool collectItems();
+bool openFurnitures();
+bool interactionsWithDoors();
 void deleteCollectedItems();
 void attack(Unit* attacker, Unit* defender);
+void coverOutsideIfPlayerInBuilding();
 
 void gameEvents();
 void inventoryEvents();
@@ -172,7 +175,7 @@ void game() {
                     Point start(player->position.x, player->position.y);
                     Point goal(worldMousePosition.x, worldMousePosition.y);
 
-                    std::vector < Point > path = aStar(start, goal);
+                    std::vector < Point > path = aStar(player, goal);
 
                     std::cout << "Path: ";
                     for (const Point& p : path)
@@ -196,25 +199,25 @@ void game() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
                 if (player->direction != 0)
                     player->setDirection(0);
-                else if (!collisions(player, 0, -player->stepSize))
+                else if (!collisionPrediction(player, 0, -player->stepSize))
                     player->move();
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
                 if (player->direction != 1)
                     player->setDirection(1);
-                else if (!collisions(player, player->stepSize, 0))
+                else if (!collisionPrediction(player, player->stepSize, 0))
                     player->move();
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
                 if (player->direction != 2)
                     player->setDirection(2);
-                else if (!collisions(player, 0, player->stepSize))
+                else if (!collisionPrediction(player, 0, player->stepSize))
                     player->move();
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                 if (player->direction != 3)
                     player->setDirection(3);
-                else if (!collisions(player, -player->stepSize, 0))
+                else if (!collisionPrediction(player, -player->stepSize, 0))
                     player->move();
             }
         }
@@ -224,7 +227,8 @@ void game() {
         dt = currentTime.asSeconds() - prevTime.asSeconds();
 
         world->mapVisiblings();
-        
+        world->update(dt);
+
         if(gameState != gameStates::dialogue)
             checkQuests();
         
@@ -249,6 +253,7 @@ void game() {
         if (gameState == gameStates::stats)
             stats->update();
 
+
         hits->update();
         refreshLifeBar();
 
@@ -264,14 +269,15 @@ void game() {
 
         for (auto& path : paths)
             if(visiblings(path))
-                path->draw(window);
+                path->draw();
 
         for (auto& go : gameObjects) {
             if (go->type != gameObjectType::Path)
                 if(visiblings(go))
-                    go->draw(window);
+                    go->draw();
         }
 
+        coverOutsideIfPlayerInBuilding();
         hits->draw();
 
         if (gameState == gameStates::inventory)
@@ -458,9 +464,22 @@ bool collectItems() {
         }
     }
 
+    return false;
+}
+
+bool openFurnitures() {
+    
+    float x1, y1, rx1, ry1;
+    float x2, y2, rx2, ry2;
+
+    x1 = player->position.x;
+    y1 = player->position.y;
+    rx1 = (player->collider->width / 2.0f + player->actionRange);
+    ry1 = (player->collider->length + player->actionRange) / 2.0f;
+
     for (auto& furniture : furnitures) {
 
-        if( furniture->inventory != nullptr ) {
+        if (furniture->inventory != nullptr) {
             x2 = furniture->position.x;
             y2 = furniture->position.y;
             rx2 = furniture->collider->width;
@@ -476,11 +495,31 @@ bool collectItems() {
             }
         }
     }
-     
+    
     return false;
 }
 
+bool interactionsWithDoors() {
 
+    for (auto& door : doors) {
+        if(door->playerNextTo()) {
+
+            if (door->state == doorState::open) {
+                door->close();
+                return true;
+            }
+            
+            if (door->state == doorState::close) {
+                door->open();
+                return true;
+            }
+                
+        }
+            
+    }
+
+    return false;
+}
 
 void deleteCollectedItems() {
     std::vector < GameObject* > newGameObjectsList;
@@ -537,6 +576,41 @@ void attack(Unit* attacker, Unit* defender) {
 
 }
 
+void coverOutsideIfPlayerInBuilding() {
+    for (auto& b : buildings) {
+        if (b->playerInside()) {
+
+            int x1, x2, y1, y2;
+            x1 = b->position.x - b->size.x / 2 * 16;
+            x2 = b->position.x + b->size.x / 2 * 16;
+            y1 = b->position.y - b->size.y * 16;
+            y2 = b->position.y;
+
+            sf::RectangleShape rectTop(sf::Vector2f(screenWidth, y1 - cam->position.y + screenHeight / 2));
+            rectTop.setFillColor(sf::Color::Black);
+            rectTop.setPosition(cam->position.x - screenWidth / 2, cam->position.y - screenHeight / 2);
+            window->draw(rectTop);
+
+            sf::RectangleShape rectBottom(sf::Vector2f(screenWidth, cam->position.y + screenHeight / 2 - y2));
+            rectBottom.setFillColor(sf::Color::Black);
+            rectBottom.setPosition(cam->position.x - screenWidth / 2, y2);
+            window->draw(rectBottom);
+
+            sf::RectangleShape rectLeft(sf::Vector2f(x1 - cam->position.x + screenWidth / 2, y2 - y1));
+            rectLeft.setFillColor(sf::Color::Black);
+            rectLeft.setPosition(cam->position.x - screenWidth / 2, y1);
+            window->draw(rectLeft);
+
+            sf::RectangleShape rectRight(sf::Vector2f(cam->position.x + screenWidth / 2 - x2, y2 - y1));
+            rectRight.setFillColor(sf::Color::Black);
+            rectRight.setPosition(x2, y1);
+            window->draw(rectRight);
+
+        }
+    }
+}
+
+
 void gameEvents() {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -549,8 +623,11 @@ void gameEvents() {
         if (player->cooldown <= 0.0f)
             if (!playerAttack())
                 if (!collectItems())
-                    if (!talkWithCharacter())
-                        player->attack();   // animation of attack
+                    if (!openFurnitures())
+                        if(!interactionsWithDoors())
+                            if (!talkWithCharacter())
+                                player->attack();   // animation of attack
+                 
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {

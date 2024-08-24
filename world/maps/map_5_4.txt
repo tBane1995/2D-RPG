@@ -33,5 +33,5 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // NATURES
-Nature "natures/tree2" 1440 1040
+Nature "natures/tree9" 1360 1136
 

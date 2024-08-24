@@ -311,9 +311,10 @@ public:
 	}
 
 
-	void update(float dt) {
-		GameObject::update(dt);
+	virtual void update(float dt) {
 		calculateCurrentFrame(dt);
+		GameObject::update(dt);
+		textname.setPosition(position.x, position.y - collider->height - 10);
 
 		sprite.setTexture(*idleTextures[direction * 4 + frame]->texture);
 		sprite.setPosition(position);
@@ -350,16 +351,11 @@ public:
 		setLifeBar();
 
 		showHand = false;
-		talkWithSprite.setPosition(position.x, position.y - 80);
-
-		if (dialogue == nullptr)
-			cout << name << " not have a dialog\n";
+		talkWithSprite.setPosition(position.x, position.y - 90);
 
 		if (dialogue != nullptr) {
-
 			if (player != nullptr) {
 
-				// SHOW HAND
 				float x1, y1, rx1, ry1;
 				float x2, y2, rx2, ry2;
 
@@ -370,25 +366,19 @@ public:
 
 				x2 = position.x;
 				y2 = position.y;
-				rx2 = collider->width / 2.0f;
-				ry2 = collider->length / 2.0f;
+				rx2 = (collider->width / 2.0f + ACTION_RANGE);
+				ry2 = (collider->length + ACTION_RANGE) / 2.0f;
 
 				if (intersectionTwoEllipses(x1, y1, rx1, ry1, x2, y2, rx2, ry2)) {
 					showHand = true;
-
 				}
 			}
+
 		}
+
 	}
 
-	void draw(sf::RenderWindow* window) {
-		if (mouseIsOver) {
-			window->draw(viewRangeArea);
-			window->draw(actionRangeArea);
-			
-		}
-
-		GameObject::draw(window);
+	virtual void draw() {
 
 		if (direction == 0) {
 			// TOP
@@ -436,6 +426,7 @@ public:
 		if (showHand == true)
 			window->draw(talkWithSprite);
 		
+		GameObject::draw();
 		//window->draw(lifeBarBackground);
 		//window->draw(lifeBar);
 	}

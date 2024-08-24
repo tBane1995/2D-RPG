@@ -103,19 +103,18 @@ public:
 		sprite.setScale(0.5f, 0.5f);
 	}
 
-	void update(float dt) {
+	virtual void update(float dt) {
 
-		GameObject::update(dt);
 		sprite.setPosition(position);
 	}
 
-	void draw(sf::RenderWindow* window) {
+	virtual void draw() {
 
 		window->draw(sprite);
 		
 		if (mouseIsOver) {
 
-			GameObject::draw(window);
+			GameObject::draw();
 			window->draw(textname);
 		}
 	}
@@ -295,8 +294,20 @@ class Inventory {
 public:
 	std::vector < Item* > items;
 	std::vector < int > counts;
+	int id;
 
 	Inventory() {
+
+		this->id = -1;
+
+		items.clear();
+		counts.clear();
+	}
+
+	Inventory(int id) {
+
+		this->id = id;
+
 		items.clear();
 		counts.clear();
 	}
@@ -388,6 +399,37 @@ public:
 
 };
 
+std::vector < Inventory* > inventories;
+
+void loadInventories() {
+	inventories.clear();
+
+	Inventory* inventory;
+
+	inventory = new Inventory(0);
+	inventory->addItem("items/roasted meat", 3);
+	inventories.push_back(inventory);
+
+	inventory = new Inventory(1);
+	inventory->addItem("items/wooden club");
+	inventory->addItem("items/wool shirt");
+	inventory->addItem("items/wool pants");				
+	inventories.push_back(inventory);
+
+	
+}
+
+Inventory* getInventory(int id) {
+
+	for (auto& i : inventories)
+		if (i->id == id)
+			return i;
+
+
+	cout << "Inventory id=" << id << " not exists!";
+	return nullptr;
+
+}
 
 class InventoryOnMap : public GameObject {
 public:
@@ -408,16 +450,15 @@ public:
 		this->inventory = inventory;
 	}
 	
-	void update(float dt) {
-		GameObject::update(dt);
-
+	virtual void update(float dt) {
+	
 		sprite.setPosition(position);
 	}
 
-	void draw(sf::RenderWindow* window) {
+	virtual void draw() {
 
 		if (mouseIsOver)
-			GameObject::draw(window);
+			GameObject::draw();
 
 		window->draw(sprite);
 

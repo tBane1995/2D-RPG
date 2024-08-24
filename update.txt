@@ -1,1 +1,13 @@
--palette was edited
+-repaired the tools rectangle and elipse in Building Editor
+-move the building in Editor/Game on right 500 px
+-turn off draw colliders of object in Building Editor
+-rewrite tools for Building Editor and Map Editor
+-now can select the objects and show parameters
+-now when you select the tools and prefab to paint is no choosen then program automatically choose prefab to paint 
+-deleted unused sprites from "assets/"
+-drawed new trees
+-in Map Editor rendering borders of map and coords
+-repaired if fast doble click then ignore a GUIwasHover and painter draw a terrain
+-repaired the "painter" - to much using memory
+-now water is animationed
+-added some shaders

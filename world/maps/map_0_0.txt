@@ -12,8 +12,8 @@
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1
-2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1
+2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
 
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -33,9 +33,9 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // BUILDINGS
-Building "buildings/building_000" 1280 256
+Building "buildings/building_000" 1712 384
 
 // CHARACTERS
-Character "characters/jack" 1879 183
+Character "characters/jack" 2100 183
 Character "characters/pit" 1979 183
 

@@ -36,9 +36,7 @@
 Item "items/health herb" 1984 288
 
 // PATHS
-Path "paths/stonepath2" 2000 336
-Path "paths/stonepath2" 1952 368
-Path "paths/stonepath2" 1920 384
-Path "paths/stonepath2" 1856 400
-Path "paths/stonepath2" 1824 416
+Path "paths/stonepath2" 1904 496
+Path "paths/stonepath2" 1856 496
+Path "paths/stonepath2" 1808 480
 

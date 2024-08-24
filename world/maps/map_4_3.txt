@@ -33,8 +33,8 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // NATURES
-Nature "natures/tree2" 1200 912
+Nature "natures/tree9" 1040 976
 
 // MONSTERS
-Monster "monsters/goblin" 1313 948
+Monster "monsters/goblin" 1385 957
 

@@ -6,12 +6,14 @@ buildingEditorStates buildingEditorState;
 Terrain* terrain;
 Floors* floors;
 
-void buildingEditorEventLeftClick();
-void buildingEditorEventRightClick();
+void BuildingEditorUnclickButtons();
+void BuildingEditorHoverButtons();
+void BuildingEditorEventLeftClick();
+void BuildingEditorEventRightClick();
 void saveBuildingToFile();
 void addPrefabToLists();
 
-void buildingEditor() {
+void BuildingEditor() {
 
     // load the icon for windows
     sf::Image ico;
@@ -61,7 +63,11 @@ void buildingEditor() {
     cam->setPosition(terrain->width/2*tileSide, terrain->height/2*tileSide);
 
     prefabToPaint = nullptr;
+    selection_state = false;
+
     createBuildingEditorPalette();
+
+    updateGameObjects();
 
     while (window->isOpen()) {
 
@@ -71,12 +77,15 @@ void buildingEditor() {
         mousePosition = sf::Mouse::getPosition(*window);	// Pobierz aktualną pozycję myszy względem bieżącego okna
         worldMousePosition = window->mapPixelToCoords(mousePosition);
 
+        GUIwasHover = false;
+        GUIwasClicked = false;
+
+        BuildingEditorUnclickButtons();
+        BuildingEditorHoverButtons();
+
         // events
         sf::Event event;
         while (window->pollEvent(event)) {
-
-            GUIwasHover = false;
-            GUIwasClicked = false;
 
             if (event.type == sf::Event::Closed) {
                 window->close();
@@ -87,25 +96,46 @@ void buildingEditor() {
                     window->close();
                 }
             }
+            
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    BuildingEditorEventLeftClick();
 
-            if (buildingEditorState == buildingEditorStates::editor) {
-                
-                if (event.type == sf::Event::MouseButtonPressed) {
-
-                    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                        buildingEditorEventLeftClick();
-                    }
-
-                    if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-                        // DELETE GAMEOBJECTS OR FLOORS
-                        buildingEditorEventRightClick();
+                    if (tool == toolType::Cursor || tool == toolType::Rectangle || tool == toolType::Elipse) {
+                        selection_state = false;
                     }
                 }
 
-                if (event.type == sf::Event::KeyPressed) {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F5)) {
-                        saveBuildingToFile();
+                if (event.mouseButton.button == sf::Mouse::Right) {
+                    BuildingEditorEventRightClick();
+                }
+            }
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+
+                    if (!GUIwasHover) {
+
+                        startMousePosition = sf::Mouse::getPosition(*window);
+                        startWorldMousePosition = window->mapPixelToCoords(mousePosition);
+
+                        if (tool == toolType::Cursor || tool == toolType::Rectangle || tool == toolType::Elipse) {
+                            selection_state = true;
+                        }
                     }
+
+                }
+            }
+
+            if (event.type == sf::Event::KeyPressed) {
+
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                    window->close();
+                    exit(0);
+                }
+
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::F5)) {
+                    saveBuildingToFile();
                 }
             }
         }
@@ -115,56 +145,31 @@ void buildingEditor() {
         // calculate delta time
         dt = currentTime.asSeconds() - prevTime.asSeconds();
 
-        if (!GUIwasClicked) {
+        
+        for (auto& go : selectedGameObjects)
+            go->updateStatistic(dt);
+
+        updateGameObjects();
+        sortGameObjects();
+        updatePalette();
+        painterUpdate();
+
+        if (!GUIwasHover) {
 
             if (prefabToPaint != nullptr) {
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                    if (prefabToPaint->type == gameObjectType::Floor) {
-                        floors->edit(worldMousePosition, dynamic_cast<FloorPrefab*>(prefabToPaint));
+                    if (tool == toolType::Brush || tool == toolType::RectBrush) {
+                        if (prefabToPaint->type == gameObjectType::Floor) {
+                            for (auto& prefab : prefabsToPaint) {
+                                floors->edit(prefab->position, dynamic_cast<FloorPrefab*>(prefabToPaint));
+                            }
+                        }
                     }
                 }
             }
         }
 
-        
-        updateGameObjects();
-        sortGameObjects();
-        updatePalette();
-
         cam->update();
-        
-        // PALETTE
-        for (auto& p : palette) {
-            if (p.mouseOvering(worldMousePosition))
-                GUIwasHover = true;
-        }
-
-        // A PAINTER
-        if (prefabToPaint != nullptr) {
-
-            if (prefabToPaint->type != gameObjectType::Floor) {
-
-                // PAINTER USE TO ADD GAMEOBJECT
-                prefabToPaint->position.x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
-                prefabToPaint->position.y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
-                prefabToPaint->update(dt);
-                prefabToPaint->mouseIsOver = false;
-            }
-            else {
-
-                // PAINTER USE TO EDIT TERRAIN
-                sf::Vector2f position;
-                position.x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
-                position.y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
-
-
-                prefabToPaint->collider->shape->setFillColor(sf::Color::Transparent);
-                prefabToPaint->collider->shape->setPosition(position);
-                prefabToPaint->collider->shape->setOutlineThickness(2.0f);
-                prefabToPaint->collider->shape->setOutlineColor(sf::Color::Red);
-            }
-
-        }
 
         // RENDER ////////////////////////////////////////////////////////////////////////
 
@@ -172,54 +177,104 @@ void buildingEditor() {
         window->setView(cam->view);
         window->draw(*terrain);
         window->draw(*floors);
-        renderGameObjects();
 
-        if (!GUIwasHover && prefabToPaint != nullptr)
-            prefabToPaint->draw(window);
+        for (auto& go : selectedGameObjects)
+            go->drawStatistic();
         
+        drawGameObjects();
+        painterDraw();
+
         drawPalette();
         window->display();
     }
 }
 
-void buildingEditorEventLeftClick() {
+void BuildingEditorUnclickButtons() {
+    buttonUp->unclick();
+    buttonDown->unclick();
 
-    if (buttonUp->mouseOvering(worldMousePosition)) {
-        GUIwasClicked = true;
-        if (paletteScroll > 0)
-            paletteScroll -= 1;
-    }
-    else if (buttonDown->mouseOvering(worldMousePosition)) {
-        GUIwasClicked = true;
+    for (auto& mb : menuButtons)
+        mb->unclick();
+    
+    for (auto& p : palette)
+        p->unclick();
 
-        float maxValue = availableGameObjects.size() - 16;
-        if (maxValue < 0)
-            maxValue = 0;
-
-        if (paletteScroll * 2 < maxValue)
-            paletteScroll += 1;
-
-    }
-
-    // select the palette button
-    for (auto& p : palette) {
-        if (p.mouseOvering(worldMousePosition)) {
-
-            GUIwasClicked = true;
-            prefabToPaint = p.object;
-
-        }
-    }
-
-    if (!GUIwasClicked && prefabToPaint != nullptr) {
-        
-        addPrefabToLists();
-    }
+    for (auto& t : tools)
+        t->unclick();
+    
 }
 
-void buildingEditorEventRightClick() {
+void BuildingEditorHoverButtons() {
+    buttonUp->hover();
+    buttonDown->hover();
+
+    for (auto& mb : menuButtons)
+        mb->hover();
+    
+    for (auto& p : palette)
+        p->hover();
+    
+    for (auto& t : tools)
+        t->hover();
+}
+
+void BuildingEditorEventLeftClick() {
+
+    buttonUp->click();
+    buttonDown->click();
+
+    for (auto& mb : menuButtons)
+        mb->click();
+
+    for (int i = 0; i < paletteCols * paletteRows; i++) {
+        palette[i]->click();
+    }
+
+    if (selectedMenuButton == btnMenuFloors)
+        for (auto& tool : tools)
+            tool->click();
+
+    if (!GUIwasHover) {
+
+        if (tool == toolType::Cursor) {
+
+            int x = selectArea.getPosition().x;
+            int y = selectArea.getPosition().y;
+            int w = selectArea.getSize().x;
+            int h = selectArea.getSize().y;
+
+            if (w < 16) w = 16;
+            if (h < 16) h = 16;
+
+            selectGameObjects(x, y, w, h);
+
+        }
+
+        if (!prefabsToPaint.empty()) {
+
+            if (tool == toolType::AddGameObject) {
+                addPrefabToLists();
+            }
+
+            if (tool == toolType::Rectangle || tool == toolType::Elipse) {
+                for (auto& prefab : prefabsToPaint) {
+                    floors->edit(prefab->position, dynamic_cast<FloorPrefab*>(prefabToPaint));
+                }
+            }
+        }
+
+    }
+
+}
+
+void BuildingEditorEventRightClick() {
 
     if (prefabToPaint == nullptr) {
+
+        if (!selectedGameObjects.empty()) {
+            selectGameObjects(0, 0, 0, 0);
+            return;
+        }
 
         bool was_delete = false;
 
@@ -235,13 +290,16 @@ void buildingEditorEventRightClick() {
         if (was_delete) {
             deleteGameObjectsFromMainLists();
         }
-        else {
-            floors->edit(worldMousePosition, 0);
-        }
 
     }
-    else
-        prefabToPaint = nullptr;
+    else {
+
+        selectedPaletteButton = nullptr;
+        selectedTool = btnToolsCursor;
+        tool = toolType::Cursor;
+        prefabToPaint = nullptr; 
+    }
+        
 }
 
 void saveBuildingToFile() {
@@ -350,54 +408,6 @@ void saveBuildingToFile() {
 
     file.close();
 
-}
-
-void addPrefabToLists() {
-
-    int x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
-    int y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
-    // cout << "cursor at position: " << xx << " " << yy << "\n"
-
-    if (prefabToPaint->type == gameObjectType::Nature) {
-
-        Nature* nature = new Nature(prefabToPaint, x, y);
-        gameObjects.push_back(nature);
-        natures.push_back(nature);
-    }
-
-    if (prefabToPaint->type == gameObjectType::Monster) {
-
-        Monster* monster = new Monster(prefabToPaint, x, y);
-        gameObjects.push_back(monster);
-        monsters.push_back(monster);
-    }
-
-    if (prefabToPaint->type == gameObjectType::ItemOnMap) {
-
-        ItemOnMap* item = new ItemOnMap(prefabToPaint, x, y);
-        gameObjects.push_back(item);
-        itemsOnMap.push_back(item);
-    }
-
-    if (prefabToPaint->type == gameObjectType::Path) {
-
-        Path* path = new Path(prefabToPaint, x, y);
-        gameObjects.push_back(path);
-        paths.push_back(path);
-    }
-
-    if (prefabToPaint->type == gameObjectType::Furniture) {
-
-        Furniture* furniture = new Furniture(prefabToPaint, x, y);
-        gameObjects.push_back(furniture);
-        furnitures.push_back(furniture);
-    }
-
-    if (prefabToPaint->type == gameObjectType::Wall) {
-        Wall* wall = new Wall(prefabToPaint, x, y);
-        gameObjects.push_back(wall);
-        walls.push_back(wall);
-    }
 }
 
 #endif

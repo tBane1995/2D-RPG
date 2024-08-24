@@ -21,6 +21,16 @@ void loadPrefabs() {
     // name, radius, width, height
     prefabs.push_back(new Nature("natures/tree1", 36, 18, 145));
     prefabs.push_back(new Nature("natures/tree2", 44, 22, 185));
+    prefabs.push_back(new Nature("natures/tree3", 36, 18, 145));
+    prefabs.push_back(new Nature("natures/tree4", 40, 20, 185));
+
+    prefabs.push_back(new Nature("natures/tree5", 36, 18, 145));
+    prefabs.push_back(new Nature("natures/tree6", 50, 25, 185));
+    prefabs.push_back(new Nature("natures/tree7", 36, 18, 145));
+    prefabs.push_back(new Nature("natures/tree8", 50, 25, 185));
+    prefabs.push_back(new Nature("natures/tree9", 50, 25, 185));
+
+
     prefabs.push_back(new Nature("natures/bush1", 110, 55, 75));
 
     // ROCKS
@@ -30,16 +40,16 @@ void loadPrefabs() {
     prefabs.push_back(new Nature("natures/rocks3", 90, 45, 57));
 
     // FURNITURES - TO-DO - heights
-    prefabs.push_back(new Furniture("furnitures/table1", 60, 26, 36));
-    prefabs.push_back(new Furniture("furnitures/bench1", 60, 26, 36));
-    prefabs.push_back(new Furniture("furnitures/chest1", 60, 26, 36));
-    prefabs.push_back(new Furniture("furnitures/wardrobe1", 64, 32, 60));
-    prefabs.push_back(new Furniture("furnitures/bookshelf1", 64, 32, 60));
-    prefabs.push_back(new Furniture("furnitures/furnace1", 60, 26, 60));
-    prefabs.push_back(new Furniture("furnitures/bed1", 64, 32, 60));
-    prefabs.push_back(new Furniture("furnitures/chair1", 16, 16, 24));
-    prefabs.push_back(new Furniture("furnitures/barrel1", 16, 16, 24));
-    prefabs.push_back(new Furniture("furnitures/lectern1", 24, 16, 40));
+    prefabs.push_back(new Furniture("furnitures/table", 60, 26, 36));
+    prefabs.push_back(new Furniture("furnitures/bench", 60, 26, 36));
+    prefabs.push_back(new Furniture("furnitures/chest", 60, 26, 36));
+    prefabs.push_back(new Furniture("furnitures/wardrobe", 64, 32, 60));
+    prefabs.push_back(new Furniture("furnitures/bookshelf", 64, 32, 60));
+    prefabs.push_back(new Furniture("furnitures/furnace", 60, 26, 60));
+    prefabs.push_back(new Furniture("furnitures/bed", 64, 32, 60));
+    prefabs.push_back(new Furniture("furnitures/chair", 16, 16, 24));
+    prefabs.push_back(new Furniture("furnitures/barrel", 16, 16, 24));
+    prefabs.push_back(new Furniture("furnitures/lectern", 24, 16, 40));
 
     // WALLS
     prefabs.push_back(new Wall("walls/wooden_wall_bottom", 32, 32, 32));
@@ -80,9 +90,11 @@ void loadPrefabs() {
     
 
     // PATHS
-    // name, width, height
     prefabs.push_back(new Path("paths/stonepath1", 64, 32, 32));
     prefabs.push_back(new Path("paths/stonepath2", 64, 32, 32));
+
+    // DOORS
+    prefabs.push_back(new Door("doors/door_0"));
 
     // ITEMS
     for (auto& i : items) {
@@ -124,7 +136,6 @@ void loadPrefabs() {
 
 
     // MONSTERS TO-DO - heights
-    // name, width, height
 
     Monster* dziobak = new Monster("monsters/dziobak", 72, 36, 50, 10);
     dziobak->HP = 40;

@@ -1,14 +1,19 @@
 ﻿#ifndef GameObjects_hpp
 #define GameObjects_hpp
 
-enum class gameObjectType { GameObject, Nature, Unit, Monster, Character, Player, ItemOnMap, InventoryOnMap, Path, Furniture, Terrain, Floor, Wall, Building };
+enum class gameObjectType { 
+	GameObject, Nature, 
+	Unit, Monster, Character, Player, 
+	ItemOnMap, InventoryOnMap, 
+	Path, Furniture, 
+	Terrain, Floor, 
+	Door, Wall, Building };
 
 class Collider {
 public:
 	float width;
 	float length;
 	float height;
-	//float height;
 	bool isRectangular;
 	sf::Shape* shape;
 
@@ -60,6 +65,11 @@ public:
 			shape->setScale(col->shape->getScale());
 		}
 	}
+
+	~Collider() {
+
+		delete shape;	// sf::Shape* shape
+	}
 };
 
 class GameObject {
@@ -80,6 +90,7 @@ public:
 	GameObject(string name, float x, float y, float width, float length, float height, bool collisioning, bool isRectangular) {
 		// CREATE PREFAB
 		this->name = name;
+
 		type = gameObjectType::GameObject;
 		position.x = x;
 		position.y = y;
@@ -114,7 +125,7 @@ public:
 	}
 
 	GameObject(string name) {
-		// FOR TILES PALETTE (TERRAIN) 
+		// FOR TILES PALETTE (TERRAIN OR FLOOR) 
 		this->name = name;
 		position.x = 0;
 		position.y = 0;
@@ -123,16 +134,17 @@ public:
 
 		mouseIsOver = false;
 		collider = new Collider(16,16,16, true);
-		collider->shape = new sf::RectangleShape(sf::Vector2f(16,16));
+		
+		dynamic_cast<sf::RectangleShape*>(collider->shape)->setOrigin(sf::Vector2f(0, 0));
+		dynamic_cast<sf::RectangleShape*>(collider->shape)->setSize(sf::Vector2f(16, 16));
+		dynamic_cast<sf::RectangleShape*>(collider->shape)->setOutlineThickness(0);
+
 		createTextname();
 
 		toDelete = false;
 		isVisible = false;
 	}
 
-	~GameObject() { }
-
-	
 	GameObject(string name, float x, float y) {
 		// FOR BUILDINGS
 
@@ -140,15 +152,20 @@ public:
 		position.x = x;
 		position.y = y;
 
-		collisioning = true;
+		collisioning = false;
 
 		mouseIsOver = false;
-		collider = nullptr;
 		createTextname();
 
 		toDelete = false;
 		isVisible = false;
 	}
+
+	~GameObject() { 
+
+		delete collider;
+	}
+
 
 	void createTextname() {
 		textname = sf::Text(getShortName(name), basicFont, 16);
@@ -157,15 +174,17 @@ public:
 		textname.setOutlineColor(sf::Color::Black);
 		textname.setOutlineThickness(2.0f);
 		
+		if (collider != nullptr)
+			textname.setPosition(position.x, position.y - collider->height - 35);
+		else
+			textname.setPosition(position.x, position.y);
 	}
 
-	void mouseOvering() {
-		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);	// Pobierz aktualną pozycję myszy względem bieżącego okna
-		sf::Vector2f worldPosition = window->mapPixelToCoords(mousePosition);	// Zamień na współrzędne świata, uwzględniając aktualny widok
-		
+	virtual void mouseOvering() {
+
 		if (collider->isRectangular == false) {
 
-			if (pointInEllipse(worldPosition.x, worldPosition.y, position.x, position.y, collider->width/2.0f, collider->length / 2.0f))
+			if (pointInEllipse(worldMousePosition.x, worldMousePosition.y, position.x, position.y, collider->width/2.0f, collider->length / 2.0f))
 				mouseIsOver = true;
 			else
 				mouseIsOver = false;
@@ -173,7 +192,7 @@ public:
 
 		if (collider->isRectangular == true) {
 
-			if (pointInRectangle(worldPosition.x, worldPosition.y, position.x, position.y, collider->width, collider->length))
+			if (pointInRectangle(worldMousePosition.x, worldMousePosition.y, position.x, position.y, collider->width, collider->length))
 				mouseIsOver = true;
 			else
 				mouseIsOver = false;
@@ -183,19 +202,23 @@ public:
 	}
 
 	virtual void update(float dt) { 
-		mouseOvering();
-
-		collider->shape->setPosition(position);
-		textname.setPosition(position.x, position.y - collider->height - 10);
+		createTextname();
+		
 	}
 
-	virtual void draw(sf::RenderWindow* window) {
-		window->draw(*collider->shape);
+	virtual void updateStatistic(float dt) {
+		collider->shape->setPosition(position);
 		
-		//if(mouseIsOver)
-			//window->draw(textname);
+	}
 
+	virtual void draw() {
+		
 		window->draw(textname);
+	}
+
+	virtual void drawStatistic() {
+
+		window->draw(*collider->shape);
 	}
 
 };
@@ -203,7 +226,32 @@ public:
 
 std::vector < GameObject* > gameObjects;
 
-bool collisions(GameObject* object, float dx, float dy)
+class Point {
+public:
+	float x, y;
+	Point()
+		: x(0)
+		, y(0)
+	{ }
+	Point(float x, float y)
+		: x(x)
+		, y(y)
+	{ }
+
+	bool operator ==(const Point& other) const {
+		return x == other.x && y == other.y;
+	}
+
+	bool operator !=(const Point& other) const {
+		return x != other.x || y != other.y;
+	}
+
+	bool operator <(const Point& other) const {
+		return std::tie(x, y) < std::tie(other.x, other.y);
+	}
+};
+
+bool collisionPrediction(GameObject* object, float dx, float dy)
 {
 	if (object->collisioning == false)
 		return false;
@@ -258,6 +306,60 @@ bool collisions(GameObject* object, float dx, float dy)
 	return false;
 }
 
+bool collisionPrediction(GameObject* object, Point p, float dx, float dy)
+{
+	if (object->collisioning == false)
+		return false;
+
+	if (object->collider->isRectangular == false) {
+
+		// object is elipse
+		for (auto& go : gameObjects) {
+
+			if (go != object && go->collisioning != false) {
+
+				if (go->collider->isRectangular == false) {
+					// elipse with elipse
+					if (intersectionTwoEllipses(p.x+dx, p.y+dy, object->collider->width / 2.0f, object->collider->length / 2.f, go->position.x, go->position.y, go->collider->width / 2.0f, go->collider->length / 2.f))
+						return true;
+				}
+
+				if (go->collider->isRectangular == true) {
+					// elipse with rectangle
+					if (intersectionRectangleWithElipse(go->position.x, go->position.y, go->collider->width, go->collider->length, p.x+dx, p.y+dy, object->collider->width / 2.0f, object->collider->length / 2.0f))
+						return true;
+
+				}
+			}
+		}
+	}
+
+	if (object->collider->isRectangular == true) {
+
+		// object is rectangle
+		for (auto& go : gameObjects) {
+
+			if (go != object && go->collisioning != false) {
+
+				if (go->collider->isRectangular == false) {
+					// rectangle with elipse
+					if (intersectionRectangleWithElipse(p.x+dx, p.y+dy, object->collider->width, object->collider->length, go->position.x, go->position.y, go->collider->width / 2.0f, go->collider->length / 2.0f))
+						return true;
+				}
+
+				if (go->collider->isRectangular == true) {
+					// rectangle with rectangle
+					if (intersectionTwoRectangles(p.x+dx, p.y+dy, object->collider->width, object->collider->length, go->position.x, go->position.y, go->collider->width, go->collider->length))
+						return true;
+
+				}
+			}
+		}
+	}
+
+
+	return false;
+}
 
 
 #endif

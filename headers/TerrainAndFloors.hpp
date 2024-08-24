@@ -16,6 +16,27 @@ public:
 		texture = getTexture(name);
 		this->ttype = ttype;
 	}
+
+	~TerrainPrefab() { 
+		delete collider->shape;
+		delete collider;
+		
+	}
+
+	virtual void update(float dt) {
+		sf::Vector2f position;
+		position.x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
+		position.y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
+
+		collider->shape->setFillColor(sf::Color::Transparent);
+		collider->shape->setPosition(position);
+		collider->shape->setOutlineThickness(2.0f);
+		collider->shape->setOutlineColor(sf::Color::Red);
+	}
+
+	virtual void draw() {
+		window->draw(*collider->shape);
+	}
 	
 };
 
@@ -28,6 +49,27 @@ public:
 		type = gameObjectType::Floor;
 		texture = getTexture(name);
 		this->ftype = ftype;
+	}
+
+	~FloorPrefab() { 
+		delete collider->shape;
+		delete collider;
+		
+	}
+
+	virtual void update(float dt) {
+		sf::Vector2f position;
+		position.x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
+		position.y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
+
+		collider->shape->setFillColor(sf::Color::Transparent);
+		collider->shape->setPosition(position);
+		collider->shape->setOutlineThickness(2.0f);
+		collider->shape->setOutlineColor(sf::Color::Red);
+	}
+
+	virtual void draw() {
+		window->draw(*collider->shape);
 	}
 
 };
@@ -52,6 +94,8 @@ public:
 
 		tileset = sf::Texture();
 		tileset = *getTexture("tiles/0_tileset")->texture;
+
+		
 
 		vertexes.setPrimitiveType(sf::Triangles);
 		vertexes.resize(width * height * 6); // widthMap * heightMap * TwoTrianglesVertices
@@ -129,7 +173,7 @@ public:
 		int tv = (int(coord_y * tileSide) % 64);
 
 		//cout << "tu: " << tu << ", tv: " << tv << "\n";
-
+		
 		triangles[0].texCoords = sf::Vector2f(tu, tv);
 		triangles[1].texCoords = sf::Vector2f(tu + tileSide, tv);
 		triangles[2].texCoords = sf::Vector2f(tu, tv + tileSide);

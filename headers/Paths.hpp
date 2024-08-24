@@ -28,16 +28,15 @@ public:
 
 	~Path() { }
 
-	void update(float dt) {
+	virtual void update(float dt) {
 
-		GameObject::update(dt);
 		sprite.setPosition(position);
 	}
 
-	void draw(sf::RenderWindow* window) {
+	virtual void draw() {
 		
 		if(mouseIsOver)
-			GameObject::draw(window);
+			GameObject::draw();
 	
 		window->draw(sprite);
 	}

@@ -33,9 +33,8 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // NATURES
-Nature "natures/tree2" 992 1056
-Nature "natures/tree1" 816 1040
+Nature "natures/tree9" 768 1136
 
 // MONSTERS
-Monster "monsters/jaszczur" 929 1310
+Monster "monsters/jaszczur" 946 1300
 

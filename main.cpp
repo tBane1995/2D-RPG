@@ -4,6 +4,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <windows.h>
+#include <conio.h>
 
 #include <vector>
 #include <queue>
@@ -25,12 +27,15 @@
 
 #include "headers/Fonts.hpp"
 #include "headers/Textures.hpp"
+#include "headers/Shaders.hpp"
 
 #include "headers/Collisions.hpp"
-#include "headers/Pathfinding.hpp"
+
 
 #include "headers/GameObjects.hpp"
 #include "headers/TerrainAndFloors.hpp"     // Terrain and Floors
+#include "headers/Water.hpp"
+#include "headers/Pathfinding.hpp"
 
 #include "headers/GameStates.hpp"           
 
@@ -44,6 +49,7 @@
 #include "headers/Furnitures.hpp"           // manage of Furnitures
 #include "headers/Paths.hpp"                // manage of Paths
 #include "headers/Walls.hpp"                // manage of Walls
+#include "headers/Doors.hpp"                // manage of Doors
 #include "headers/Dialogues.hpp"            
 #include "headers/Character.hpp"            // manage of Characters
 #include "headers/Prefabs.hpp"              // all prefabs: itemsOnMap, InventoryOnMap, Characters, Monsters, Natures, Furnitures, Walls etc .. 
@@ -54,7 +60,10 @@
 
 #include "headers/GUI.hpp"
 #include "headers/PrefabToPaint.hpp"
+#include "headers/BrushSizes.hpp"
+#include "headers/Tools.hpp"
 #include "headers/Palette.hpp"
+#include "headers/Painter.hpp"
 
 #include "headers/ControlsPanel.hpp"
 #include "headers/InventoryPanel.hpp"
@@ -228,7 +237,7 @@ void editWhitePixelsToTransparent(string monster_path) {
     cout << "editing white pixels to transparent: " << monster_path << "\n";
 
     sf::Color whiteColor = sf::Color(255, 255, 255);
-    //sf::Color whiteColor = sf::Color(136, 68, 0);
+    //sf::Color whiteColor = sf::Color(64, 54, 42);
     sf::Color transparentColor = sf::Color(0, 0, 0, 0);
     //sf::Color transparentColor = sf::Color(255, 127, 39);
 
@@ -297,28 +306,296 @@ void createTab(int width, int height) {
             std::cout << tab[i][j] << " ";
 }
 
+void testSelectingFunction() {
+
+    sf::Vector2i mousePosition;
+    sf::Vector2i startMousePosition;
+
+    sf::Vector2f worldMousePosition;
+    sf::Vector2f startWorldMousePosition;
+
+    sf::RectangleShape rect;
+    sf::RenderWindow* window;
+
+    bool selection_state = false;
+
+    window = new sf::RenderWindow(sf::VideoMode(1280, 720), "RECT");
+    
+    while (window->isOpen()) {
+
+        mousePosition = sf::Mouse::getPosition(*window); // Pobierz aktualną pozycję myszy względem bieżącego okna
+        worldMousePosition = window->mapPixelToCoords(mousePosition);
+
+        sf::Event event;
+        while (window->pollEvent(event)) {
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+
+                    startMousePosition = sf::Mouse::getPosition(*window);
+                    startWorldMousePosition = window->mapPixelToCoords(startMousePosition);
+                }   selection_state = true;;
+            }
+
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    selection_state = false;
+                    // action
+                }
+            }
+        }
+
+        if (selection_state == true) {
+
+            int start_x = std::min(ceil(startWorldMousePosition.x / tileSide), ceil(worldMousePosition.x / tileSide));
+            int start_y = std::min(ceil(startWorldMousePosition.y / tileSide), ceil(worldMousePosition.y / tileSide));
+            int end_x = std::max(ceil(startWorldMousePosition.x / tileSide), ceil(worldMousePosition.x / tileSide));
+            int end_y = std::max(ceil(startWorldMousePosition.y / tileSide), ceil(worldMousePosition.y / tileSide));
+
+            cout << "selected area: \n";
+            cout << "start: " << start_x << ", " << start_y << "\n";
+            cout << "end: " << end_x << ", " << end_y << "\n";
+            cout << "\n\n";
+
+            rect = sf::RectangleShape(sf::Vector2f((end_x - start_x)*tileSide, (end_y - start_y)*tileSide));
+            rect.setPosition(start_x*tileSide, start_y*tileSide);
+        }
+
+        window->clear();
+        if(selection_state == true)
+            window->draw(rect);
+        window->display();
+    }
+
+    delete window;
+ 
+}
+
+void testElipseSelectingFunction() {
+
+    sf::Vector2i mousePosition;
+    sf::Vector2i startMousePosition;
+
+    sf::Vector2f worldMousePosition;
+    sf::Vector2f startWorldMousePosition;
+
+    float tileSide = 16.0f;
+
+
+
+    std::vector < sf::RectangleShape > rects;
+
+    bool selection_state = false;
+
+    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(1280, 720), "RECT");
+
+    while (window->isOpen()) {
+
+        mousePosition = sf::Mouse::getPosition(*window); // Pobierz aktualną pozycję myszy względem bieżącego okna
+        worldMousePosition = window->mapPixelToCoords(mousePosition);
+
+        sf::Event event;
+        while (window->pollEvent(event)) {
+
+            if (event.type == sf::Event::Closed)
+                window->close();
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+
+                    startMousePosition = sf::Mouse::getPosition(*window);
+                    startWorldMousePosition = window->mapPixelToCoords(startMousePosition);
+                    selection_state = true;
+                }   
+                
+            }
+
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    selection_state = false;
+                }
+            }
+        }
+
+        if (selection_state == true) {
+
+            rects.clear();
+
+            int start_x = std::min(ceil(startWorldMousePosition.x / tileSide), ceil(worldMousePosition.x / tileSide));
+            int start_y = std::min(ceil(startWorldMousePosition.y / tileSide), ceil(worldMousePosition.y / tileSide));
+            int end_x = std::max(ceil(startWorldMousePosition.x / tileSide), ceil(worldMousePosition.x / tileSide));
+            int end_y = std::max(ceil(startWorldMousePosition.y / tileSide), ceil(worldMousePosition.y / tileSide));
+
+            cout << "selected area: \n";
+            cout << "start: " << start_x << ", " << start_y << "\n";
+            cout << "end: " << end_x << ", " << end_y << "\n";
+            cout << "\n\n";
+
+            int width = end_x - start_x;
+            int height = end_y - start_y;
+
+            // Środek pędzla
+            float centerX = (start_x + end_x) / 2.0f;
+            float centerY = (start_y + end_y) / 2.0f;
+
+            // Półosie elipsy
+            float a = width / 2.0f;
+            float b = height / 2.0f;
+
+            // Generowanie elipsy w oparciu o pędzel
+            for (int y = start_y; y < end_y; ++y) {
+                for (int x = start_x; x < end_x; ++x) {
+                    // Obliczanie pozycji w stosunku do środka
+                    float dx = (x - centerX) / a;
+                    float dy = (y - centerY) / b;
+
+                    // Sprawdź, czy pędzel na tej pozycji ma wartość 1
+                    if (dx * dx + dy * dy <= 0.995f) {
+                        int xx = x * int(tileSide);
+                        int yy = y * int(tileSide);
+
+                        sf::RectangleShape rect = sf::RectangleShape(sf::Vector2f(tileSide, tileSide));
+                        rect.setFillColor(sf::Color::Red);
+                        rect.setPosition(xx, yy);
+                        rects.push_back(rect);
+                    }
+                }
+            }
+
+        }
+
+        window->clear();
+        if (selection_state == true)
+            for (auto& rect : rects)
+                window->draw(rect);
+        window->display();
+    }
+
+    delete window;
+}
+
+void convertPNGsToSet() {
+
+    int frameWidth = 128;
+    int frameHeight = 128;
+    std::vector < string > PNGS;
+    
+    PNGS.clear();
+    PNGS.push_back("assets/sets/water/frame_00.png");
+    PNGS.push_back("assets/sets/water/frame_01.png");
+    PNGS.push_back("assets/sets/water/frame_02.png");
+    PNGS.push_back("assets/sets/water/frame_03.png");
+    PNGS.push_back("assets/sets/water/frame_04.png");
+    PNGS.push_back("assets/sets/water/frame_05.png");
+    PNGS.push_back("assets/sets/water/frame_06.png");
+    PNGS.push_back("assets/sets/water/frame_07.png");
+    PNGS.push_back("assets/sets/water/frame_08.png");
+    PNGS.push_back("assets/sets/water/frame_09.png");
+    PNGS.push_back("assets/sets/water/frame_10.png");
+    PNGS.push_back("assets/sets/water/frame_11.png");
+    PNGS.push_back("assets/sets/water/frame_12.png");
+    PNGS.push_back("assets/sets/water/frame_13.png");
+    PNGS.push_back("assets/sets/water/frame_14.png");
+    PNGS.push_back("assets/sets/water/frame_15.png");
+
+    sf::Image set;
+    sf::Texture tex;
+    sf::Image img;
+
+    set.create(frameWidth * (PNGS.size()+1), frameHeight);
+    img.create(128, 128, sf::Color::Transparent);
+    set.copy(img, 0, 0);
+
+    for (int i = 0; i < PNGS.size();i++) {
+        
+        tex.loadFromFile(PNGS[i].c_str());
+        img = tex.copyToImage();
+        set.copy(img, frameWidth * (i+1), 0);
+    }
+
+    set.saveToFile("assets/sets/water/waterset.png");
+}
+
+void testGLSL() {
+    // Tworzenie okna
+    sf::RenderWindow window(sf::VideoMode(512, 512), "GLSL Shader Animation");
+    
+    // Wczytywanie tekstury
+    sf::Texture texture;
+    if (!texture.loadFromFile("assets/noise.png"))
+        return;
+
+    // Tworzenie sprite'a
+    sf::Sprite sprite(texture);
+
+    // Wczytywanie shadera
+    sf::Shader shader;
+    if (!shader.loadFromFile("assets/shaders/circles.frag", sf::Shader::Fragment))
+        return;
+
+    // Zegar do animacji
+    sf::Clock clock;
+
+    // Główna pętla
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+
+        }
+
+        window.clear();
+
+        shader.setUniform("u_resolution", sf::Vector2f(1024,1024));
+
+        // Pobieranie czasu i wysyłanie do shadera
+        float time = clock.getElapsedTime().asSeconds(); 
+        shader.setUniform("u_time", time);
+
+        // Przypisanie tekst
+        // shader.setUniform("texture", texture);
+        // Rysowanie sprite'a z shaderem
+        window.draw(sprite, &shader);
+
+        window.display();
+    }
+
+}
+
 int main()
 {
-    // TOOLS - be careful with that
-    //createSetsFromIdle("assets/monsters/jaszczur/");             // TO-DO
-    //createSetsFromRuns("assets/monsters/jaszczur/");               // TO-DO
-    //editWhitePixelsToTransparent("assets/monsters/jaszczur/");   // TO-DO
-    test();
 
+    // TOOLS - be careful with that
+    //createSetsFromIdle("assets/monsters/kolcorozec/");
+    //createSetsFromRuns("assets/monsters/jaszczur/");
+    //editWhitePixelsToTransparent("assets/monsters/niedzwiedz/");
+    //testSelectingFunction();
+    //testElipseSelectingFunction();
+    //convertPNGsToFramePNGs();
+    
     // LOADS
 	loadFonts();
 	loadTextures();		// TO-DO "FROM FILE"
+	loadShaders();		// TO-DO "FROM FILE"
 	loadItems();		// TO-DO "FROM FILE"
+    loadInventories();
     loadDialogues();
     loadQuests();
 	loadPrefabs();		// TO-DO "FROM FILE"
 	
 
-	window->setKeyRepeatEnabled(false);	// TO-DO commentary
+	//window->setKeyRepeatEnabled(false);	// TO-DO commentary
 	
     // PROGRAMS
-	//game();
-	//mapEditor();
-    buildingEditor();
-    
+	game();
+	//MapEditor();
+    //BuildingEditor();
+    //testSelectingFunction();
+    //testElipseSelectingFunction();
+    //convertPNGsToSet();
+    //testGLSL();
+    return 0;
 }

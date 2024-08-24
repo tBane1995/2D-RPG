@@ -33,8 +33,9 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // NATURES
-Nature "natures/tree1" 960 848
+Nature "natures/tree9" 800 864
 
 // MONSTERS
-Monster "monsters/goblin" 799 920
+Monster "monsters/goblin" 392 968
+Monster "monsters/dziobak" 912 800
 

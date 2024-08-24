@@ -4,16 +4,20 @@
 enum class mapEditorStates { start, editor };
 mapEditorStates mapEditorState;
 
-void addPrefabToLists();
-void createPalette();
-void updatePalette();
-void renderPalette();
-void editTile();
-void editFloor();
-void mapEditorEventLeftClick();
-void mapEditorEventRightClick();
+bool showStatistics = false;
 
-void mapEditor() {
+void painterUpdate();
+void painterDraw();
+void addPrefabToLists();
+void editTiles();
+void editFloors();
+void MapEditorUnclickButtons();
+void MapEditorHoverButtons();
+void MapEditorEventLeftClick();
+void MapEditorEventRightClick();
+
+
+void MapEditor() {
 
     // load the icon for windows
     sf::Image ico;
@@ -57,11 +61,17 @@ void mapEditor() {
     mapEditorState = mapEditorStates::editor;
 
     prefabToPaint = nullptr;
+    selectedGameObjects.clear();
+
+    selection_state = false;
+
     createMapEditorPalette();
 
     world = new World();
     world->load();
     cam->setPosition(screenWidth/2.0f, screenHeight/2.0f);
+
+    updateGameObjects();
 
     while (window->isOpen()) {
 
@@ -71,59 +81,77 @@ void mapEditor() {
         mousePosition = sf::Mouse::getPosition(*window);	// Pobierz aktualną pozycję myszy względem bieżącego okna
         worldMousePosition = window->mapPixelToCoords(mousePosition);
 
+        GUIwasHover = false;
+        GUIwasClicked = false;
+
+        MapEditorUnclickButtons();
+        MapEditorHoverButtons();
+
         // events
         sf::Event event;
         while (window->pollEvent(event)) {
-
-            GUIwasHover = false;
-            GUIwasClicked = false;
 
             if (event.type == sf::Event::Closed) {
                 window->close();
             }
 
-            if (mapEditorState == mapEditorStates::editor) {
-
-                if (event.type == sf::Event::MouseButtonPressed) {
-
-                    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                        mapEditorEventLeftClick();
-                    }
-
-                    if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-                        // DELETE GAMEOBJECTS OR FLOORS
-                        mapEditorEventRightClick();
-                    }
-                }
-
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
                     
+                    MapEditorEventLeftClick();
 
-                if (event.type == sf::Event::KeyPressed) {
-                    
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                        window->close();
-                        exit(0);
-                    }
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F5)) {
-                        world->save();
-                    }
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F6)) {
-                        world->load();
+                    if (tool == toolType::Cursor || tool == toolType::Rectangle || tool == toolType::Elipse) {
+                        selection_state = false;
                     }
 
                 }
 
+                if (event.mouseButton.button == sf::Mouse::Right) {
+                    MapEditorEventRightClick();
+                }
+            }
+                
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
 
+                    if (GUIwasHover != true) {
+
+                        startMousePosition = sf::Mouse::getPosition(*window);
+                        startWorldMousePosition = window->mapPixelToCoords(mousePosition);
+
+                        if (tool == toolType::Cursor || tool == toolType::Rectangle || tool == toolType::Elipse) {
+                            selection_state = true;
+                        }
+                    }
+                    
+                }
+            }
+
+            if (event.type == sf::Event::KeyPressed) {
+                    
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                    window->close();
+                    exit(0);
+                }
+
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::F5)) {
+                    world->save();
+                }
+
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::F6)) {
+                    world->load();
+                }
 
             }
+
+
+
         }
 
         // calculate delta time
         dt = currentTime.asSeconds() - prevTime.asSeconds();
 
-        float moveSpeed = 1.0f;
+        float moveSpeed = 300.0f * dt;
         // moving the view
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             cam->move(0.0f, -moveSpeed);
@@ -137,21 +165,20 @@ void mapEditor() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             cam->move(moveSpeed, 0.0f);
 
-        if (!GUIwasClicked) {
-            
+        
+
+        if (!GUIwasHover) {
+
             if (prefabToPaint != nullptr) {
 
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-
-                    if (prefabToPaint->type == gameObjectType::Terrain)
-                        editTile();
-
-                    if (prefabToPaint->type == gameObjectType::Floor) {
-                        editFloor();
+                    if (tool == toolType::Brush || tool == toolType::RectBrush) {
+                        if (prefabToPaint->type == gameObjectType::Terrain)
+                            editTiles();
                     }
+                    
                 }
             }
-            
 
         }
 
@@ -160,50 +187,17 @@ void mapEditor() {
         // UPDATE ////////////////////////////////////////////////////////////////////////
 
         world->mapVisiblings();     // render map or not render map
+        
+        world->update(dt);
+        for (auto& go : selectedGameObjects)
+            go->updateStatistic(dt);
 
         updateGameObjects();
         sortGameObjects();
-
-        cam->update();
-
-        
-        // PALETTE
-        for (auto& p : palette) {
-            if (p.mouseOvering(worldMousePosition))
-                GUIwasHover = true;
-        }
-        
-        
-        // A PAINTER
-        if (prefabToPaint != nullptr) {
-
-            if (prefabToPaint->type != gameObjectType::Terrain && prefabToPaint->type != gameObjectType::Floor ) {
-
-                // PAINTER USE TO ADD GAMEOBJECT
-                prefabToPaint->position.x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
-                prefabToPaint->position.y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
-                prefabToPaint->update(dt);
-                prefabToPaint->mouseIsOver = false;
-            }
-            else {
-
-                // PAINTER USE TO EDIT TERRAIN
-                sf::Vector2f position;
-                position.x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
-                position.y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
-
-                
-                prefabToPaint->collider->shape->setFillColor(sf::Color::Transparent);
-                prefabToPaint->collider->shape->setPosition(position);
-                prefabToPaint->collider->shape->setOutlineThickness(2.0f);
-                prefabToPaint->collider->shape->setOutlineColor(sf::Color::Red);
-            }
-            
-        }
-
-
         updatePalette();
-
+        cam->update();
+        painterUpdate();
+      
 
         // RENDER ////////////////////////////////////////////////////////////////////////////
 
@@ -211,191 +205,162 @@ void mapEditor() {
         window->setView(cam->view);
 
         world->draw();
+        world->drawStatistic();
 
         for (auto& m : world->maps)
-            for (auto& b : m->_buildings)
+            for (auto& b : m->_buildings) {
                 window->draw(*b->floors);
+                b->draw();
+            }
+        
+        for (auto& go : selectedGameObjects)
+            go->drawStatistic();
 
-        renderGameObjects();
-
-        if(!GUIwasHover && prefabToPaint != nullptr)
-           prefabToPaint->draw(window);
+        drawGameObjects();
+        painterDraw();
     
         drawPalette();
-
         window->display();
     }
 
-
+    delete window;
 }
 
-void addPrefabToMapAndLists() {
 
-    int x = int(worldMousePosition.x) / int(tileSide) * int(tileSide);
-    int y = int(worldMousePosition.y) / int(tileSide) * int(tileSide);
-    // cout << "cursor at position: " << xx << " " << yy << "\n"
 
-    Map* map = world->getMap(worldMousePosition);
-
-    if(map != nullptr) {
-
-        if (prefabToPaint->type == gameObjectType::Nature) {
-
-            Nature* nature = new Nature(prefabToPaint, x, y);
-            gameObjects.push_back(nature);
-            natures.push_back(nature);
-            map->_natures.push_back(nature);
-        }
-
-        if (prefabToPaint->type == gameObjectType::Monster) {
-
-            Monster* monster = new Monster(prefabToPaint, x, y);
-            gameObjects.push_back(monster);
-            monsters.push_back(monster);
-            map->_monsters.push_back(monster);
-        }
-
-        if (prefabToPaint->type == gameObjectType::ItemOnMap) {
-
-            ItemOnMap* item = new ItemOnMap(prefabToPaint, x, y);
-            gameObjects.push_back(item);
-            itemsOnMap.push_back(item);
-            map->_itemsOnMap.push_back(item);
-        }
-
-        if (prefabToPaint->type == gameObjectType::Path) {
-
-            Path* path = new Path(prefabToPaint, x, y);
-            gameObjects.push_back(path);
-            paths.push_back(path);
-            map->_paths.push_back(path);
-        }
-
-        if (prefabToPaint->type == gameObjectType::Furniture) {
-
-            Furniture* furniture = new Furniture(prefabToPaint, x, y);
-            gameObjects.push_back(furniture);
-            furnitures.push_back(furniture);
-            map->_furnitures.push_back(furniture);
-        }
-
-        if (prefabToPaint->type == gameObjectType::Wall) {
-            Wall* wall = new Wall(prefabToPaint, x, y);
-            gameObjects.push_back(wall);
-            walls.push_back(wall);
-            map->_walls.push_back(wall);
-        }
-    }
-}
-
-void editTile() {
-
-    Map* map = world->getMap(worldMousePosition);
-
-    if (map == nullptr)
-        return;
-
-    TerrainPrefab* terrainPrefab = dynamic_cast<TerrainPrefab*>(prefabToPaint);
-
-    if (map != nullptr) {
-
-        if (terrainPrefab->name == "tiles/tile_0_grass")
-            map->editTile(worldMousePosition, 0);
-
-        if (terrainPrefab->name == "tiles/tile_1_sands")
-            map->editTile(worldMousePosition, 1);
-
-        if (terrainPrefab->name == "tiles/tile_2_water")
-            map->editTile(worldMousePosition, 2);
-
-        if (terrainPrefab->name == "tiles/tile_3_gravel")
-            map->editTile(worldMousePosition, 3);
-
-        
-    }
+void editTiles() {
 
     
-}
+    for(auto& prefab : prefabsToPaint) {
 
-void editFloor() {
-    
-    Map* map = world->getMap(worldMousePosition);
-    
-    if (map == nullptr)
-        return;
-
-    if (prefabToPaint == nullptr) {
-        map->editFloor(worldMousePosition, 0);
-        return;
-    }
-
-    FloorPrefab* floorPrefab = dynamic_cast<FloorPrefab*>(prefabToPaint);
-
-    if (map != nullptr) {
-        
-        if (floorPrefab->name == "floors/floor_0")
-            map->editFloor(worldMousePosition, 0);
+        if (prefab->type == gameObjectType::Terrain) {
             
-        if (floorPrefab->name == "floors/floor_1")
-            map->editFloor(worldMousePosition, 1);
+            TerrainPrefab* tp = dynamic_cast<TerrainPrefab*>(prefab);
+            //cout << prefab->position.x << ", " << prefab->position.y << "\n";
 
-        if (floorPrefab->name == "floors/floor_2")
-            map->editFloor(worldMousePosition, 2);
+            Map* map = world->getMap(tp->position);
+
+            if (map != nullptr) {
+
+                if (tp->name == "tiles/tile_0_grass")
+                    map->editTile(tp->position, 0);
+
+                if (tp->name == "tiles/tile_1_sands")
+                    map->editTile(tp->position, 1);
+
+                if (tp->name == "tiles/tile_2_water")
+                    map->editTile(tp->position, 2);
+
+                if (tp->name == "tiles/tile_3_gravel")
+                    map->editTile(tp->position, 3);
+
+            }
+        }
+    }
+
+    
+}
+
+void MapEditorUnclickButtons() {
+    buttonUp->unclick();
+    buttonDown->unclick();
+
+    for (auto& mb : menuButtons)
+        mb->unclick();
+
+    for (int i = 0; i < paletteCols * paletteRows; i++)
+        palette[i]->unclick();
+
+    if (selectedMenuButton == btnMenuTerrain)
+        for (auto& tool : tools)
+            tool->unclick();
+
+}
+
+void MapEditorHoverButtons() {
+    buttonUp->hover();
+    buttonDown->hover();
+
+    for (auto& mb : menuButtons)
+        mb->hover();
+    
+    for (int i = 0; i < paletteCols * paletteRows; i++)
+        palette[i]->hover();
+
+    if (selectedMenuButton == btnMenuTerrain)
+        for (auto& tool : tools)
+            tool->hover();
+
+}
+
+void MapEditorEventLeftClick() {
+    
+    cout << "\nclick";
+
+    buttonUp->click();
+    buttonDown->click();
+
+    for (auto& mb : menuButtons)
+        mb->click();
+
+    for (int i = 0; i < paletteCols * paletteRows; i++) {
+        palette[i]->click();
+    }
+
+    if (selectedMenuButton == btnMenuTerrain)
+        for (auto& tool : tools)
+            tool->click();
+
+    if (!GUIwasHover) {
+
+        (GUIwasHover) ? cout << "hover" : cout << "not hover";
+
+        if (tool == toolType::Cursor) {
             
-        if (floorPrefab->name == "floors/floor_3")
-            map->editFloor(worldMousePosition, 3);
-    }
-}
+            int x = selectArea.getPosition().x;
+            int y = selectArea.getPosition().y;
+            int w = selectArea.getSize().x;
+            int h = selectArea.getSize().y;
 
-void mapEditorEventLeftClick() {
-    cout << worldMousePosition.x << " " << worldMousePosition.y << "\n";
+            if (w < 16) w = 16;
+            if (h < 16) h = 16;
 
-    if (buttonUp->mouseOvering(worldMousePosition)) {
-        GUIwasClicked = true;
-        if (paletteScroll > 0)
-            paletteScroll -= 1;
-    }
-
-    else if (buttonDown->mouseOvering(worldMousePosition)) {
-        GUIwasClicked = true;
-
-        float maxValue = availableGameObjects.size() - paletteCols*paletteRows;
-        if (maxValue < 0)
-            maxValue = 0;
-
-        if (paletteScroll * paletteCols < maxValue)
-            paletteScroll += 1;
-
-    }
-
-    // select the palette button
-    for (auto& p : palette) {
-        if (p.mouseOvering(worldMousePosition)) {
-
-            GUIwasClicked = true;
-            prefabToPaint = p.object;
+            selectGameObjects(x, y, w, h);
 
         }
-    }
 
-    if (!GUIwasClicked && prefabToPaint != nullptr) {
+        if (!prefabsToPaint.empty()) {
 
-        if (prefabToPaint->type != gameObjectType::Terrain) {
-            addPrefabToMapAndLists();
+            if (tool == toolType::AddGameObject) {
+                addPrefabsToMapAndLists();
+            }
+
+            if (tool == toolType::Rectangle || tool == toolType::Elipse) {
+                editTiles();
+            }
         }
+
     }
+
 }
 
-void mapEditorEventRightClick() {
+void MapEditorEventRightClick() {
+    
     
     if (prefabToPaint == nullptr) {
+
+        if (!selectedGameObjects.empty()) {
+            selectGameObjects(0, 0, 0, 0);
+            return;
+        }
+            
 
         bool was_delete = false;
 
         // TO-DO //////////////////////////////////////////////////
         for (auto& m : world->maps)
             for (auto& building : m->_buildings) {
-                if (building->mouseIsOver(worldMousePosition)) {
+                if (building->mouseIsOver) {
                     building->deleteBuilding();
                     deleteGameObjectsFromMainLists();
                     was_delete = true;
@@ -421,12 +386,13 @@ void mapEditorEventRightClick() {
             for (auto& map : world->maps)
                 map->deleteGameObjects();
         }
-        else {
-            editFloor();
-        }
 
-    }
-    else
+    } else {
+  
+        selectedPaletteButton = nullptr;
+        selectedTool = btnToolsCursor;
+        tool = toolType::Cursor;
         prefabToPaint = nullptr;
+    }
 }
 #endif

@@ -8,6 +8,8 @@ public:
 	sf::Vector2f base;
 	sf::Time deathTime;
 	int EXPERIENCE;
+	std::vector < Point > path;
+	std::vector < sf::CircleShape > pathpoints;
 
 	Monster(string name, float width, float length, float height,  int EXP) : Unit(name, name, width, length, height) {
 		type = gameObjectType::Monster;
@@ -15,6 +17,10 @@ public:
 		isAlive = true;
 		base = position;	
 		this->EXPERIENCE = EXP;
+		
+		path.clear();
+		pathpoints.clear();
+
 		loadTextures();
 		
 
@@ -26,6 +32,9 @@ public:
 		isAlive = true;
 		base = position;
 		this->EXPERIENCE = dynamic_cast<Monster*>(object)->EXPERIENCE;
+
+		path.clear();
+		pathpoints.clear();
 
 		loadTextures();
 	}
@@ -95,18 +104,110 @@ public:
 
 	}
 
+	void loadTheTarget() {
+		do {
+			target.x = base.x + (rand() % 32 - 16)*16;
+			target.y = base.y + (rand() % 32 - 16)*16;
+		} while (collisionPrediction(this, target.x - position.x, target.y - position.y));
+
+		//cout << "Load the target: ["<<target.x<<","<<target.y<<"]\n";
+	}
+
+	void loadThePath() {
+
+		Point goal = Point(target.x, target.y);
+
+		path = aStar(this, goal);
+		//cout << "position: [" << position.x << "," << position.y << "]\n";
+		//cout << "path(" << path.size() << ") : ";
+		/*
+		for (auto& p : path)
+			cout <<"["<<p.x << "," << p.y << "] ";
+
+		cout << "\n";
+		*/
+	}
+
+	void followThePath(float dt) {
+
+		float dist = 15.0f * 4.0f * dt;	// distance to move
+
+		if (position == target) {
+			
+			//cout << "\nmonster: " << name << "\n";
+			loadTheTarget();
+			//sf::Time starttime = currentTime;
+			loadThePath();
+			//cout<<"time: " << (timeClock.getElapsedTime() - starttime).asSeconds() << "s\n";
+		}
+		else if (position.x != target.x && fabs(target.x - position.x) < dist) {
+			position.x = target.x;
+		}
+		else if (position.y != target.y && fabs(target.y - position.y) < dist) {
+			position.y = target.y;
+		}
+		else {
+			if (path.size() > 0) {
+				if (position.x == path[0].x && position.y == path[0].y) {
+					path.erase(path.begin());
+				}
+				else if (position.x != path[0].x && fabs(path[0].x - position.x) < dist) {
+					position.x = path[0].x;
+				}
+				else if (position.y != path[0].y && fabs(path[0].y - position.y) < dist) {
+					position.y = path[0].y;
+				}
+				else if (path[0].x < position.x) {
+					position.x -= dist;
+					direction = 3;
+				}
+				else if (path[0].x > position.x) {
+					position.x += dist;
+					direction = 1;
+				}
+				else if (path[0].y < position.y) {
+					position.y -= dist;
+					direction = 0;
+				}
+				else if (path[0].y > position.y) {
+					position.y += dist;
+					direction = 2;
+				}
+			}
+		}
+
+	}
+
 	void idle(float dt) {
 		if (rand() % 300 == 0) {
 			state = unitStates::run;
-			target.x = base.x + rand() % 100 - 50;
-			target.y = base.y + rand() % 100 - 50;
+			target.x = base.x + rand() % 256 - 128;
+			target.y = base.y + rand() % 256 - 128;
 		}
 
 		calculateCurrentFrame(dt);
 		sprite.setTexture(*idleTextures[direction * 4 + frame]->texture);
 	}
 
+	void run(float dt) {
+
+		if (path.size() == 0) {
+			
+			//cout << "\nmonster: " << name << "\n";
+			loadTheTarget();
+			//sf::Time starttime = currentTime;
+			loadThePath();
+			//cout << "time: " << (timeClock.getElapsedTime() - starttime).asSeconds() << "s\n";
+		}
+
+		followThePath(dt);
+
+		calculateCurrentFrame(dt);
+		sprite.setTexture(*runTextures[direction * 4 + frame]->texture);
+	}
+
 	virtual void update(float dt) {
+
 
 		if (HP == 0 && isAlive == true) {
 			
@@ -126,18 +227,16 @@ public:
 				HP = HP_FULL;
 				state = unitStates::idle;
 
-				while (collisions(this, 0, 0)) {
+				while (collisionPrediction(this, 0, 0)) {
 
-					position.x = rand() % 100 - 50 + base.x;
-					position.y = rand() % 100 - 50 + base.y;
+					position.x = rand() % 256 - 128 + base.x;
+					position.y = rand() % 256 - 128 + base.y;
 				}
 			}
 
 		}
 		
 		if( isAlive == true) {
-
-			GameObject::update(dt);
 
 			if (playerInActionRange()) {
 				state = unitStates::attack;
@@ -161,29 +260,62 @@ public:
 				cooldown -= dt;
 
 			sprite.setPosition(position);
-			viewRangeArea.setPosition(position);
-			actionRangeArea.setPosition(position);
 
 			setLifeBar();
-			textname.setPosition(position.x, position.y - collider->height - 35);
+			createTextname();
+
 		}
 
 	}
 
-	void draw(sf::RenderWindow* window) {
+	virtual void updateStatistic(float dt) {
+		
+		Unit::updateStatistic(dt);
+
+		if (collisionPrediction(this, 0, 0))
+			collider->shape->setFillColor(sf::Color::Red);
+		else
+			collider->shape->setFillColor(sf::Color(128, 64, 128, 128));
+		
+		viewRangeArea.setPosition(position);
+		actionRangeArea.setPosition(position);
+
+		// PATH
+
+		pathpoints.clear();
+		for (auto& p : path) {
+			sf::CircleShape point = sf::CircleShape(4);
+			point.setFillColor(sf::Color::Red);
+			point.setOrigin(4, 4);
+			point.setPosition(p.x, p.y);
+			pathpoints.push_back(point);
+		}
+	}
+
+	virtual void draw() {
 
 		if (isAlive) {
-
-			if (mouseIsOver) {
-				window->draw(viewRangeArea);
-				window->draw(actionRangeArea);
-				GameObject::draw(window);
-			}
 
 			window->draw(sprite);
 			window->draw(lifeBarBackground);
 			window->draw(lifeBar);
+
+			Unit::draw();
 		}
+	}
+
+	virtual void drawStatistic() {
+
+		for (auto& p : pathpoints)
+			window->draw(p);
+
+		sf::CircleShape meta(8);
+		meta.setFillColor(sf::Color::Blue);
+		meta.setOrigin(8, 8);
+		meta.setPosition(target.x, target.y);
+		window->draw(meta);
+
+		Unit::drawStatistic();
 	}
 };
 

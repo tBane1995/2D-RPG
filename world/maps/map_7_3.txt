@@ -33,8 +33,8 @@
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 // NATURES
-Nature "natures/tree1" 2032 784
+Nature "natures/tree8" 1888 768
 
 // MONSTERS
-Monster "monsters/wilczur" 1936 1090
+Monster "monsters/wilczur" 1771 1024
 
